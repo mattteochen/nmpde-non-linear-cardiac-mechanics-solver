@@ -33,8 +33,11 @@
 *.out
 *.app
 
-*/build/*
+**/build/*
 
 # Custom mesh
 lifex_example_mesh/*
 **/.DS_Store
+
+**/compile_commands.json
+
