@@ -39,5 +39,7 @@
 lifex_example_mesh/*
 **/.DS_Store
 
+# Clangd
 **/compile_commands.json
+**/.cache/*
 
