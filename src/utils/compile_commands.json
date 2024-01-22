@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/Users/matteochen/hpc/shared/nmpde-projects/src/tests/slab_cubic/build",
+  "command": "/opt/homebrew/bin/mpicxx -DNDEBUG -I/opt/homebrew/Cellar/boost@1.76/1.76.0_4/include -isystem /Users/matteochen/dealii-candi/deal.II-v9.5.1/include -isystem /Users/matteochen/dealii-candi/deal.II-v9.5.1/include/deal.II/bundled -isystem /Users/matteochen/dealii-candi/trilinos-release-13-2-0/include -isystem /Users/matteochen/dealii-candi/hdf5-1.12.2/include -isystem /Users/matteochen/dealii-candi/p4est-2.3.2/FAST/include  -Wfloat-conversion -Wmissing-braces -Wnon-virtual-dtor -O3 -DNDEBUG -std=gnu++17 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -mmacosx-version-min=13.0 -pedantic -Wall -Wextra -Wmissing-braces -Woverloaded-virtual -Wpointer-arith -Wsign-compare -Wsuggest-override -Wswitch -Wsynth -Wwrite-strings -Wno-deprecated-declarations -Wno-psabi -Wfloat-conversion -Qunused-arguments -Wno-unsupported-friend -Wno-pass-failed -Wno-parentheses -Wno-unused-local-typedefs -openmp-simd -ftemplate-depth=1024 -O2 -funroll-loops -fstrict-aliasing -o CMakeFiles/main.dir/main.cpp.o -c /Users/matteochen/hpc/shared/nmpde-projects/src/tests/slab_cubic/main.cpp",
+  "file": "/Users/matteochen/hpc/shared/nmpde-projects/src/tests/slab_cubic/main.cpp",
+  "output": "CMakeFiles/main.dir/main.cpp.o"
+}
+]
