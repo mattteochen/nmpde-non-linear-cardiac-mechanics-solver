@@ -1,8 +1,8 @@
 #ifndef SLAB_CUBIC_HPP
 #define SLAB_CUBIC_HPP
 
-#include <cmath>
 #include <deal.II/base/conditional_ostream.h>
+#include <deal.II/base/point.h>
 #include <deal.II/base/quadrature_lib.h>
 
 #include <deal.II/distributed/fully_distributed_tria.h>
@@ -12,6 +12,7 @@
 
 #include <deal.II/fe/fe_simplex_p.h>
 #include <deal.II/fe/fe_values.h>
+#include <deal.II/fe/fe_system.h>
 
 #include <deal.II/grid/grid_in.h>
 
@@ -23,8 +24,21 @@
 #include <deal.II/numerics/matrix_tools.h>
 #include <deal.II/numerics/vector_tools.h>
 
+#if DEAL_II_VERSION_MAJOR >= 9 && defined(DEAL_II_WITH_TRILINOS)
+#include <deal.II/differentiation/ad.h>
+#define ENABLE_SACADO_FORMULATION
+#endif
+
+// These must be included below the AD headers so that
+// their math functions are available for use in the
+// definition of tensors and kinematic quantities
+#include <deal.II/physics/elasticity/kinematics.h>
+#include <deal.II/physics/elasticity/standard_tensors.h>
+
+#include <cmath>
 #include <fstream>
 #include <iostream>
+#include <map>
 
 #include "../../utils/Utils.hpp"
 #include "../../utils/Assert.hpp"
@@ -37,103 +51,37 @@ using ui = uint32_t;
  */
 class SlabCubic
 {
-public:
   /**
    * Const physical dimension
    */
   static constexpr unsigned int dim = 3;
 
+  using tensor = Tensor<2, dim>;
+public:
+
   /**
-   * A class representing the deformation gradient tensor
+   * Const boundaries faces
    */
-  class DeformationGradientTensor : public Function<dim>
+  static constexpr unsigned int boundary_faces_num = 6;
+
+  template<typename Scalar = double>
+  struct Material
   {
-    using T = Tensor<2, dim>;
-  protected:
-    /**
-     * A dealii Tensor<2, dim> representing the deformation gradient tensor
-     */
-    T deformation_gradient_tensor;
-  public:
-    /**
-     * Default constructor
-     */
-    DeformationGradientTensor() = default;
-
-    /**
-     * Retrieve the deformation gradient tensor, const version
-     * @return A dealii Tensor<2, dim> representing the deformation gradient tensor
-     */
-    const T& get_tensor() const {
-      return deformation_gradient_tensor;
-    }
-
-    /**
-     * Retrieve the deformation gradient tensor
-     * @return A dealii Tensor<2, dim> representing the deformation gradient tensor
-     */
-    T& get_tensor() {
-      return deformation_gradient_tensor;
-    }
-  
-    /**
-     * Evaluate the deformation gradient tensor at a specific point x;
-     * @param x A dealii Tensor
-     * @return The deformation gradient tensor
-     */
-    T& value(const T& x, const unsigned int /*component*/ = 0) {
-      deformation_gradient_tensor.clear();
-      for (ui i=0; i<dim; ++i) {
-        for (ui j=0; j<dim; ++j) {
-          deformation_gradient_tensor[i][j] = -x[i][j];
-        }
-      }
-      return deformation_gradient_tensor;
-    }
+    static constexpr Scalar b_f = static_cast<Scalar>(8);
+    static constexpr Scalar b_t = static_cast<Scalar>(2);
+    static constexpr Scalar b_fs = static_cast<Scalar>(4);
+    static constexpr Scalar default_C = static_cast<Scalar>(2000);
   };
 
   /**
-   * A class representing the green Lagrange strain tensor
+   * A class representing the pressure component
    */
-  class GreenStrainTensor : public Function<dim>
+  class FunctionPressure : Function<dim>
   {
-    using T = Tensor<2, dim>;
-  protected:
-    /**
-     * A dealii Tensor<2, dim> representing the green Lagrange strain tensor
-     */
-    T green_lagrange_strain_tensor;
   public:
-    /**
-     * Default constructor
-     */
-    GreenStrainTensor() = default;
-
-    /**
-     * Retrieve the green Lagrange strain tensor, const version
-     * @return A dealii Tensor<2, dim> representing the green Lagrange strain tensor
-     */
-    const T& get_tensor() const {
-      return green_lagrange_strain_tensor;
-    }
-
-    /**
-     * Retrieve the green Lagrange strain tensor
-     * @return A dealii Tensor<2, dim> representing the green Lagrange strain tensor
-     */
-    T& get_tensor() {
-      return green_lagrange_strain_tensor;
-    }
-  
-    /**
-     * Evaluate the green Lagrange strain tensor at a specific deformation gradient tensor;
-     * @param x A DeformationGradientTensor
-     * @return The green Lagrange strain tensor
-     */
-     T& value(const DeformationGradientTensor& dgt, const unsigned int /*component*/ = 0) {
-      return green_lagrange_strain_tensor =
-                 0.5 * (Utils::dealii::Tensor::get_transpose<2, dim>(dgt.get_tensor()) * dgt.get_tensor() -
-                        Utils::dealii::Tensor::get_identity<2, dim>());
+    virtual double value(const Point<dim> & /*p*/,
+                         const unsigned int /*component*/ = 0) const override {
+      return 4.0;
     }
   };
 
@@ -144,10 +92,6 @@ public:
   class ExponentQ : Function<dim>
   {
   protected:
-    static constexpr Scalar b_f = static_cast<Scalar>(8);
-    static constexpr Scalar b_t = static_cast<Scalar>(2);
-    static constexpr Scalar b_fs = static_cast<Scalar>(4);
-
     Scalar q = static_cast<Scalar>(0);
     uint8_t initialised = 0;
   public:
@@ -165,47 +109,13 @@ public:
      * @param gst A DeformationGradientTensor
      * @return The exponent Q
      */
-    void compute(const GreenStrainTensor& gst) const {
-      auto& gst_tensor = gst.get_tensor();
-      q = b_f * gst_tensor[0][0] * gst_tensor[0][0] +
-             b_t * (gst_tensor[1][1] * gst_tensor[1][1] + gst_tensor[2][2] * gst_tensor[2][2] +
-                    gst_tensor[1][2] * gst_tensor[1][2] + gst_tensor[2][1] * gst_tensor[2][1]) +
-             b_fs * (gst_tensor[0][1] * gst_tensor[0][1] + gst_tensor[1][0] * gst_tensor[1][0] +
-                     gst_tensor[0][2] * gst_tensor[0][2] + gst_tensor[2][0] * gst_tensor[2][0]);
+    void compute(const tensor& gst) {
+      q = Material<double>::b_f * gst[0][0] * gst[0][0] +
+             Material<double>::b_t * (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
+                    gst[1][2] * gst[1][2] + gst[2][1] * gst[2][1]) +
+             Material<double>::b_fs * (gst[0][1] * gst[0][1] + gst[1][0] * gst[1][0] +
+                     gst[0][2] * gst[0][2] + gst[2][0] * gst[2][0]);
       initialised = 1;
-    }
-  };
-
-  /**
-   * A class representing the parameter W of Piola Kirchhof 
-   */
-  template<typename Scalar>
-  class PKW : Function<dim>
-  {
-  protected:
-    static constexpr Scalar default_C = static_cast<Scalar>(2000);
-    Scalar C = default_C;
-    Scalar w = static_cast<Scalar>(0);
-  public:
-    /**
-     * Retrieve the W value
-     * @return The W value
-     */
-    Scalar get_w() {
-      return w;
-    }
-
-    void set_C(Scalar value) {
-      C = value;
-    }
-
-    /**
-     * Evaluate the W value with given Q exponent
-     * @param q An exponent q evaluated at a GreenStrainTensor
-     * @return The parameter W
-     */
-    Scalar value(const ExponentQ<Scalar>& q) {
-      return w = C * 0.5 * (std::exp(q.get_q() - static_cast<Scalar>(1)));
     }
   };
 
@@ -221,7 +131,17 @@ public:
     , mesh_file_name(mesh_file_name_)
     , r(r_)
     , mesh(MPI_COMM_WORLD)
-  {}
+  {
+    PK_b_weights[{0,0}] = Material<double>::b_f; 
+    PK_b_weights[{1,1}] = Material<double>::b_t; 
+    PK_b_weights[{2,2}] = Material<double>::b_t; 
+    PK_b_weights[{1,2}] = Material<double>::b_t; 
+    PK_b_weights[{2,1}] = Material<double>::b_t; 
+    PK_b_weights[{0,2}] = Material<double>::b_fs; 
+    PK_b_weights[{2,0}] = Material<double>::b_fs; 
+    PK_b_weights[{0,1}] = Material<double>::b_fs; 
+    PK_b_weights[{1,0}] = Material<double>::b_fs; 
+  }
 
   // Initialization.
   void
@@ -258,24 +178,34 @@ protected:
   // Problem definition. ///////////////////////////////////////////////////////
 
   /**
-   * The deformation gradient tensor object
-   */
-  DeformationGradientTensor dgt;
-
-  /**
-   * The green Lagrange strain tensor
-   */
-  GreenStrainTensor gst;
-
-  /**
    * The exponent Q
    */
   ExponentQ<double> exponent_Q;
 
   /**
-   * The W param of Piola Kirchhof stress tensor
+   * The deformation gradient tensor
    */
-  PKW<double> w;
+  tensor F;
+
+  /**
+   * The green Lagrange stress tensor
+   */
+  tensor E;
+
+  /**
+   * The Piola Kirchhoff tensor
+   */
+  tensor PK;
+
+  /**
+   * The function pressure
+   */
+  FunctionPressure pressure;
+
+  /**
+   * The b_ij coefficients for the Piola Kiochhoff tensor
+   */
+  std::map<std::pair<int, int>, double> PK_b_weights;
 
   // Discretization. ///////////////////////////////////////////////////////////
 
@@ -293,6 +223,9 @@ protected:
 
   // Quadrature formula.
   std::unique_ptr<Quadrature<dim>> quadrature;
+
+  // Quadrature formula for face integrals.
+  std::unique_ptr<Quadrature<dim - 1>> quadrature_face;
 
   // DoF handler.
   DoFHandler<dim> dof_handler;
