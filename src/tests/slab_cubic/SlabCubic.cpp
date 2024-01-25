@@ -135,7 +135,7 @@ SlabCubic::assemble_system()
 
   // We use these vectors to store the old solution (i.e. at previous Newton
   // iteration) and its gradient on quadrature nodes of the current cell.
-  std::vector<double>         solution_loc(n_q);
+  std::vector<Tensor<1, dim>>         solution_loc(n_q);
   std::vector<tensor> solution_gradient_loc(n_q);
 
   FEValuesExtractors::Vector displacement(0);
@@ -155,7 +155,7 @@ SlabCubic::assemble_system()
       // (stored inside solution) on the quadrature nodes of the current
       // cell. This can be accomplished through
       // FEValues::get_function_values and FEValues::get_function_gradients.
-      fe_values.get_function_values(solution, solution_loc);
+      fe_values[displacement].get_function_values(solution, solution_loc);
       fe_values[displacement].get_function_gradients(solution, solution_gradient_loc);
 
       for (unsigned int q = 0; q < n_q; ++q)
@@ -325,7 +325,19 @@ void
 SlabCubic::output() const
 {
   DataOut<dim> data_out;
-  data_out.add_data_vector(dof_handler, solution, "u");
+
+  // By passing these two additional arguments to add_data_vector, we specify
+  // that the three components of the solution are actually the three components
+  // of a vector, so that the visualization program can take that into account.
+  std::vector<DataComponentInterpretation::DataComponentInterpretation>
+    data_component_interpretation(
+      dim, DataComponentInterpretation::component_is_part_of_vector);
+  std::vector<std::string> solution_names(dim, "u");
+
+  data_out.add_data_vector(dof_handler,
+                           solution,
+                           solution_names,
+                           data_component_interpretation);
 
   std::vector<unsigned int> partition_int(mesh.n_active_cells());
   GridTools::get_subdomain_association(mesh, partition_int);
@@ -334,7 +346,7 @@ SlabCubic::output() const
 
   data_out.build_patches();
 
-  const std::string output_file_name = "output-nonlineardiffusion";
+  const std::string output_file_name = "slab-cubic";
   data_out.write_vtu_with_pvtu_record("./",
                                       output_file_name,
                                       0,
