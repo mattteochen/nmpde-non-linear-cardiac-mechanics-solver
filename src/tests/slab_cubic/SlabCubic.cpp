@@ -1,11 +1,10 @@
 #include "SlabCubic.hpp"
-#include <cmath>
-#include <deal.II/base/symmetric_tensor.h>
-#include <deal.II/base/tensor.h>
 
-void
-SlabCubic::setup()
-{
+/**
+ * @brief Setup the problem by loading the mesh, creating the finite element and
+ * initialising the linear system.
+ */
+void SlabCubic::setup() {
   // Create the mesh.
   {
     pcout << "Initializing the mesh" << std::endl;
@@ -26,7 +25,7 @@ SlabCubic::setup()
     {
       GridTools::partition_triangulation(mpi_size, mesh_serial);
       const auto construction_data = TriangulationDescription::Utilities::
-        create_description_from_triangulation(mesh_serial, MPI_COMM_WORLD);
+          create_description_from_triangulation(mesh_serial, MPI_COMM_WORLD);
       mesh.create_triangulation(construction_data);
     }
 
@@ -113,230 +112,251 @@ SlabCubic::setup()
   }
 }
 
-void
-SlabCubic::assemble_system()
-{
+/**
+ * @brief Assemble the system for a Newton iteration. The residual and Jacobian
+ * matrix are evaluated leveraging automatic differentiation by Sacado:
+ * https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html
+ */
+void SlabCubic::assemble_system() {
   const unsigned int dofs_per_cell = fe->dofs_per_cell;
-  const unsigned int n_q           = quadrature->size();
+  const unsigned int n_q = quadrature->size();
 
   FEValues<dim> fe_values(*fe, *quadrature,
-      update_values | update_gradients | update_quadrature_points | update_JxW_values);
+                          update_values | update_gradients |
+                              update_quadrature_points | update_JxW_values);
 
-  FEFaceValues<dim> fe_values_boundary(*fe, *quadrature_face,
-      update_values | update_quadrature_points | update_JxW_values);
+  FEFaceValues<dim> fe_values_boundary(
+      *fe, *quadrature_face,
+      update_values | update_quadrature_points | update_JxW_values |
+          update_normal_vectors);
 
   FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
-  Vector<double>     cell_rhs(dofs_per_cell);
+  Vector<double> cell_rhs(dofs_per_cell);
 
   std::vector<types::global_dof_index> dof_indices(dofs_per_cell);
 
   jacobian_matrix = 0.0;
   residual_vector = 0.0;
 
-  // We use these vectors to store the old solution (i.e. at previous Newton
-  // iteration) and its gradient on quadrature nodes of the current cell.
-  std::vector<Tensor<1, dim>>         solution_loc(n_q);
-  std::vector<tensor> solution_gradient_loc(n_q);
-
   FEValuesExtractors::Vector displacement(0);
 
-  for (const auto &cell : dof_handler.active_cell_iterators())
+  constexpr Differentiation::AD::NumberTypes ADTypeCode =
+      Differentiation::AD::NumberTypes::sacado_dfad_dfad;
+
+  for (const auto &cell : dof_handler.active_cell_iterators()) {
+    if (!cell->is_locally_owned()) continue;
+
+    // Retrive the indipendent and dependent variables num
+    // Setting them to dofs_per_cell as
+    // https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html
+    const uint32_t n_independent_vars = dofs_per_cell;
+    const uint32_t n_dependent_vars = dofs_per_cell;
+
+    // Retirive the dof indices
+    cell->get_dof_indices(dof_indices);
+
+    // Create some aliases for the AD helper.
+    using ADHelper =
+        Differentiation::AD::ResidualLinearization<ADTypeCode, double>;
+    using ADNumberType = typename ADHelper::ad_type;
+
+    // Create and initialize an instance of the helper class.
+    ADHelper ad_helper(n_independent_vars, n_dependent_vars);
+
+    // Reinit finite element
+    fe_values.reinit(cell);
+    // Reinit local data structures
+    cell_matrix = 0.0;
+    cell_rhs = 0.0;
+
+    // ==================================================
+    // =               AD Recording Phase               =
+    // ==================================================
     {
-      if (!cell->is_locally_owned())
-        continue;
+      // First, we set the values for all DoFs.
+      ad_helper.register_dof_values(solution, dof_indices);
 
-      fe_values.reinit(cell);
+      // Then we get the complete set of degree of freedom values as
+      // represented by auto-differentiable numbers.
+      const std::vector<ADNumberType> dof_values_ad =
+          ad_helper.get_sensitive_dof_values();
 
-      cell_matrix = 0.0;
-      cell_rhs    = 0.0;
+      // Problem specific task, compute values and gradients
+      std::vector<Tensor<2, dim, ADNumberType>> solution_gradient_loc(
+          n_q, Tensor<2, dim, ADNumberType>());
+      std::vector<Tensor<1, dim, ADNumberType>> solution_loc(
+          n_q, Tensor<1, dim, ADNumberType>());
+      fe_values[displacement].get_function_gradients_from_local_dof_values(
+          dof_values_ad, solution_gradient_loc);
+      fe_values[displacement].get_function_values_from_local_dof_values(
+          dof_values_ad, solution_loc);
 
-      // We need to compute the Jacobian matrix and the residual for current
-      // cell. This requires knowing the value and the gradient of u^{(k)}
-      // (stored inside solution) on the quadrature nodes of the current
-      // cell. This can be accomplished through
-      // FEValues::get_function_values and FEValues::get_function_gradients.
-      fe_values[displacement].get_function_values(solution, solution_loc);
-      fe_values[displacement].get_function_gradients(solution, solution_gradient_loc);
+      // This variable stores the cell residual vector contributions.
+      // Good practise is to initialise it to zero.
+      std::vector<ADNumberType> residual_ad(n_dependent_vars,
+                                            ADNumberType(0.0));
 
-      for (unsigned int q = 0; q < n_q; ++q)
-        {
-          // Compute deformation gradient tensor
-          F = Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
+      // Loop over quadrature points
+      for (unsigned int q = 0; q < n_q; ++q) {
+        // Compute deformation gradient tensor
+        auto F = Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
+        // Compute green Lagrange tensor
+        auto E = Physics::Elasticity::Kinematics::E(F);
+        // Compute exponent Q
+        ExponentQ<ADNumberType> exponent_q;
+        exponent_q.compute(E);
+        // Compute Piola Kirchhoff tensor
+        Tensor<2, dim, ADNumberType> piola_kirchhoff;
+        for (uint32_t i = 0; i < dim; ++i) {
+          for (uint32_t j = 0; j < dim; ++j) {
+            piola_kirchhoff[i][j] = Material<double>::default_C *
+                                    piola_kirchhoff_b_weights[{i, j}] *
+                                    E[i][j] * std::exp(exponent_q.get_q());
+          }
+        }
+        // Compute the integration weight
+        const auto quadrature_integration_w = fe_values.JxW(q);
 
-          // Compute green Lagrange tensor
-          E = Physics::Elasticity::Kinematics::E(F);
-          
-          // Compute exponent Q
-          exponent_Q.compute(E);
+        for (unsigned int i = 0; i < dofs_per_cell; ++i) {
+          // Compose -F:
+          // It is give by (L(q) + B_N(q)). This piece compose L(q).
+          residual_ad[i] -=
+              scalar_product(piola_kirchhoff,
+                             fe_values[displacement].gradient(i, q)) *
+              quadrature_integration_w;  // L(d)
+        }
+      }
+      // Loop over quadrature points for Neumann boundaries conditions
+      if (cell->at_boundary()) {
+        for (uint32_t face_number = 0; face_number < cell->n_faces();
+             ++face_number) {
+          if (cell->face(face_number)->at_boundary() &&
+              is_face_at_newmann_boundary(
+                  cell->face(face_number)->boundary_id())) {
+            fe_values_boundary.reinit(cell, face_number);
 
-          // Compute Piola Kirchhoff tensor
-          for (uint32_t i=0; i<dim; ++i) {
-            for (uint32_t j=0; j<dim; ++j) {
-              PK[i][j] = Material<double>::default_C * PK_b_weights[{i, j}] * E[i][j] * std::exp(exponent_Q.get_q());
+            for (unsigned int q = 0; q < n_q; ++q) {
+              // Compute deformation gradient tensor
+              // TODO: maybe cache this (is 3x3 for now)
+              auto F =
+                  Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
+              // Compute determinant of F
+              auto det_F = determinant(F);
+              // Compute F^T
+              auto F_T = transpose(F);
+              // Compute (F^T)^{-1}
+              auto F_T_inverse = invert(F_T);
+              // Compute H_h (tensor)
+              auto H_h = det_F * F_T_inverse;
+
+              for (unsigned int i = 0; i < dofs_per_cell; ++i) {
+                // Compose B_N(q)
+                residual_ad[i] +=
+                    pressure.value(fe_values_boundary.quadrature_point(q)) *
+                    scalar_product(
+                        H_h * fe_values_boundary.normal_vector(q),
+                        fe_values_boundary[displacement].value(i, q)) *
+                    fe_values_boundary.JxW(q);
+              }
             }
           }
-
-          const auto quadrature_integration_w = fe_values.JxW(q);
-
-          for (unsigned int i = 0; i < dofs_per_cell; ++i)
-            {
-              for (unsigned int j = 0; j < dofs_per_cell; ++j)
-                {
-                  //TODO: compose cell matrix (Jacobian)
-                }
-
-              // Compose -F:
-              // It is give by 0(L(d) + B_N(d))
-              cell_rhs(i) -=
-                  scalar_product(PK, fe_values[displacement].gradient(i, q)) *
-                  quadrature_integration_w; // L(d)
-            }
         }
-
-      // Newmann boundary conditions
-      if (cell->at_boundary())
-        {
-          for (uint32_t face_number = 0; face_number < cell->n_faces();
-               ++face_number)
-            {
-              if (cell->face(face_number)->at_boundary() &&
-                  cell->face(face_number)->boundary_id() == 60)
-                {
-                  //Sanity check
-                  std::cout << "Found Newmann boundary" << std::endl;
-                  fe_values_boundary.reinit(cell, face_number);
-
-                  for (unsigned int q = 0; q < n_q; ++q)
-                    {
-                      // Compute deformation gradient tensor
-                      F = Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
-                      
-                      // Compute determinant of F
-                      auto det_F = determinant(F);
-
-                      // Compute F^T
-                      auto F_T = transpose(F);
-
-                      // Compute (F^T)^{-1}
-                      auto F_T_inverse = invert(F_T);
-
-                      // Compute H_h (tensor)
-                      auto H_h = det_F * F_T_inverse;
-
-                      for (unsigned int i = 0; i < dofs_per_cell; ++i)
-                        // Compose B_N(q)
-                        cell_rhs(i) +=
-                          pressure.value(
-                            fe_values_boundary.quadrature_point(q)
-                          ) *
-                          scalar_product(
-                            H_h * fe_values_boundary.normal_vector(q),
-                            fe_values_boundary[displacement].value(i, q)
-                          ) *
-                          fe_values_boundary.JxW(q);
-                    }
-                }
-            }
-        }
-
-      cell->get_dof_indices(dof_indices);
-
+      }
+      // Register the residual AD
+      ad_helper.register_residual_vector(residual_ad);
+      // Compute the residual
+      ad_helper.compute_residual(cell_rhs);
+      // We need -R(displacement)(test_function) at Newton rhs
+      cell_rhs *= -1.0;
+      // Compute the local Jacobian
+      ad_helper.compute_linearization(cell_matrix);
+      // Add to global matrix and vector
       jacobian_matrix.add(dof_indices, cell_matrix);
       residual_vector.add(dof_indices, cell_rhs);
     }
-
+  }
+  // Share between MPI processes
   jacobian_matrix.compress(VectorOperation::add);
   residual_vector.compress(VectorOperation::add);
 
   // Boundary conditions.
   {
     std::map<types::global_dof_index, double> boundary_values;
-
-    std::map<types::boundary_id, const Function<dim> *> boundary_functions;
-    Functions::ZeroFunction<dim>                        zero_function;
-
-    boundary_functions[40] = &zero_function;
-
-    VectorTools::interpolate_boundary_values(dof_handler,
-                                             boundary_functions,
-                                             boundary_values);
-
-    MatrixTools::apply_boundary_values(
-      boundary_values, jacobian_matrix, delta_owned, residual_vector, true);
+    VectorTools::interpolate_boundary_values(
+        dof_handler, dirichlet_boundary_functions, boundary_values);
+    MatrixTools::apply_boundary_values(boundary_values, jacobian_matrix,
+                                       delta_owned, residual_vector, true);
   }
 }
 
-void
-SlabCubic::solve_system()
-{
+/**
+ * @brief Solve the linear system using GMRES
+ */
+void SlabCubic::solve_system() {
   SolverControl solver_control(1000, 1e-6 * residual_vector.l2_norm());
 
   SolverGMRES<TrilinosWrappers::MPI::Vector> solver(solver_control);
-  TrilinosWrappers::PreconditionSSOR         preconditioner;
+  TrilinosWrappers::PreconditionSSOR preconditioner;
   preconditioner.initialize(
-    jacobian_matrix, TrilinosWrappers::PreconditionSSOR::AdditionalData(1.0));
+      jacobian_matrix, TrilinosWrappers::PreconditionSSOR::AdditionalData(1.0));
 
   solver.solve(jacobian_matrix, delta_owned, residual_vector, preconditioner);
   pcout << "   " << solver_control.last_step() << " GMRES iterations"
         << std::endl;
 }
 
-void
-SlabCubic::solve_newton()
-{
+/**
+ * @brief Solve the non linear problem using the Newton method
+ */
+void SlabCubic::solve_newton() {
   pcout << "===============================================" << std::endl;
 
-  const unsigned int n_max_iters        = 1000;
-  const double       residual_tolerance = 1e-6;
+  const unsigned int n_max_iters = 1000;
+  const double residual_tolerance = 1e-6;
 
-  unsigned int n_iter        = 0;
-  double       residual_norm = residual_tolerance + 1;
+  unsigned int n_iter = 0;
+  double residual_norm = residual_tolerance + 1;
 
-  while (n_iter < n_max_iters && residual_norm > residual_tolerance)
-    {
-      assemble_system();
-      residual_norm = residual_vector.l2_norm();
+  while (n_iter < n_max_iters && residual_norm > residual_tolerance) {
+    assemble_system();
+    residual_norm = residual_vector.l2_norm();
 
-      pcout << "Newton iteration " << n_iter << "/" << n_max_iters
-            << " - ||r|| = " << std::scientific << std::setprecision(6)
-            << residual_norm << std::flush;
+    pcout << "Newton iteration " << n_iter << "/" << n_max_iters
+          << " - ||r|| = " << std::scientific << std::setprecision(6)
+          << residual_norm << std::flush;
 
-      // We actually solve the system only if the residual is larger than the
-      // tolerance.
-      if (residual_norm > residual_tolerance)
-        {
-          solve_system();
+    // We actually solve the system only if the residual is larger than the
+    // tolerance.
+    if (residual_norm > residual_tolerance) {
+      solve_system();
 
-          solution_owned += delta_owned;
-          solution = solution_owned;
-        }
-      else
-        {
-          pcout << " < tolerance" << std::endl;
-        }
-
-      ++n_iter;
+      solution_owned += delta_owned;
+      solution = solution_owned;
+    } else {
+      pcout << " < tolerance" << std::endl;
     }
+
+    ++n_iter;
+  }
 
   pcout << "===============================================" << std::endl;
 }
 
-void
-SlabCubic::output() const
-{
+/**
+ * @brief Write the output
+ */
+void SlabCubic::output() const {
   DataOut<dim> data_out;
 
   // By passing these two additional arguments to add_data_vector, we specify
   // that the three components of the solution are actually the three components
   // of a vector, so that the visualization program can take that into account.
   std::vector<DataComponentInterpretation::DataComponentInterpretation>
-    data_component_interpretation(
-      dim, DataComponentInterpretation::component_is_part_of_vector);
+      data_component_interpretation(
+          dim, DataComponentInterpretation::component_is_part_of_vector);
   std::vector<std::string> solution_names(dim, "u");
 
-  data_out.add_data_vector(dof_handler,
-                           solution,
-                           solution_names,
+  data_out.add_data_vector(dof_handler, solution, solution_names,
                            data_component_interpretation);
 
   std::vector<unsigned int> partition_int(mesh.n_active_cells());
@@ -347,9 +367,7 @@ SlabCubic::output() const
   data_out.build_patches();
 
   const std::string output_file_name = "slab-cubic";
-  data_out.write_vtu_with_pvtu_record("./",
-                                      output_file_name,
-                                      0,
+  data_out.write_vtu_with_pvtu_record("./", output_file_name, 0,
                                       MPI_COMM_WORLD);
 
   pcout << "Output written to " << output_file_name << "." << std::endl;
