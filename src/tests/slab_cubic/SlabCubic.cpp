@@ -123,7 +123,7 @@ SlabCubic::assemble_system()
       update_values | update_gradients | update_quadrature_points | update_JxW_values);
 
   FEFaceValues<dim> fe_values_boundary(*fe, *quadrature_face,
-      update_values | update_quadrature_points | update_JxW_values);
+      update_values | update_quadrature_points | update_JxW_values | update_normal_vectors);
 
   FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
   Vector<double>     cell_rhs(dofs_per_cell);
@@ -162,13 +162,10 @@ SlabCubic::assemble_system()
         {
           // Compute deformation gradient tensor
           F = Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
-
           // Compute green Lagrange tensor
           E = Physics::Elasticity::Kinematics::E(F);
-          
           // Compute exponent Q
           exponent_Q.compute(E);
-
           // Compute Piola Kirchhoff tensor
           for (uint32_t i=0; i<dim; ++i) {
             for (uint32_t j=0; j<dim; ++j) {
@@ -210,20 +207,16 @@ SlabCubic::assemble_system()
                     {
                       // Compute deformation gradient tensor
                       F = Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
-                      
                       // Compute determinant of F
                       auto det_F = determinant(F);
-
                       // Compute F^T
                       auto F_T = transpose(F);
-
                       // Compute (F^T)^{-1}
                       auto F_T_inverse = invert(F_T);
-
                       // Compute H_h (tensor)
                       auto H_h = det_F * F_T_inverse;
 
-                      for (unsigned int i = 0; i < dofs_per_cell; ++i)
+                      for (unsigned int i = 0; i < dofs_per_cell; ++i) {
                         // Compose B_N(q)
                         cell_rhs(i) +=
                           pressure.value(
@@ -234,6 +227,7 @@ SlabCubic::assemble_system()
                             fe_values_boundary[displacement].value(i, q)
                           ) *
                           fe_values_boundary.JxW(q);
+                      }
                     }
                 }
             }
@@ -316,6 +310,7 @@ SlabCubic::solve_newton()
         }
 
       ++n_iter;
+      break;
     }
 
   pcout << "===============================================" << std::endl;
