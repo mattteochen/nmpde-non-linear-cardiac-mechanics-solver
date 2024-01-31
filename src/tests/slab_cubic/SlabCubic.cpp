@@ -220,7 +220,7 @@ void SlabCubic::assemble_system() {
         for (unsigned int i = 0; i < dofs_per_cell; ++i) {
           // Compose -F:
           // It is give by (L(q) + B_N(q)). This piece compose L(q).
-          residual_ad[i] -=
+          residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
               quadrature_integration_w;  // L(d)
