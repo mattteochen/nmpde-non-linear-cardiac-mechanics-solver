@@ -120,6 +120,9 @@ void SlabCubic::setup() {
 void SlabCubic::assemble_system() {
   const unsigned int dofs_per_cell = fe->dofs_per_cell;
   const unsigned int n_q = quadrature->size();
+  const unsigned int n_face_q = quadrature_face->size();
+
+  pcout << "n_q: " << n_q << " n_face_q: " << n_face_q << std::endl;
 
   FEValues<dim> fe_values(*fe, *quadrature,
                           update_values | update_gradients |
@@ -235,7 +238,8 @@ void SlabCubic::assemble_system() {
                   cell->face(face_number)->boundary_id())) {
             fe_values_boundary.reinit(cell, face_number);
 
-            for (unsigned int q = 0; q < n_q; ++q) {
+            // Loop over face quadrature points
+            for (unsigned int q = 0; q < n_face_q; ++q) {
               // Compute deformation gradient tensor
               // TODO: maybe cache this (is 3x3 for now)
               auto F =
@@ -293,7 +297,7 @@ void SlabCubic::assemble_system() {
  * @brief Solve the linear system using GMRES
  */
 void SlabCubic::solve_system() {
-  SolverControl solver_control(1000, 1e-6 * residual_vector.l2_norm());
+  SolverControl solver_control(5000, 1e-6 * residual_vector.l2_norm());
 
   SolverGMRES<TrilinosWrappers::MPI::Vector> solver(solver_control);
   TrilinosWrappers::PreconditionSSOR preconditioner;
