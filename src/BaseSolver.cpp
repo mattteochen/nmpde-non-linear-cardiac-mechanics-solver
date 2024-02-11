@@ -1,10 +1,11 @@
-#include "SlabCubic.hpp"
+#include "BaseSolver.hpp"
 
 /**
  * @brief Setup the problem by loading the mesh, creating the finite element and
  * initialising the linear system.
  */
-void SlabCubic::setup() {
+template<int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::setup() {
   // Create the mesh.
   {
     pcout << "Initializing the mesh" << std::endl;
@@ -113,16 +114,15 @@ void SlabCubic::setup() {
 }
 
 /**
- * @brief Assemble the system for a Newton iteration. The residual and Jacobian
+ * @brief Assemble the system for a Newton iteration. The residual vector and Jacobian
  * matrix are evaluated leveraging automatic differentiation by Sacado:
  * https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html
  */
-void SlabCubic::assemble_system() {
+template<int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::assemble_system() {
   const unsigned int dofs_per_cell = fe->dofs_per_cell;
   const unsigned int n_q = quadrature->size();
   const unsigned int n_face_q = quadrature_face->size();
-
-  pcout << "n_q: " << n_q << " n_face_q: " << n_face_q << std::endl;
 
   FEValues<dim> fe_values(*fe, *quadrature,
                           update_values | update_gradients |
@@ -212,7 +212,7 @@ void SlabCubic::assemble_system() {
         Tensor<2, dim, ADNumberType> piola_kirchhoff;
         for (uint32_t i = 0; i < dim; ++i) {
           for (uint32_t j = 0; j < dim; ++j) {
-            piola_kirchhoff[i][j] = Material<double>::default_C *
+            piola_kirchhoff[i][j] = Material::C *
                                     piola_kirchhoff_b_weights[{i, j}] *
                                     E[i][j] * std::exp(exponent_q.get_q());
           }
@@ -296,8 +296,9 @@ void SlabCubic::assemble_system() {
 /**
  * @brief Solve the linear system using GMRES
  */
-void SlabCubic::solve_system() {
-  SolverControl solver_control(5000, 1e-6 * residual_vector.l2_norm());
+template<int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::solve_system() {
+  SolverControl solver_control(1000, 1e-6 * residual_vector.l2_norm());
 
   SolverGMRES<TrilinosWrappers::MPI::Vector> solver(solver_control);
   TrilinosWrappers::PreconditionSSOR preconditioner;
@@ -312,7 +313,8 @@ void SlabCubic::solve_system() {
 /**
  * @brief Solve the non linear problem using the Newton method
  */
-void SlabCubic::solve_newton() {
+template<int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::solve_newton() {
   pcout << "===============================================" << std::endl;
 
   const unsigned int n_max_iters = 1000;
@@ -349,7 +351,8 @@ void SlabCubic::solve_newton() {
 /**
  * @brief Write the output
  */
-void SlabCubic::output() const {
+template<int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::output() const {
   DataOut<dim> data_out;
 
   // By passing these two additional arguments to add_data_vector, we specify
@@ -370,7 +373,7 @@ void SlabCubic::output() const {
 
   data_out.build_patches();
 
-  const std::string output_file_name = "slab-cubic";
+  const std::string output_file_name = problem_name;
   data_out.write_vtu_with_pvtu_record("./", output_file_name, 0,
                                       MPI_COMM_WORLD);
 
@@ -378,3 +381,51 @@ void SlabCubic::output() const {
 
   pcout << "===============================================" << std::endl;
 }
+
+/**
+ * @brief Parse the parameter input
+ * @param parameters_file_name_ The input configuration parameter file name
+ */
+template<int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::parse_parameters(const std::string& parameters_file_name_) {
+  // Add the linear solver subsection
+  prm.enter_subsection("LinearSolver");
+  {
+    prm.declare_entry("SolverType", "GMRES",
+                      Patterns::Selection("GMRES"),
+                      "Type of solver used to solve the linear system");
+
+    prm.declare_entry("Residual", "1e-6",
+                      Patterns::Double(0.0),
+                      "Linear solver tolerance");
+
+    prm.declare_entry("MaxIteration", "1.0",
+                      Patterns::Double(0.0),
+                      "Linear solver max iterations multiplier");
+
+    prm.declare_entry("PreconditionerType", "SSOR",
+                      Patterns::Selection("SSOR"),
+                      "Type of preconditioner");
+  }
+  prm.leave_subsection();
+
+  // Read input file
+  prm.parse_input(parameters_file_name_);
+  // prm.print_parameters(std::cout, ParameterHandler::OutputStyle::JSON);
+
+  // Parse linear solver subsection to the configuration object
+  prm.enter_subsection("LinearSolver");
+  {
+    linear_solver_configuration = LinearSolverConfiguration<Scalar>(
+      LinearSolverConfiguration<Scalar>::solver_type_matcher[prm.get("SolverType")],
+      LinearSolverConfiguration<Scalar>::preconditioner_type_matcher[prm.get("PreconditionerType")],
+      prm.get_double("Residual"),
+      prm.get_double("MaxIteration")
+    );
+  }
+  prm.leave_subsection();
+}
+
+// Explicit template initializations
+template class BaseSolver<2, double>;
+template class BaseSolver<3, double>;
