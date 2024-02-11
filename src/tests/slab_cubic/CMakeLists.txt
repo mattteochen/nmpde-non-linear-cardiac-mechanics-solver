@@ -3,8 +3,5 @@ project(SlabCubic LANGUAGES CXX C)
 
 include(../../../common/cmake-common.cmake)
 
-add_executable(main main.cpp SlabCubic.cpp)
+add_executable(main main.cpp ../../BaseSolver.cpp)
 deal_ii_setup_target(main)
-
-# add_executable(test dealii.cpp)
-# deal_ii_setup_target(test)
