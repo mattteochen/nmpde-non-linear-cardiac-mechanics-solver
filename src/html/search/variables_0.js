@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['b_5ff_138',['b_f',['../structBaseSolver_1_1Material.html#a39f42652937811a25512f9a04f80d407',1,'BaseSolver::Material']]],
-  ['b_5ffs_139',['b_fs',['../structBaseSolver_1_1Material.html#a15f1db5b2b9ffe5ccddbe785418f3b7a',1,'BaseSolver::Material']]],
-  ['b_5ft_140',['b_t',['../structBaseSolver_1_1Material.html#a5dc80734cd1fc563981031d05da1db0a',1,'BaseSolver::Material']]],
-  ['boundaries_5futility_141',['boundaries_utility',['../classBaseSolver.html#a8d29ea8fb40c04a3a1e251bd5da3c73c',1,'BaseSolver']]]
+  ['zero_5ffunction_14',['zero_function',['../classSlabCubic.html#aea0bd1d0680b182200785a4a7e01e171',1,'SlabCubic::zero_function()'],['../classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022',1,'IdealizedLV::zero_function()']]]
 ];

@@ -16,7 +16,7 @@
  * @brief Utility class for managing boundary conditions.
  */
 class BoundariesUtility {
- public:
+public:
   /**
    * @brief Default constructor.
    */
@@ -28,8 +28,8 @@ class BoundariesUtility {
    * @param newmann_boundaries_ A string containing Newmann boundary tags
    * separated by commas.
    */
-  BoundariesUtility(const std::string& dirichlet_boundaries_,
-                    const std::string& newmann_boundaries_) {
+  BoundariesUtility(const std::string &dirichlet_boundaries_,
+                    const std::string &newmann_boundaries_) {
     std::istringstream dirichlet_iss(dirichlet_boundaries_);
     std::istringstream newmann_iss(newmann_boundaries_);
     for (std::string token; std::getline(dirichlet_iss, token, ',');) {
@@ -43,7 +43,7 @@ class BoundariesUtility {
    * @brief Move assignment operator.
    * @param other Another BoundariesUtility object to be moved from.
    */
-  void operator=(BoundariesUtility&& other) {
+  void operator=(BoundariesUtility &&other) {
     dirichlet_boundaries = std::move(other.dirichlet_boundaries);
     newmann_boundaries = std::move(other.newmann_boundaries);
   }
@@ -52,18 +52,18 @@ class BoundariesUtility {
    * @return A constant reference to a vector containing Dirichlet boundary
    * tags.
    */
-  const std::vector<unsigned int>& get_dirichlet_boundaries_tags() const {
+  const std::vector<unsigned int> &get_dirichlet_boundaries_tags() const {
     return dirichlet_boundaries;
   }
   /**
    * @brief Get the Newmann boundary tags.
    * @return A constant reference to a vector containing Newmann boundary tags.
    */
-  const std::vector<unsigned int>& get_newmann_boundaries_tags() const {
+  const std::vector<unsigned int> &get_newmann_boundaries_tags() const {
     return newmann_boundaries;
   }
 
- protected:
+protected:
   std::vector<unsigned int>
       dirichlet_boundaries; /**< Vector to store Dirichlet boundary tags. */
   std::vector<unsigned int>
@@ -76,17 +76,17 @@ class BoundariesUtility {
  * @param out The output stream.
  * @param bu The BoundaryUtility object.
  */
-inline void operator<<(std::ostream& out, BoundariesUtility const& bu) {
+inline void operator<<(std::ostream &out, BoundariesUtility const &bu) {
   out << "  Dirichlet tags: ";
-  for (auto& t : bu.get_dirichlet_boundaries_tags()) {
+  for (auto &t : bu.get_dirichlet_boundaries_tags()) {
     out << t << " ";
   }
   out << std::endl;
   out << "  Newmann tags: ";
-  for (auto& t : bu.get_newmann_boundaries_tags()) {
+  for (auto &t : bu.get_newmann_boundaries_tags()) {
     out << t << " ";
   }
   out << std::endl;
 }
 
-#endif  // BOUNDARIES_UTILITY_HPP
+#endif // BOUNDARIES_UTILITY_HPP

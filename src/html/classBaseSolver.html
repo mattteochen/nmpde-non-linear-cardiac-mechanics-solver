@@ -73,7 +73,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor based problems.  
+<p>Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (<a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">https://pubmed.ncbi.nlm.nih.gov/8550635/</a>).  
  <a href="classBaseSolver.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="BaseSolver_8hpp_source.html">BaseSolver.hpp</a>&gt;</code></p>
@@ -82,9 +82,9 @@ Inheritance diagram for BaseSolver&lt; dim, Scalar &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBaseSolver__inherit__graph.png" border="0" usemap="#BaseSolver_3_01dim_00_01Scalar_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="BaseSolver_3_01dim_00_01Scalar_01_4_inherit__map" id="BaseSolver_3_01dim_00_01Scalar_01_4_inherit__map">
-<area shape="rect" title="Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor..." alt="" coords="115,5,313,32"/>
-<area shape="rect" href="classIdealizedLV.html" title="Class representing the an Idealized LV solver." alt="" coords="5,80,204,107"/>
-<area shape="rect" href="classSlabCubic.html" title="Class representing the Slab Cubic solver." alt="" coords="229,80,418,107"/>
+<area shape="rect" title="Abstract class representing a base solver for non linear cardiac mechanics by using the transversely ..." alt="" coords="115,5,313,32"/>
+<area shape="rect" href="classIdealizedLV.html" title="Class representing the an Idealized LV solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="5,80,204,107"/>
+<area shape="rect" href="classSlabCubic.html" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="229,80,418,107"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -92,7 +92,7 @@ Collaboration diagram for BaseSolver&lt; dim, Scalar &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBaseSolver__coll__graph.png" border="0" usemap="#BaseSolver_3_01dim_00_01Scalar_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="BaseSolver_3_01dim_00_01Scalar_01_4_coll__map" id="BaseSolver_3_01dim_00_01Scalar_01_4_coll__map">
-<area shape="rect" title="Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor..." alt="" coords="595,97,793,124"/>
+<area shape="rect" title="Abstract class representing a base solver for non linear cardiac mechanics by using the transversely ..." alt="" coords="595,97,793,124"/>
 <area shape="rect" href="classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="227,5,361,32"/>
 <area shape="rect" href="classNewtonSolverUtility.html" title=" " alt="" coords="217,57,371,98"/>
 <area shape="rect" href="classLinearSolverUtility.html" title=" " alt="" coords="223,122,365,163"/>
@@ -107,10 +107,10 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class representing the applied pressure component.  <a href="classBaseSolver_1_1ConstantPressureFunction.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html">ExponentQ</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class representing the exponent Q.  <a href="classBaseSolver_1_1ExponentQ.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class representing the exponent Q. This parameter is used by the construction of the strain energy function: <a href="https://pubmed.ncbi.nlm.nih.gov/26807042/">https://pubmed.ncbi.nlm.nih.gov/26807042/</a>.  <a href="classBaseSolver_1_1ExponentQ.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBaseSolver_1_1Material.html">Material</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structBaseSolver_1_1Material.html" title="Material related parameters.">Material</a> related parameters.  <a href="structBaseSolver_1_1Material.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structBaseSolver_1_1Material.html" title="Material related parameters. Reference papaer: https://pubmed.ncbi.nlm.nih.gov/26807042/.">Material</a> related parameters. Reference papaer: <a href="https://pubmed.ncbi.nlm.nih.gov/26807042/">https://pubmed.ncbi.nlm.nih.gov/26807042/</a>.  <a href="structBaseSolver_1_1Material.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -130,25 +130,25 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memdesc:aaf5ef630e0939bf3bd3c921da641d5b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for abstract class. <br /></td></tr>
 <tr class="separator:aaf5ef630e0939bf3bd3c921da641d5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a727a6637ad911ae0e85d4b072f8e08f9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a727a6637ad911ae0e85d4b072f8e08f9">setup</a> ()</td></tr>
-<tr class="memdesc:a727a6637ad911ae0e85d4b072f8e08f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup the problem mesh and data structures.  <a href="classBaseSolver.html#a727a6637ad911ae0e85d4b072f8e08f9">More...</a><br /></td></tr>
+<tr class="memdesc:a727a6637ad911ae0e85d4b072f8e08f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  <a href="classBaseSolver.html#a727a6637ad911ae0e85d4b072f8e08f9">More...</a><br /></td></tr>
 <tr class="separator:a727a6637ad911ae0e85d4b072f8e08f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">solve_newton</a> ()</td></tr>
-<tr class="memdesc:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a single Newton method iteration.  <a href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">More...</a><br /></td></tr>
+<tr class="memdesc:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the non linear problem using the Newton method.  <a href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">More...</a><br /></td></tr>
 <tr class="separator:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa463430a542ce8497c4d755245da4b7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">output</a> () const</td></tr>
-<tr class="memdesc:aa463430a542ce8497c4d755245da4b7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Output the problem.  <a href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">More...</a><br /></td></tr>
+<tr class="memdesc:aa463430a542ce8497c4d755245da4b7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the output.  <a href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">More...</a><br /></td></tr>
 <tr class="separator:aa463430a542ce8497c4d755245da4b7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:a7ac7bc7fcd68e6458b4c87ffcb700a6e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e">assemble_system</a> ()</td></tr>
-<tr class="memdesc:a7ac7bc7fcd68e6458b4c87ffcb700a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the algebraic problem.  <a href="classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e">More...</a><br /></td></tr>
+<tr class="memdesc:a7ac7bc7fcd68e6458b4c87ffcb700a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado: <a href="https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html">https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html</a>.  <a href="classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e">More...</a><br /></td></tr>
 <tr class="separator:a7ac7bc7fcd68e6458b4c87ffcb700a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee9eb50ca5ff8ce3d21ac6d758e8120b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aee9eb50ca5ff8ce3d21ac6d758e8120b">solve_system</a> ()</td></tr>
-<tr class="memdesc:aee9eb50ca5ff8ce3d21ac6d758e8120b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve a linear system for the Newton iteration.  <a href="classBaseSolver.html#aee9eb50ca5ff8ce3d21ac6d758e8120b">More...</a><br /></td></tr>
+<tr class="memdesc:aee9eb50ca5ff8ce3d21ac6d758e8120b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolver.html#aee9eb50ca5ff8ce3d21ac6d758e8120b">More...</a><br /></td></tr>
 <tr class="separator:aee9eb50ca5ff8ce3d21ac6d758e8120b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01a93460f997b586b4e983c050f9cec0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a01a93460f997b586b4e983c050f9cec0">parse_parameters</a> (const std::string &amp;parameters_file_name_)</td></tr>
-<tr class="memdesc:a01a93460f997b586b4e983c050f9cec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the configuration file.  <a href="classBaseSolver.html#a01a93460f997b586b4e983c050f9cec0">More...</a><br /></td></tr>
+<tr class="memdesc:a01a93460f997b586b4e983c050f9cec0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the parameter input.  <a href="classBaseSolver.html#a01a93460f997b586b4e983c050f9cec0">More...</a><br /></td></tr>
 <tr class="separator:a01a93460f997b586b4e983c050f9cec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
@@ -210,7 +210,7 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;int dim, typename Scalar = double&gt;<br />
 class BaseSolver&lt; dim, Scalar &gt;</h3>
 
-<p>Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor based problems. </p>
+<p>Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (<a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">https://pubmed.ncbi.nlm.nih.gov/8550635/</a>). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">dim</td><td>The problem dimension </td></tr>
@@ -296,8 +296,14 @@ template&lt;int dim, typename Scalar &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Assemble the algebraic problem. </p>
 <p>Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado: <a href="https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html">https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html</a>. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -352,8 +358,14 @@ template&lt;int dim, typename Scalar &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Output the problem. </p>
 <p>Write the output. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -383,11 +395,16 @@ template&lt;int dim, typename Scalar &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Parse the configuration file. </p>
-<p>Parse the parameter input.</p>
+<p>Parse the parameter input. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parameters_file_name_</td><td>The input parameter file name</td></tr>
     <tr><td class="paramname">parameters_file_name_</td><td>The input configuration parameter file name </td></tr>
   </table>
   </dd>
@@ -409,8 +426,14 @@ template&lt;int dim, typename Scalar &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Setup the problem mesh and data structures. </p>
 <p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -428,8 +451,14 @@ template&lt;int dim, typename Scalar &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Solve a single Newton method iteration. </p>
 <p>Solve the non linear problem using the Newton method. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -455,8 +484,14 @@ template&lt;int dim, typename Scalar &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Solve a linear system for the Newton iteration. </p>
-<p>Solve the linear system using GMRES. </p>
+<p>Solve the linear system. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

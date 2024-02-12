@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['idealizedlv_93',['IdealizedLV',['../classIdealizedLV.html',1,'']]]
+  ['idealizedlv_94',['IdealizedLV',['../classIdealizedLV.html',1,'']]]
 ];

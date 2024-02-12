@@ -74,44 +74,39 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifndef IDEALIZED_LV_HPP</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define IDEALIZED_LV_HPP</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="BaseSolver_8hpp.html">BaseSolver.hpp</a>&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;transversely_isotropic_constructive_law/BaseSolver.hpp&gt;</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">template</span> &lt;<span class="keywordtype">int</span> dim, <span class="keyword">typename</span> Scalar&gt;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classIdealizedLV.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classIdealizedLV.html">IdealizedLV</a> : <span class="keyword">public</span> <a class="code" href="classBaseSolver.html">BaseSolver</a>&lt;dim, Scalar&gt; {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keyword">using</span> <a class="code" href="classBaseSolver.html">Base</a> = <a class="code" href="classBaseSolver.html">BaseSolver&lt;dim, Scalar&gt;</a>;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classIdealizedLV.html#a1ca0adf4de4ce10ea9e20b4367e2ea55">   28</a></span>&#160;  <a class="code" href="classIdealizedLV.html#a1ca0adf4de4ce10ea9e20b4367e2ea55">IdealizedLV</a>(<span class="keyword">const</span> std::string &amp;parameters_file_name_,</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            <span class="keyword">const</span> std::string &amp;mesh_file_name_,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <span class="keyword">const</span> std::string &amp;problem_name_)</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;      : <a class="code" href="classBaseSolver.html">Base</a>(parameters_file_name_, mesh_file_name_, problem_name_) {}</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classIdealizedLV.html#a03935c261c52487e95d10da7dc0409ea">   35</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classIdealizedLV.html#a03935c261c52487e95d10da7dc0409ea">initialise_boundaries_tag</a>()<span class="keyword"> override </span>{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">//  Set Newmann boundary faces</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; t : <a class="code" href="classBaseSolver.html#a8d29ea8fb40c04a3a1e251bd5da3c73c">Base::boundaries_utility</a>.get_newmann_boundaries_tags()) {</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      <a class="code" href="classBaseSolver.html#a50bb89e84a23ec0c4bd181f8c63c745e">Base::newmann_boundary_faces</a>.insert(t);</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="comment">// Set Dirichlet boundary faces</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; t : <a class="code" href="classBaseSolver.html#a8d29ea8fb40c04a3a1e251bd5da3c73c">Base::boundaries_utility</a>.get_dirichlet_boundaries_tags()) {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <a class="code" href="classBaseSolver.html#add973afcdc2c7ba1a1deb22adf6c4519">Base::dirichlet_boundary_functions</a>[t] = &amp;<a class="code" href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">zero_function</a>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">   45</a></span>&#160;  };</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  dealii::Functions::ZeroFunction&lt;dim&gt; <a class="code" href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">zero_function</a>;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;};</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#endif  // IDEALIZED_LV_HPP</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">template</span> &lt;<span class="keywordtype">int</span> dim, <span class="keyword">typename</span> Scalar&gt;</div>
+<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="classIdealizedLV.html">   16</a></span>&#160;<span class="keyword">class </span><a class="code" href="classIdealizedLV.html">IdealizedLV</a> : <span class="keyword">public</span> BaseSolver&lt;dim, Scalar&gt; {</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keyword">using</span> Base = BaseSolver&lt;dim, Scalar&gt;;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="classIdealizedLV.html#a1ca0adf4de4ce10ea9e20b4367e2ea55">   29</a></span>&#160;  <a class="code" href="classIdealizedLV.html#a1ca0adf4de4ce10ea9e20b4367e2ea55">IdealizedLV</a>(<span class="keyword">const</span> std::string &amp;parameters_file_name_,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;              <span class="keyword">const</span> std::string &amp;mesh_file_name_,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;              <span class="keyword">const</span> std::string &amp;problem_name_)</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classIdealizedLV.html#a03935c261c52487e95d10da7dc0409ea">   37</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="classIdealizedLV.html#a03935c261c52487e95d10da7dc0409ea">initialise_boundaries_tag</a>()<span class="keyword"> override </span>{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="comment">//  Set Newmann boundary faces</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;t : Base::boundaries_utility.get_newmann_boundaries_tags()) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      Base::newmann_boundary_faces.insert(t);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    }</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="comment">// Set Dirichlet boundary faces</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;t : Base::boundaries_utility.get_dirichlet_boundaries_tags()) {</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      Base::dirichlet_boundary_functions[t] = &amp;<a class="code" href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">zero_function</a>;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">   47</a></span>&#160;  };</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  dealii::Functions::ZeroFunction&lt;dim&gt; <a class="code" href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">zero_function</a>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;};</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#endif // IDEALIZED_LV_HPP</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassBaseSolver_html_a8d29ea8fb40c04a3a1e251bd5da3c73c"><div class="ttname"><a href="classBaseSolver.html#a8d29ea8fb40c04a3a1e251bd5da3c73c">BaseSolver::boundaries_utility</a></div><div class="ttdeci">BoundariesUtility boundaries_utility</div><div class="ttdef"><b>Definition:</b> BaseSolver.hpp:333</div></div>
-<div class="ttc" id="aclassBaseSolver_html_a50bb89e84a23ec0c4bd181f8c63c745e"><div class="ttname"><a href="classBaseSolver.html#a50bb89e84a23ec0c4bd181f8c63c745e">BaseSolver::newmann_boundary_faces</a></div><div class="ttdeci">std::set&lt; unsigned int &gt; newmann_boundary_faces</div><div class="ttdef"><b>Definition:</b> BaseSolver.hpp:248</div></div>
-<div class="ttc" id="aclassIdealizedLV_html_a2358de846a9d987d6ce09f0d72bc6022"><div class="ttname"><a href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">IdealizedLV::zero_function</a></div><div class="ttdeci">dealii::Functions::ZeroFunction&lt; dim &gt; zero_function</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:45</div></div>
-<div class="ttc" id="aclassIdealizedLV_html_a1ca0adf4de4ce10ea9e20b4367e2ea55"><div class="ttname"><a href="classIdealizedLV.html#a1ca0adf4de4ce10ea9e20b4367e2ea55">IdealizedLV::IdealizedLV</a></div><div class="ttdeci">IdealizedLV(const std::string &amp;parameters_file_name_, const std::string &amp;mesh_file_name_, const std::string &amp;problem_name_)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:28</div></div>
-<div class="ttc" id="aBaseSolver_8hpp_html"><div class="ttname"><a href="BaseSolver_8hpp.html">BaseSolver.hpp</a></div><div class="ttdoc">Header file defining the abstract base solver class.</div></div>
-<div class="ttc" id="aclassBaseSolver_html"><div class="ttname"><a href="classBaseSolver.html">BaseSolver</a></div><div class="ttdoc">Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor...</div><div class="ttdef"><b>Definition:</b> BaseSolver.hpp:56</div></div>
-<div class="ttc" id="aclassIdealizedLV_html"><div class="ttname"><a href="classIdealizedLV.html">IdealizedLV</a></div><div class="ttdoc">Class representing the an Idealized LV solver.</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:15</div></div>
-<div class="ttc" id="aclassBaseSolver_html_add973afcdc2c7ba1a1deb22adf6c4519"><div class="ttname"><a href="classBaseSolver.html#add973afcdc2c7ba1a1deb22adf6c4519">BaseSolver::dirichlet_boundary_functions</a></div><div class="ttdeci">std::map&lt; types::boundary_id, const Function&lt; dim &gt; * &gt; dirichlet_boundary_functions</div><div class="ttdef"><b>Definition:</b> BaseSolver.hpp:253</div></div>
-<div class="ttc" id="aclassIdealizedLV_html_a03935c261c52487e95d10da7dc0409ea"><div class="ttname"><a href="classIdealizedLV.html#a03935c261c52487e95d10da7dc0409ea">IdealizedLV::initialise_boundaries_tag</a></div><div class="ttdeci">void initialise_boundaries_tag() override</div><div class="ttdoc">Initialise boundaries tag. Boundaries are problem specific hence we override the base virtual impleme...</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:35</div></div>
+<div class="ttc" id="aclassIdealizedLV_html_a2358de846a9d987d6ce09f0d72bc6022"><div class="ttname"><a href="classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022">IdealizedLV::zero_function</a></div><div class="ttdeci">dealii::Functions::ZeroFunction&lt; dim &gt; zero_function</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:47</div></div>
+<div class="ttc" id="aclassIdealizedLV_html_a1ca0adf4de4ce10ea9e20b4367e2ea55"><div class="ttname"><a href="classIdealizedLV.html#a1ca0adf4de4ce10ea9e20b4367e2ea55">IdealizedLV::IdealizedLV</a></div><div class="ttdeci">IdealizedLV(const std::string &amp;parameters_file_name_, const std::string &amp;mesh_file_name_, const std::string &amp;problem_name_)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:29</div></div>
+<div class="ttc" id="aclassIdealizedLV_html"><div class="ttname"><a href="classIdealizedLV.html">IdealizedLV</a></div><div class="ttdoc">Class representing the an Idealized LV solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:16</div></div>
+<div class="ttc" id="aclassIdealizedLV_html_a03935c261c52487e95d10da7dc0409ea"><div class="ttname"><a href="classIdealizedLV.html#a03935c261c52487e95d10da7dc0409ea">IdealizedLV::initialise_boundaries_tag</a></div><div class="ttdeci">void initialise_boundaries_tag() override</div><div class="ttdoc">Initialise boundaries tag. Boundaries are problem specific hence we override the base virtual impleme...</div><div class="ttdef"><b>Definition:</b> IdealizedLV.hpp:37</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

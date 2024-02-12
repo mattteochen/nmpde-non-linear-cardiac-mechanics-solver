@@ -6,10 +6,11 @@
 #ifndef SLAB_CUBIC_HPP
 #define SLAB_CUBIC_HPP
 
-#include <BaseSolver.hpp>
+#include <transversely_isotropic_constructive_law/BaseSolver.hpp>
 
 /**
  * @brief Class representing the Slab Cubic solver
+ * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
 class SlabCubic : public BaseSolver<dim, Scalar> {
@@ -18,7 +19,7 @@ class SlabCubic : public BaseSolver<dim, Scalar> {
    */
   using Base = BaseSolver<dim, Scalar>;
 
- public:
+public:
   /**
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
@@ -45,11 +46,11 @@ class SlabCubic : public BaseSolver<dim, Scalar> {
     }
   };
 
- protected:
+protected:
   /**
    * Utility zero function for Dirichilet boundary
    */
   dealii::Functions::ZeroFunction<dim> zero_function;
 };
 
-#endif  // SLAB_CUBIC_HPP
+#endif // SLAB_CUBIC_HPP

@@ -4,9 +4,9 @@ project(SlabCubic LANGUAGES CXX C)
 include(../../../common/cmake-common.cmake)
 
 include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../lib/
   ${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
-add_executable(main main.cpp ../../lib/BaseSolver.cpp)
+add_executable(main main.cpp ../../lib/transversely_isotropic_constructive_law/BaseSolver.cpp)
 deal_ii_setup_target(main)

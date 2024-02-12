@@ -68,30 +68,133 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p>Add into blah blah....</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Codebase</h1>
-<p>An abstract base solver class <code><a class="el" href="classBaseSolver.html" title="Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor...">BaseSolver</a></code> has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.</p>
-<p>The base class takes in account a pressure component that pushes on <code>x</code> boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please <em><b>override</b></em> all the needed implementations (this might the <code>assemble</code> method).</p>
+Constructive law: transversely isotropic constitutive law</h1>
+<p>This section covers the finite element solver for materials that follow the <a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">transversely isotropic constitutive law</a>.</p>
+<p>An abstract base solver class <code>BaseSolver</code> has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.</p>
+<p>The base class takes in account a pressure component that pushes on <em><b>x</b></em> boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please <em><b>override</b></em> all the needed implementations (this might the <code>assemble</code> method).</p>
 <p>Dirichlet boundaries condition values are assigned in the derived class.</p>
-<p>The application control point lives in the <a href="https://www.dealii.org/current/doxygen/deal.II/classParameterHandler.html"><code>parameters.prm</code></a> configuration file.</p>
-<p><code><a class="el" href="classBaseSolver.html" title="Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor...">BaseSolver</a></code>'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions (see <code><a class="el" href="classSlabCubic.html" title="Class representing the Slab Cubic solver.">SlabCubic</a></code> or <code><a class="el" href="classIdealizedLV.html" title="Class representing the an Idealized LV solver.">IdealizedLV</a></code>).</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
-Non Linear Solver</h1>
+<p><code>BaseSolver</code>'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions: </p><div class="fragment"><div class="line">#ifndef DEMO_HPP</div>
+<div class="line">#define DEMO_HPP</div>
+<div class="line"> </div>
+<div class="line">#include &lt;BaseSolver.hpp&gt;</div>
+<div class="line"> </div>
+<div class="line">template &lt;int dim, typename Scalar&gt;</div>
+<div class="line">class Demo : public BaseSolver&lt;dim, Scalar&gt; {</div>
+<div class="line">  using Base = BaseSolver&lt;dim, Scalar&gt;;</div>
+<div class="line">public:</div>
+<div class="line">  Demo(const std::string &amp;parameters_file_name_,</div>
+<div class="line">            const std::string &amp;mesh_file_name_,</div>
+<div class="line">            const std::string &amp;problem_name_)</div>
+<div class="line">      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}</div>
+<div class="line"> </div>
+<div class="line">  void initialise_boundaries_tag() override {</div>
+<div class="line">    //  Set Newmann boundary faces</div>
+<div class="line">    for (auto &amp;t : Base::boundaries_utility.get_newmann_boundaries_tags()) {</div>
+<div class="line">      Base::newmann_boundary_faces.insert(t);</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    // Set Dirichlet boundary faces</div>
+<div class="line">    for (auto &amp;t : Base::boundaries_utility.get_dirichlet_boundaries_tags()) {</div>
+<div class="line">      Base::dirichlet_boundary_functions[t] = &amp;zero_function;</div>
+<div class="line">    }</div>
+<div class="line">  };</div>
+<div class="line"> </div>
+<div class="line"> protected:</div>
+<div class="line">  dealii::Functions::ZeroFunction&lt;dim&gt; zero_function;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line">#endif  // DEMO_HPP</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md2"></a>
+Non Linear Solver</h2>
 <p>As the cardiac problem is non linear, we have employed the <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton method</a>. The Jacobian matrix has been created by using <code>dealii</code> built-in <a href="https://www.dealii.org/current/doxygen/deal.II/group__auto__symb__diff.html">AD</a> packages.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
-Linear Solver</h1>
-<p>Currently the following <em><b>iterative solvers</b></em> are supported in order to solve a single Newton iteration: [x] GMRES [x] BiCGSTAB [] CG</p>
-<p><em><b>Preconditioners</b></em> available: [x] SSOR</p>
-<h1><a class="anchor" id="autotoc_md4"></a>
-Configuration file</h1>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Linear Solver</h2>
+<p>Currently the following <em><b>iterative solvers</b></em> are supported in order to solve a single Newton iteration:</p><ul>
+<li>[x] GMRES</li>
+<li>[x] BiCGSTAB</li>
+<li>[] CG</li>
+</ul>
+<p><em><b>Preconditioners</b></em> available:</p><ul>
+<li>[x] SSOR</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Configuration file</h2>
 <p>The single entry point for all run time and application specific parameters can be specified inside a configuration file called <code>your_config_name.prm</code>.</p>
+<p>Changes can be tested without recompilation if they can be modified through the configuration file.</p>
+<p>A mock configuration file: </p><div class="fragment"><div class="line">subsection LinearSolver</div>
+<div class="line">  # Type of solver used to solve the linear system</div>
+<div class="line">  set SolverType                = BiCGSTAB</div>
+<div class="line"> </div>
+<div class="line">  # Linear solver residual (scaled by residual norm)</div>
+<div class="line">  set Residual                  = 1e-6</div>
+<div class="line"> </div>
+<div class="line">  # Linear solver iterations multiplier (to be multiplied to matrix size)</div>
+<div class="line">  set MaxIteration              = 1.0</div>
+<div class="line"> </div>
+<div class="line">  # Preconditioner type</div>
+<div class="line">  set PreconditionerType        = SSOR</div>
+<div class="line">end</div>
+<div class="line"> </div>
+<div class="line">subsection PolynomialDegree</div>
+<div class="line">  # Degree of the polynomial for finite elements</div>
+<div class="line">  set Degree                    = 1</div>
+<div class="line">end</div>
+<div class="line"> </div>
+<div class="line">subsection NewtonMethod</div>
+<div class="line">  # Newton method residual</div>
+<div class="line">  set Residual                  = 1e-6</div>
+<div class="line"> </div>
+<div class="line">  # Newton method max iterations</div>
+<div class="line">  set MaxIterations             = 100</div>
+<div class="line">end</div>
+<div class="line"> </div>
+<div class="line">subsection Material</div>
+<div class="line">  # b_f value of the strain energy tensor</div>
+<div class="line">  set b_f                       = 8.0</div>
+<div class="line"> </div>
+<div class="line">  # b_t value of the strain energy tensor</div>
+<div class="line">  set b_t                       = 2.0</div>
+<div class="line"> </div>
+<div class="line">  # b_fs value of the strain energy tensor</div>
+<div class="line">  set b_fs                       = 4.0</div>
+<div class="line"> </div>
+<div class="line">  # C value of the strain energy tensor</div>
+<div class="line">  set C                          = 2000.0</div>
+<div class="line">end</div>
+<div class="line"> </div>
+<div class="line">subsection Boundaries</div>
+<div class="line">  # Dirichlet boundaries tags</div>
+<div class="line">  set Dirichlet                  = 40</div>
+<div class="line"> </div>
+<div class="line">  # Newmann boundaries tags</div>
+<div class="line">  set Newmann                    = 60</div>
+<div class="line">end</div>
+<div class="line"> </div>
+<div class="line">subsection Pressure</div>
+<div class="line">  # External pressure value</div>
+<div class="line">  set Value                      = 4.0</div>
+<div class="line">end</div>
+</div><!-- fragment --><p><b>Please be sure to add every subsection shown above as for missing sections, the program sets a default value that may lead to undefined results</b>.</p>
 <h1><a class="anchor" id="autotoc_md5"></a>
+Enviroenment</h1>
+<p>This project is dependent on several c++ packages as:</p><ul>
+<li><a href="https://www.dealii.org/current/doxygen/deal.II/">dealii</a> &gt;= v9.0</li>
+<li><a href="https://www.open-mpi.org/">MPI</a> &gt;= v3.1</li>
+<li><a href="https://www.boost.org/">BOOST</a> &gt;= v1.76.0</li>
+</ul>
+<p>To ease the configuration, a scientific docker enviroenment can be found <a href="https://hub.docker.com/r/pcafrica/mk">here</a>.</p>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Compiling</h1>
+<p>The following commands are dedicated for enviroenment with <code>mk</code> modules installed.</p>
 <p>To build the executable, make sure you have loaded the needed modules with </p><div class="fragment"><div class="line">$ module load gcc-glibc dealii</div>
 </div><!-- fragment --><p>Then run the following commands: </p><div class="fragment"><div class="line">$ mkdir build</div>
 <div class="line">$ cd build</div>
 <div class="line">$ cmake ..</div>
 <div class="line">$ make</div>
 </div><!-- fragment --><p>The executable will be created into <code>build</code>, and can be executed through </p><div class="fragment"><div class="line">$ mpirun -n x executable_name</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
+Formatting</h1>
+<p>All the source files are formatted by using <code>clang-format</code> with <code>LLVM</code> coding style. </p><div class="fragment"><div class="line">clang-format -i -style=LLVM --sort-includes your_file</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
