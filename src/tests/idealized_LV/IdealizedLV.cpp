@@ -1,4 +1,5 @@
 #include "IdealizedLV.hpp"
+
 #include <deal.II/lac/solver_bicgstab.h>
 
 /**

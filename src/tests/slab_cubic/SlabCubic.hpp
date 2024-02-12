@@ -1,13 +1,21 @@
+/**
+ * @file SlabCubic.hpp
+ * @brief Header file defining the slab cubic solver class.
+ */
+
 #ifndef SLAB_CUBIC_HPP
 #define SLAB_CUBIC_HPP
 
-#include "../../BaseSolver.hpp"
+#include <BaseSolver.hpp>
 
 /**
  * @class Class representing the Slab Cubic solver
  */
 template <int dim, typename Scalar>
 class SlabCubic : public BaseSolver<dim, Scalar> {
+  /**
+   * Alias for base class
+   */
   using Base = BaseSolver<dim, Scalar>;
 
  public:
@@ -15,13 +23,12 @@ class SlabCubic : public BaseSolver<dim, Scalar> {
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
    * @param mesh_file_name_ The mesh file name
-   * @param r_ The polynomial degree
    * @param problem_name_ The problem name
    */
   SlabCubic(const std::string &parameters_file_name_,
-            const std::string &mesh_file_name_, const unsigned int &r_,
+            const std::string &mesh_file_name_,
             const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, r_, problem_name_) {}
+      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}
   /**
    * @brief Initialise boundaries tag
    */

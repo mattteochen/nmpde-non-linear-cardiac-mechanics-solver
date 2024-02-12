@@ -1,10 +1,16 @@
-#include "BaseSolver.hpp"
-
-#include "LinearSolverUtility.hpp"
-
 /**
- * @brief Setup the problem by loading the mesh, creating the finite element and
- * initialising the linear system.
+ * @file BaseSolver.cpp
+ * @brief Implementation file for the base solver class.
+ */
+
+#include <deal.II/base/patterns.h>
+
+#include <BaseSolver.hpp>
+#include <LinearSolverUtility.hpp>
+#include <NewtonSolverUtility.hpp>
+
+/** @brief Setup the problem by loading the mesh, creating the finite element
+ * and initialising the linear system.
  */
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::setup() {
@@ -204,19 +210,20 @@ void BaseSolver<dim, Scalar>::assemble_system() {
       // Loop over quadrature points
       for (unsigned int q = 0; q < n_q; ++q) {
         // Compute deformation gradient tensor
-        auto F = Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
+        const auto F =
+            Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
         // Compute green Lagrange tensor
-        auto E = Physics::Elasticity::Kinematics::E(F);
+        const auto E = Physics::Elasticity::Kinematics::E(F);
         // Compute exponent Q
         ExponentQ<ADNumberType> exponent_q;
-        exponent_q.compute(E);
+        const auto exp_q = exponent_q.compute(E);
         // Compute Piola Kirchhoff tensor
         Tensor<2, dim, ADNumberType> piola_kirchhoff;
         for (uint32_t i = 0; i < dim; ++i) {
           for (uint32_t j = 0; j < dim; ++j) {
             piola_kirchhoff[i][j] = Material::C *
                                     piola_kirchhoff_b_weights[{i, j}] *
-                                    E[i][j] * std::exp(exponent_q.get_q());
+                                    E[i][j] * std::exp(exp_q);
           }
         }
         // Compute the integration weight
@@ -244,16 +251,14 @@ void BaseSolver<dim, Scalar>::assemble_system() {
             for (unsigned int q = 0; q < n_face_q; ++q) {
               // Compute deformation gradient tensor
               // TODO: maybe cache this (is 3x3 for now)
-              auto F =
+              const auto F =
                   Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
               // Compute determinant of F
-              auto det_F = determinant(F);
-              // Compute F^T
-              auto F_T = transpose(F);
+              const auto det_F = determinant(F);
               // Compute (F^T)^{-1}
-              auto F_T_inverse = invert(F_T);
+              const auto F_T_inverse = invert(transpose(F));
               // Compute H_h (tensor)
-              auto H_h = det_F * F_T_inverse;
+              const auto H_h = det_F * F_T_inverse;
 
               for (unsigned int i = 0; i < dofs_per_cell; ++i) {
                 // Compose B_N(q)
@@ -324,23 +329,22 @@ template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::solve_newton() {
   pcout << "===============================================" << std::endl;
 
-  const unsigned int n_max_iters = 1000;
-  const double residual_tolerance = 1e-6;
-
   unsigned int n_iter = 0;
-  double residual_norm = residual_tolerance + 1;
+  double residual_norm = newton_solver_utility.get_tolerance() + 1;
 
-  while (n_iter < n_max_iters && residual_norm > residual_tolerance) {
+  while (n_iter < newton_solver_utility.get_max_iterations() &&
+         residual_norm > newton_solver_utility.get_tolerance()) {
     assemble_system();
     residual_norm = residual_vector.l2_norm();
 
-    pcout << "Newton iteration " << n_iter << "/" << n_max_iters
+    pcout << "Newton iteration " << n_iter << "/"
+          << newton_solver_utility.get_max_iterations()
           << " - ||r|| = " << std::scientific << std::setprecision(6)
           << residual_norm << std::flush;
 
     // We actually solve the system only if the residual is larger than the
     // tolerance.
-    if (residual_norm > residual_tolerance) {
+    if (residual_norm > newton_solver_utility.get_tolerance()) {
       solve_system();
 
       solution_owned += delta_owned;
@@ -413,6 +417,42 @@ void BaseSolver<dim, Scalar>::parse_parameters(
   }
   prm.leave_subsection();
 
+  // Add the polynomial degree subsection
+  prm.enter_subsection("PolynomialDegree");
+  {
+    prm.declare_entry("Degree", "1", Patterns::Integer(1),
+                      "Degree of the polynomial for finite elements");
+  }
+  prm.leave_subsection();
+
+  // Add the Newton method solver subsection
+  prm.enter_subsection("NewtonMethod");
+  {
+    prm.declare_entry("Residual", "1e-6", Patterns::Double(0.0),
+                      "Linear solver tolerance");
+
+    prm.declare_entry("MaxIterations", "1000", Patterns::Integer(0),
+                      "Degree of the polynomial for finite elements");
+  }
+  prm.leave_subsection();
+
+  // Add the material properties subsection
+  prm.enter_subsection("Material");
+  {
+    prm.declare_entry("b_f", "0.0", Patterns::Double(0.0),
+                      "b_f coefficient of the strain energy tensor");
+
+    prm.declare_entry("b_t", "0.0", Patterns::Double(0.0),
+                      "b_t coefficient of the strain energy tensor");
+
+    prm.declare_entry("b_fs", "0.0", Patterns::Double(0.0),
+                      "b_fs coefficient of the strain energy tensor");
+
+    prm.declare_entry("C", "0.0", Patterns::Double(0.0),
+                      "C coefficient of the strain energy tensor");
+  }
+  prm.leave_subsection();
+
   // Read input file
   prm.parse_input(parameters_file_name_);
   // prm.print_parameters(std::cout, ParameterHandler::OutputStyle::JSON);
@@ -430,6 +470,35 @@ void BaseSolver<dim, Scalar>::parse_parameters(
   pcout << "===============================================" << std::endl;
   pcout << "Linear solver configuration:" << std::endl;
   pcout << linear_solver_utility;
+
+  // Parse polynomial degree to class member
+  prm.enter_subsection("PolynomialDegree");
+  { r = prm.get_integer("Degree"); }
+  prm.leave_subsection();
+  pcout << "-----------------------------------------------" << std::endl;
+  pcout << "Polynomial configuration:" << std::endl;
+  pcout << "  Degree: " << r << std::endl;
+
+  // Parse Newton method subsection to the configuration object
+  prm.enter_subsection("NewtonMethod");
+  {
+    newton_solver_utility = NewtonSolverUtility<Scalar>(
+        prm.get_double("Residual"), prm.get_integer("MaxIterations"));
+  }
+  prm.leave_subsection();
+  pcout << "Newton method configuration:" << std::endl;
+  pcout << newton_solver_utility;
+  pcout << "-----------------------------------------------" << std::endl;
+
+  // Parse material subsection to the configuration struct
+  prm.enter_subsection("Material");
+  Material::b_f = prm.get_double("b_f");
+  Material::b_t = prm.get_double("b_t");
+  Material::b_fs = prm.get_double("b_fs");
+  Material::C = prm.get_double("C");
+  prm.leave_subsection();
+  pcout << "Material configuration:" << std::endl;
+  pcout << Material::show();
   pcout << "===============================================" << std::endl;
 }
 
