@@ -3,8 +3,10 @@ project(SlabCubic LANGUAGES CXX C)
 
 include(../../../common/cmake-common.cmake)
 
-add_executable(main main.cpp SlabCubic.cpp)
-deal_ii_setup_target(main)
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/
+)
 
-# add_executable(test dealii.cpp)
-# deal_ii_setup_target(test)
+add_executable(main main.cpp ../../lib/BaseSolver.cpp)
+deal_ii_setup_target(main)

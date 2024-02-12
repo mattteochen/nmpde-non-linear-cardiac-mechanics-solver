@@ -1,0 +1,35 @@
+Add into blah blah....\hypertarget{index_autotoc_md1}{}\doxysection{Codebase}\label{index_autotoc_md1}
+An abstract base solver class {\ttfamily \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}} has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
+
+The base class takes in account a pressure component that pushes on {\ttfamily x} boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please {\itshape {\bfseries{override}}} all the needed implementations (this might the {\ttfamily assemble} method).
+
+Dirichlet boundaries condition values are assigned in the derived class.
+
+The application control point lives in the \href{https://www.dealii.org/current/doxygen/deal.II/classParameterHandler.html}{\texttt{ {\ttfamily parameters.\+prm}}} configuration file.
+
+{\ttfamily \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}}\textquotesingle{}s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions (see {\ttfamily \mbox{\hyperlink{classSlabCubic}{Slab\+Cubic}}} or {\ttfamily \mbox{\hyperlink{classIdealizedLV}{Idealized\+LV}}}).\hypertarget{index_autotoc_md2}{}\doxysection{Non Linear Solver}\label{index_autotoc_md2}
+As the cardiac problem is non linear, we have employed the \href{https://en.wikipedia.org/wiki/Newton\%27s_method}{\texttt{ Newton method}}. The Jacobian matrix has been created by using {\ttfamily dealii} built-\/in \href{https://www.dealii.org/current/doxygen/deal.II/group__auto__symb__diff.html}{\texttt{ AD}} packages.\hypertarget{index_autotoc_md3}{}\doxysection{Linear Solver}\label{index_autotoc_md3}
+Currently the following {\itshape {\bfseries{iterative solvers}}} are supported in order to solve a single Newton iteration\+: \mbox{[}x\mbox{]} G\+M\+R\+ES \mbox{[}x\mbox{]} Bi\+C\+G\+S\+T\+AB \mbox{[}\mbox{]} CG
+
+{\itshape {\bfseries{Preconditioners}}} available\+: \mbox{[}x\mbox{]} S\+S\+OR\hypertarget{index_autotoc_md4}{}\doxysection{Configuration file}\label{index_autotoc_md4}
+The single entry point for all run time and application specific parameters can be specified inside a configuration file called {\ttfamily your\+\_\+config\+\_\+name.\+prm}.\hypertarget{index_autotoc_md5}{}\doxysection{Compiling}\label{index_autotoc_md5}
+To build the executable, make sure you have loaded the needed modules with 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ module load gcc-\/glibc dealii}
+\end{DoxyCode}
+
+
+Then run the following commands\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ mkdir build}
+\DoxyCodeLine{\$ cd build}
+\DoxyCodeLine{\$ cmake ..}
+\DoxyCodeLine{\$ make}
+\end{DoxyCode}
+
+
+The executable will be created into {\ttfamily build}, and can be executed through 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ mpirun -\/n x executable\_name}
+\end{DoxyCode}
+ 
