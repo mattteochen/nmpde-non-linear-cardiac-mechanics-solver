@@ -1,0 +1,117 @@
+\hypertarget{classBaseSolver_1_1ExponentQ}{}\doxysection{Base\+Solver$<$ dim, Scalar $>$\+::ExponentQ$<$ Number\+Type $>$ Class Template Reference}
+\label{classBaseSolver_1_1ExponentQ}\index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
+
+
+Class representing the exponent Q.  
+
+
+
+
+{\ttfamily \#include $<$Base\+Solver.\+hpp$>$}
+
+
+
+Inheritance diagram for Base\+Solver$<$ dim, Scalar $>$\+::ExponentQ$<$ Number\+Type $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=251pt]{classBaseSolver_1_1ExponentQ__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Base\+Solver$<$ dim, Scalar $>$\+::ExponentQ$<$ Number\+Type $>$\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=251pt]{classBaseSolver_1_1ExponentQ__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a5de9daa3b0cdaf004dea98f64c45835a}{get\+\_\+q}} ()
+\begin{DoxyCompactList}\small\item\em Retrieve the Q value. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Tensor\+Type $>$ }\\Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a9fc03a9e78ac1f25606c0b5794b895b0}{compute}} (Tensor\+Type const \&gst)
+\begin{DoxyCompactList}\small\item\em Evaluate the Q exponent at a given green Lagrange strain tensor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}{q}} = static\+\_\+cast$<$Scalar$>$(0)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$int dim, typename Scalar = double$>$\newline
+template$<$typename Number\+Type$>$\newline
+class Base\+Solver$<$ dim, Scalar $>$\+::\+Exponent\+Q$<$ Number\+Type $>$}
+
+Class representing the exponent Q. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Number\+Type} & The exponent scalar type \\
+\hline
+\end{DoxyTemplParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a9fc03a9e78ac1f25606c0b5794b895b0}\label{classBaseSolver_1_1ExponentQ_a9fc03a9e78ac1f25606c0b5794b895b0}} 
+\index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!compute@{compute}}
+\index{compute@{compute}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
+\doxysubsubsection{\texorpdfstring{compute()}{compute()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+template$<$typename Number\+Type $>$ \\
+template$<$typename Tensor\+Type $>$ \\
+Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::compute (\begin{DoxyParamCaption}\item[{Tensor\+Type const \&}]{gst }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Evaluate the Q exponent at a given green Lagrange strain tensor. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Tensor\+Type} & The specialised dealii\+:Tensor type representing the green Lagrange strain tensor \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em gst} & A green Lagrange strain tensor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The exponent q 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a5de9daa3b0cdaf004dea98f64c45835a}\label{classBaseSolver_1_1ExponentQ_a5de9daa3b0cdaf004dea98f64c45835a}} 
+\index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!get\_q@{get\_q}}
+\index{get\_q@{get\_q}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
+\doxysubsubsection{\texorpdfstring{get\_q()}{get\_q()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+template$<$typename Number\+Type $>$ \\
+Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::get\+\_\+q (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieve the Q value. 
+
+\begin{DoxyReturn}{Returns}
+The exponent q 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}\label{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}} 
+\index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!q@{q}}
+\index{q@{q}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
+\doxysubsubsection{\texorpdfstring{q}{q}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+template$<$typename Number\+Type $>$ \\
+Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::q = static\+\_\+cast$<$Scalar$>$(0)\hspace{0.3cm}{\ttfamily [protected]}}
+
+The values of the exponent 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\end{DoxyCompactItemize}

@@ -1,6 +1,6 @@
 subsection LinearSolver
   # Type of solver used to solve the linear system
-  set SolverType                = GMRES
+  set SolverType                = BiCGSTAB
 
   # Linear solver residual (scaled by residual norm)
   set Residual                  = 1e-6
@@ -36,5 +36,18 @@ subsection Material
   set b_fs                       = 4.0
 
   # C value of the strain energy tensor
-  set C                       = 2000.0
+  set C                          = 2000.0
+end
+
+subsection Boundaries
+  # Dirichlet boundaries tags
+  set Dirichlet                  = 40
+
+  # Newmann boundaries tags
+  set Newmann                    = 60
+end
+
+subsection Pressure
+  # External pressure value
+  set Value                      = 4.0
 end

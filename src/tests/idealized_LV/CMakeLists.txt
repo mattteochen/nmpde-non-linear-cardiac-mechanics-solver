@@ -3,5 +3,10 @@ project(IdealizedLV LANGUAGES CXX C)
 
 include(../../../common/cmake-common.cmake)
 
-add_executable(main main.cpp IdealizedLV.cpp)
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+  ${CMAKE_CURRENT_SOURCE_DIR}/
+)
+
+add_executable(main main.cpp ../../lib/BaseSolver.cpp)
 deal_ii_setup_target(main)

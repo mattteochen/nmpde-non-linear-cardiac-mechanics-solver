@@ -1,0 +1,53 @@
+subsection LinearSolver
+  # Type of solver used to solve the linear system
+  set SolverType                = BiCGSTAB
+
+  # Linear solver residual (scaled by residual norm)
+  set Residual                  = 1e-6
+
+  # Linear solver iterations multiplier (to be multiplied to matrix size)
+  set MaxIteration              = 1.0
+
+  # Preconditioner type
+  set PreconditionerType        = SSOR
+end
+
+subsection PolynomialDegree
+  # Degree of the polynomial for finite elements
+  set Degree                    = 1
+end
+
+subsection NewtonMethod
+  # Newton method residual
+  set Residual                  = 1e-6
+
+  # Newton method max iterations
+  set MaxIterations             = 100
+end
+
+subsection Material
+  # b_f value of the strain energy tensor
+  set b_f                       = 1.0
+
+  # b_t value of the strain energy tensor
+  set b_t                       = 1.0
+
+  # b_fs value of the strain energy tensor
+  set b_fs                       = 1.0
+
+  # C value of the strain energy tensor
+  set C                          = 10000.0
+end
+
+subsection Boundaries
+  # Dirichlet boundaries tags
+  set Dirichlet                  = 50
+
+  # Newmann boundaries tags
+  set Newmann                    = 20
+end
+
+subsection Pressure
+  # External pressure value
+  set Value                      = 4.0
+end
