@@ -1,8 +1,8 @@
 #ifndef BASESOLVER_HPP
 #define BASESOLVER_HPP
 
-#include "LinearSolverConfiguration.hpp"
 #include <deal.II/base/conditional_ostream.h>
+#include <deal.II/base/parameter_handler.h>
 #include <deal.II/base/point.h>
 #include <deal.II/base/quadrature_lib.h>
 #include <deal.II/base/symmetric_tensor.h>
@@ -20,7 +20,6 @@
 #include <deal.II/numerics/data_out.h>
 #include <deal.II/numerics/matrix_tools.h>
 #include <deal.II/numerics/vector_tools.h>
-#include <deal.II/base/parameter_handler.h>
 #if DEAL_II_VERSION_MAJOR >= 9 && defined(DEAL_II_WITH_TRILINOS)
 #include <deal.II/differentiation/ad.h>
 #define ENABLE_SACADO_FORMULATION
@@ -36,7 +35,7 @@
 #include <iostream>
 #include <map>
 
-#include "LinearSolverConfiguration.hpp"
+#include "LinearSolverUtility.hpp"
 
 using namespace dealii;
 
@@ -48,12 +47,22 @@ using namespace dealii;
  */
 template <int dim, typename Scalar = double>
 class BaseSolver {
-public:
+  /**
+   * Alias for the base preconditioner pointer
+   */
+  using Preconditioner = std::unique_ptr<TrilinosWrappers::PreconditionBase>;
+  /**
+   * Alias for the base linear solver pointer
+   */
+  using LinearSolver =
+      std::unique_ptr<SolverBase<TrilinosWrappers::MPI::Vector>>;
+
+ public:
   /**
    * Material related parameters
    */
   struct Material {
-    //TODO: use parameter handler
+    // TODO: use parameter handler
     static constexpr Scalar b_f = static_cast<Scalar>(8);
     static constexpr Scalar b_t = static_cast<Scalar>(2);
     static constexpr Scalar b_fs = static_cast<Scalar>(4);
@@ -71,7 +80,7 @@ public:
      */
     virtual double value(const Point<dim> & /*p*/,
                          const unsigned int /*component*/ = 0) const override {
-      //TODO: use parameter handler
+      // TODO: use parameter handler
       return 4.0;
     }
   };
@@ -79,7 +88,7 @@ public:
    * @class Class representing the exponent Q
    * @tparam NumberType The exponent scalar type
    */
-  template<typename NumberType>
+  template <typename NumberType>
   class ExponentQ : Function<dim> {
    protected:
     /**
@@ -92,9 +101,7 @@ public:
      * @brief Retrieve the Q value
      * @return The exponent q
      */
-    NumberType get_q() {
-      return q;
-    }
+    NumberType get_q() { return q; }
     /**
      * @brief Evaluate the Q exponent at a given green Lagrange strain tensor
      * @tparam TensorType The specialised dealii:Tensor type representing the
@@ -105,16 +112,17 @@ public:
     template <typename TensorType>
     NumberType compute(const TensorType &gst) {
       return q = Material::b_f * gst[0][0] * gst[0][0] +
-          Material::b_t *
-              (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
-               gst[1][2] * gst[1][2] + gst[2][1] * gst[2][1]) +
-          Material::b_fs *
-              (gst[0][1] * gst[0][1] + gst[1][0] * gst[1][0] +
-               gst[0][2] * gst[0][2] + gst[2][0] * gst[2][0]);
+                 Material::b_t *
+                     (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
+                      gst[1][2] * gst[1][2] + gst[2][1] * gst[2][1]) +
+                 Material::b_fs *
+                     (gst[0][1] * gst[0][1] + gst[1][0] * gst[1][0] +
+                      gst[0][2] * gst[0][2] + gst[2][0] * gst[2][0]);
     }
   };
   /**
-   * @brief Initialise boundaries tag. This must be implemented by the derived class
+   * @brief Initialise boundaries tag. This must be implemented by the derived
+   * class
    */
   virtual void initialise_boundaries_tag() = 0;
   /**
@@ -132,7 +140,9 @@ public:
    * @param r_ The polynomial degree
    * @param problem_name_ The problem name
    */
-  BaseSolver(const std::string& parameters_file_name_, const std::string &mesh_file_name_, const unsigned int &r_, const std::string& problem_name_)
+  BaseSolver(const std::string &parameters_file_name_,
+             const std::string &mesh_file_name_, const unsigned int &r_,
+             const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
         pcout(std::cout, mpi_rank == 0),
@@ -184,7 +194,7 @@ public:
    * @brief Parse the configuration file
    * @param parameters_file_name_ The input parameter file name
    */
-  void parse_parameters(const std::string& parameters_file_name_);
+  void parse_parameters(const std::string &parameters_file_name_);
   /**
    * MPI size
    */
@@ -273,15 +283,15 @@ public:
   /**
    * The problem name
    */
-  const std::string& problem_name;
+  const std::string &problem_name;
   /**
    * The problem parameter handler
    */
   ParameterHandler prm;
   /**
-   * The linear solver configuration
+   * The linear solver utiility
    */
-  LinearSolverConfiguration<Scalar> linear_solver_configuration;
+  LinearSolverUtility<Scalar> linear_solver_utility;
 };
 
-#endif //BASESOLVER_HPP
+#endif  // BASESOLVER_HPP

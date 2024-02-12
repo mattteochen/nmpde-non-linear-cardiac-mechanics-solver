@@ -1,10 +1,12 @@
 #include "BaseSolver.hpp"
 
+#include "LinearSolverUtility.hpp"
+
 /**
  * @brief Setup the problem by loading the mesh, creating the finite element and
  * initialising the linear system.
  */
-template<int dim, typename Scalar>
+template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::setup() {
   // Create the mesh.
   {
@@ -114,11 +116,11 @@ void BaseSolver<dim, Scalar>::setup() {
 }
 
 /**
- * @brief Assemble the system for a Newton iteration. The residual vector and Jacobian
- * matrix are evaluated leveraging automatic differentiation by Sacado:
+ * @brief Assemble the system for a Newton iteration. The residual vector and
+ * Jacobian matrix are evaluated leveraging automatic differentiation by Sacado:
  * https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html
  */
-template<int dim, typename Scalar>
+template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::assemble_system() {
   const unsigned int dofs_per_cell = fe->dofs_per_cell;
   const unsigned int n_q = quadrature->size();
@@ -146,7 +148,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
   constexpr Differentiation::AD::NumberTypes ADTypeCode =
       Differentiation::AD::NumberTypes::sacado_dfad_dfad;
 
-  for (const auto &cell : dof_handler.active_cell_iterators()) {
+  for (const auto& cell : dof_handler.active_cell_iterators()) {
     if (!cell->is_locally_owned()) continue;
 
     // Retrive the indipendent and dependent variables num
@@ -296,24 +298,29 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 /**
  * @brief Solve the linear system using GMRES
  */
-template<int dim, typename Scalar>
+template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::solve_system() {
-  SolverControl solver_control(1000, 1e-6 * residual_vector.l2_norm());
+  auto solver_control = linear_solver_utility.get_initialized_solver_control(
+      jacobian_matrix.m(), residual_vector.l2_norm());
 
-  SolverGMRES<TrilinosWrappers::MPI::Vector> solver(solver_control);
-  TrilinosWrappers::PreconditionSSOR preconditioner;
-  preconditioner.initialize(
-      jacobian_matrix, TrilinosWrappers::PreconditionSSOR::AdditionalData(1.0));
+  Preconditioner preconditioner;
+  LinearSolver solver;
 
-  solver.solve(jacobian_matrix, delta_owned, residual_vector, preconditioner);
-  pcout << "   " << solver_control.last_step() << " GMRES iterations"
-        << std::endl;
+  linear_solver_utility.initialize_solver(solver, solver_control);
+  linear_solver_utility.initialize_preconditioner(preconditioner,
+                                                  jacobian_matrix);
+  linear_solver_utility.solve(solver, jacobian_matrix, delta_owned,
+                              residual_vector, preconditioner);
+  pcout << "   " << solver_control.last_step() << " "
+        << LinearSolverUtility<Scalar>::solver_type_matcher_rev
+               [linear_solver_utility.get_solver_type()]
+        << " iterations" << std::endl;
 }
 
 /**
  * @brief Solve the non linear problem using the Newton method
  */
-template<int dim, typename Scalar>
+template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::solve_newton() {
   pcout << "===============================================" << std::endl;
 
@@ -351,7 +358,7 @@ void BaseSolver<dim, Scalar>::solve_newton() {
 /**
  * @brief Write the output
  */
-template<int dim, typename Scalar>
+template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::output() const {
   DataOut<dim> data_out;
 
@@ -386,25 +393,22 @@ void BaseSolver<dim, Scalar>::output() const {
  * @brief Parse the parameter input
  * @param parameters_file_name_ The input configuration parameter file name
  */
-template<int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::parse_parameters(const std::string& parameters_file_name_) {
+template <int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::parse_parameters(
+    const std::string& parameters_file_name_) {
   // Add the linear solver subsection
   prm.enter_subsection("LinearSolver");
   {
-    prm.declare_entry("SolverType", "GMRES",
-                      Patterns::Selection("GMRES"),
+    prm.declare_entry("SolverType", "GMRES", Patterns::Selection("GMRES"),
                       "Type of solver used to solve the linear system");
 
-    prm.declare_entry("Residual", "1e-6",
-                      Patterns::Double(0.0),
+    prm.declare_entry("Residual", "1e-6", Patterns::Double(0.0),
                       "Linear solver tolerance");
 
-    prm.declare_entry("MaxIteration", "1.0",
-                      Patterns::Double(0.0),
+    prm.declare_entry("MaxIteration", "1.0", Patterns::Double(0.0),
                       "Linear solver max iterations multiplier");
 
-    prm.declare_entry("PreconditionerType", "SSOR",
-                      Patterns::Selection("SSOR"),
+    prm.declare_entry("PreconditionerType", "SSOR", Patterns::Selection("SSOR"),
                       "Type of preconditioner");
   }
   prm.leave_subsection();
@@ -416,14 +420,17 @@ void BaseSolver<dim, Scalar>::parse_parameters(const std::string& parameters_fil
   // Parse linear solver subsection to the configuration object
   prm.enter_subsection("LinearSolver");
   {
-    linear_solver_configuration = LinearSolverConfiguration<Scalar>(
-      LinearSolverConfiguration<Scalar>::solver_type_matcher[prm.get("SolverType")],
-      LinearSolverConfiguration<Scalar>::preconditioner_type_matcher[prm.get("PreconditionerType")],
-      prm.get_double("Residual"),
-      prm.get_double("MaxIteration")
-    );
+    linear_solver_utility = LinearSolverUtility<Scalar>(
+        LinearSolverUtility<Scalar>::solver_type_matcher[prm.get("SolverType")],
+        LinearSolverUtility<Scalar>::preconditioner_type_matcher[prm.get(
+            "PreconditionerType")],
+        prm.get_double("Residual"), prm.get_double("MaxIteration"));
   }
   prm.leave_subsection();
+  pcout << "===============================================" << std::endl;
+  pcout << "Linear solver configuration:" << std::endl;
+  pcout << linear_solver_utility;
+  pcout << "===============================================" << std::endl;
 }
 
 // Explicit template initializations
