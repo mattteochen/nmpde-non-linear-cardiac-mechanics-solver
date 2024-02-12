@@ -6,10 +6,11 @@
 #ifndef IDEALIZED_LV_HPP
 #define IDEALIZED_LV_HPP
 
-#include <BaseSolver.hpp>
+#include <transversely_isotropic_constructive_law/BaseSolver.hpp>
 
 /**
  * @brief Class representing the an Idealized LV solver
+ * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
 class IdealizedLV : public BaseSolver<dim, Scalar> {
@@ -18,7 +19,7 @@ class IdealizedLV : public BaseSolver<dim, Scalar> {
    */
   using Base = BaseSolver<dim, Scalar>;
 
- public:
+public:
   /**
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
@@ -45,11 +46,11 @@ class IdealizedLV : public BaseSolver<dim, Scalar> {
     }
   };
 
- protected:
+protected:
   /**
    * Utility zero function for Dirichilet boundary
    */
   dealii::Functions::ZeroFunction<dim> zero_function;
 };
 
-#endif  // IDEALIZED_LV_HPP
+#endif // IDEALIZED_LV_HPP

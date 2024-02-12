@@ -5,16 +5,17 @@
 
 #include <deal.II/base/patterns.h>
 
-#include <BaseSolver.hpp>
-#include <BoundariesUtility.hpp>
-#include <LinearSolverUtility.hpp>
-#include <NewtonSolverUtility.hpp>
+#include <transversely_isotropic_constructive_law/BaseSolver.hpp>
+#include <transversely_isotropic_constructive_law/BoundariesUtility.hpp>
+#include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
+#include <transversely_isotropic_constructive_law/NewtonSolverUtility.hpp>
 
 /** @brief Setup the problem by loading the mesh, creating the finite element
  * and initialising the linear system.
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
  */
-template <int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::setup() {
+template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
   // Create the mesh.
   {
     pcout << "Initializing the mesh" << std::endl;
@@ -126,6 +127,8 @@ void BaseSolver<dim, Scalar>::setup() {
  * @brief Assemble the system for a Newton iteration. The residual vector and
  * Jacobian matrix are evaluated leveraging automatic differentiation by Sacado:
  * https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::assemble_system() {
@@ -155,8 +158,9 @@ void BaseSolver<dim, Scalar>::assemble_system() {
   constexpr Differentiation::AD::NumberTypes ADTypeCode =
       Differentiation::AD::NumberTypes::sacado_dfad_dfad;
 
-  for (const auto& cell : dof_handler.active_cell_iterators()) {
-    if (!cell->is_locally_owned()) continue;
+  for (const auto &cell : dof_handler.active_cell_iterators()) {
+    if (!cell->is_locally_owned())
+      continue;
 
     // Retrive the indipendent and dependent variables num
     // Setting them to dofs_per_cell as
@@ -236,7 +240,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
-              quadrature_integration_w;  // L(d)
+              quadrature_integration_w; // L(d)
         }
       }
       // Loop over quadrature points for Neumann boundaries conditions
@@ -302,7 +306,9 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 }
 
 /**
- * @brief Solve the linear system using GMRES
+ * @brief Solve the linear system
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::solve_system() {
@@ -325,6 +331,8 @@ void BaseSolver<dim, Scalar>::solve_system() {
 
 /**
  * @brief Solve the non linear problem using the Newton method
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::solve_newton() {
@@ -362,6 +370,8 @@ void BaseSolver<dim, Scalar>::solve_newton() {
 
 /**
  * @brief Write the output
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::output() const {
@@ -396,11 +406,13 @@ void BaseSolver<dim, Scalar>::output() const {
 
 /**
  * @brief Parse the parameter input
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
  * @param parameters_file_name_ The input configuration parameter file name
  */
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::parse_parameters(
-    const std::string& parameters_file_name_) {
+    const std::string &parameters_file_name_) {
   // Add the linear solver subsection
   prm.enter_subsection("LinearSolver");
   {

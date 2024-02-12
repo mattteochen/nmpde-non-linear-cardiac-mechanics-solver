@@ -35,25 +35,25 @@
 #include <deal.II/physics/elasticity/kinematics.h>
 #include <deal.II/physics/elasticity/standard_tensors.h>
 
-#include <BoundariesUtility.hpp>
-#include <LinearSolverUtility.hpp>
-#include <NewtonSolverUtility.hpp>
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
+#include <transversely_isotropic_constructive_law/BoundariesUtility.hpp>
+#include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
+#include <transversely_isotropic_constructive_law/NewtonSolverUtility.hpp>
 
 using namespace dealii;
 
 /**
- * @brief Abstract class representing a base solver for Green Lagrange stress
- * tensor and Piola Kirchhoff tensor based problems
+ * @brief Abstract class representing a base solver for non linear cardiac
+ * mechanics by using the transversely isotropic constitutive law by Guccione et
+ * al. (https://pubmed.ncbi.nlm.nih.gov/8550635/).
  * @tparam dim The problem dimension
  * @tparam Scalar The scalar type for the problem, by default a double
  */
-template <int dim, typename Scalar = double>
-class BaseSolver {
+template <int dim, typename Scalar = double> class BaseSolver {
   /**
    * Alias for the base preconditioner pointer
    */
@@ -64,16 +64,33 @@ class BaseSolver {
   using LinearSolver =
       std::unique_ptr<SolverBase<TrilinosWrappers::MPI::Vector>>;
 
- public:
+public:
   /**
-   * @brief Material related parameters
+   * @brief Material related parameters. Reference papaer:
+   * https://pubmed.ncbi.nlm.nih.gov/26807042/
    */
   struct Material {
+    /**
+     * b_f coefficient
+     */
     static Scalar b_f;
+    /**
+     * b_t coefficient
+     */
     static Scalar b_t;
+    /**
+     * b_fs coefficient
+     */
     static Scalar b_fs;
+    /**
+     * C coefficient
+     */
     static Scalar C;
 
+    /**
+     * Retrive a std::string representing the current configuration
+     * @return The configuration string
+     */
     static std::string show() {
       return "  b_f: " + std::to_string(Material::b_f) + "\n" +
              "  b_t : " + std::to_string(b_t) + "\n" +
@@ -85,7 +102,7 @@ class BaseSolver {
    * @brief Class representing the applied pressure component
    */
   class ConstantPressureFunction : Function<dim> {
-   public:
+  public:
     /**
      * @brief Default constructor
      */
@@ -112,25 +129,26 @@ class BaseSolver {
       return pressure;
     }
 
-   protected:
+  protected:
     /**
      * @brief Pressure value in kPa
      */
     double pressure = 0.0;
   };
   /**
-   * @brief Class representing the exponent Q
+   * @brief Class representing the exponent Q.
+   * This parameter is used by the construction of the strain energy function:
+   * https://pubmed.ncbi.nlm.nih.gov/26807042/
    * @tparam NumberType The exponent scalar type
    */
-  template <typename NumberType>
-  class ExponentQ : Function<dim> {
-   protected:
+  template <typename NumberType> class ExponentQ : Function<dim> {
+  protected:
     /**
      * The values of the exponent
      */
     NumberType q = static_cast<Scalar>(0);
 
-   public:
+  public:
     /**
      * @brief Retrieve the Q value
      * @return The exponent q
@@ -143,8 +161,7 @@ class BaseSolver {
      * @param gst A green Lagrange strain tensor
      * @return The exponent q
      */
-    template <typename TensorType>
-    NumberType compute(TensorType const &gst) {
+    template <typename TensorType> NumberType compute(TensorType const &gst) {
       return q = Material::b_f * gst[0][0] * gst[0][0] +
                  Material::b_t *
                      (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
@@ -178,10 +195,8 @@ class BaseSolver {
              const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
-        pcout(std::cout, mpi_rank == 0),
-        mesh_file_name(mesh_file_name_),
-        mesh(MPI_COMM_WORLD),
-        problem_name(problem_name_) {
+        pcout(std::cout, mpi_rank == 0), mesh_file_name(mesh_file_name_),
+        mesh(MPI_COMM_WORLD), problem_name(problem_name_) {
     // Initalized the parameter handler
     parse_parameters(parameters_file_name_);
 
@@ -200,32 +215,18 @@ class BaseSolver {
    * @brief Virtual destructor for abstract class
    */
   virtual ~BaseSolver() {}
-  /**
-   * @brief Setup the problem mesh and data structures
-   */
+
   void setup();
-  /**
-   * @brief Solve a single Newton method iteration
-   */
+
   void solve_newton();
-  /**
-   * @brief Output the problem
-   */
+
   void output() const;
 
- protected:
-  /**
-   * @brief Assemble the algebraic problem
-   */
+protected:
   virtual void assemble_system();
-  /**
-   * @brief Solve a linear system for the Newton iteration
-   */
+
   virtual void solve_system();
-  /**
-   * @brief Parse the configuration file
-   * @param parameters_file_name_ The input parameter file name
-   */
+
   void parse_parameters(const std::string &parameters_file_name_);
   /**
    * MPI size
@@ -356,7 +357,6 @@ Scalar BaseSolver<dim, Scalar>::Material::b_fs;
  * @brief Define static member of BaseSolver<dim, Scalar>::Material::C
  * Needed for linking.
  */
-template <int dim, typename Scalar>
-Scalar BaseSolver<dim, Scalar>::Material::C;
+template <int dim, typename Scalar> Scalar BaseSolver<dim, Scalar>::Material::C;
 
-#endif  // BASESOLVER_HPP
+#endif // BASESOLVER_HPP
