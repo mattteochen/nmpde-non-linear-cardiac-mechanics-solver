@@ -26,9 +26,9 @@ Header file defining the abstract base solver class.
 {\ttfamily \#include $<$deal.\+I\+I/numerics/vector\+\_\+tools.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/physics/elasticity/kinematics.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/physics/elasticity/standard\+\_\+tensors.\+h$>$}\newline
+{\ttfamily \#include $<$Boundaries\+Utility.\+hpp$>$}\newline
 {\ttfamily \#include $<$Linear\+Solver\+Utility.\+hpp$>$}\newline
 {\ttfamily \#include $<$Newton\+Solver\+Utility.\+hpp$>$}\newline
-{\ttfamily \#include $<$Boundaries\+Utility.\+hpp$>$}\newline
 {\ttfamily \#include $<$cmath$>$}\newline
 {\ttfamily \#include $<$fstream$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
@@ -52,13 +52,13 @@ This graph shows which files directly or indirectly include this file\+:\nopageb
 \begin{DoxyCompactItemize}
 \item 
 class \mbox{\hyperlink{classBaseSolver}{Base\+Solver$<$ dim, Scalar $>$}}
-\begin{DoxyCompactList}\small\item\em Abstract class representing a base solver for Green Lagrange stress tensor and Piola Kirchhoff tensor based problems. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}). \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structBaseSolver_1_1Material}{Base\+Solver$<$ dim, Scalar $>$\+::\+Material}}
-\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{structBaseSolver_1_1Material}{Material}} related parameters. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{structBaseSolver_1_1Material}{Material}} related parameters. Reference papaer\+: \href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}}. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction}{Base\+Solver$<$ dim, Scalar $>$\+::\+Constant\+Pressure\+Function}}
 \begin{DoxyCompactList}\small\item\em Class representing the applied pressure component. \end{DoxyCompactList}\item 
 class \mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{Base\+Solver$<$ dim, Scalar $>$\+::\+Exponent\+Q$<$ Number\+Type $>$}}
-\begin{DoxyCompactList}\small\item\em Class representing the exponent Q. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Class representing the exponent Q. This parameter is used by the construction of the strain energy function\+: \href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}

@@ -13,9 +13,8 @@
  * @brief Utility class for configuring Newton solvers.
  * @tparam Scalar The scalar type used in the solver configuration.
  */
-template <typename Scalar>
-class NewtonSolverUtility {
- public:
+template <typename Scalar> class NewtonSolverUtility {
+public:
   /**
    * @brief Default constructor.
    */
@@ -32,7 +31,7 @@ class NewtonSolverUtility {
    * @brief Move assignment operator.
    * @param other The NewtonSolverUtility object to move from.
    */
-  void operator=(NewtonSolverUtility<Scalar>&& other) {
+  void operator=(NewtonSolverUtility<Scalar> &&other) {
     tolerance = other.get_tolerance();
     max_iterations = other.get_max_iterations();
   }
@@ -47,7 +46,7 @@ class NewtonSolverUtility {
    */
   unsigned int get_max_iterations() const { return max_iterations; }
 
- protected:
+protected:
   Scalar tolerance;            /**< The tolerance for convergence. */
   unsigned int max_iterations; /**< The maximum number of iterations. */
 };
@@ -58,9 +57,9 @@ class NewtonSolverUtility {
  * @param nsu The NewtonSolverUtility object to output.
  */
 template <typename Scalar>
-void operator<<(std::ostream& out, NewtonSolverUtility<Scalar> const& nsu) {
+void operator<<(std::ostream &out, NewtonSolverUtility<Scalar> const &nsu) {
   out << "  Tolerance: " << nsu.get_tolerance() << std::endl;
   out << "  Max iterations: " << nsu.get_max_iterations() << std::endl;
 }
 
-#endif  // NEWTON_SOLVER_UTILITY_HPP
+#endif // NEWTON_SOLVER_UTILITY_HPP

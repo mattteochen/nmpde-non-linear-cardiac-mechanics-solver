@@ -22,9 +22,8 @@
  * @tparam Scalar The scalar type used in the linear solver configuration
  * (default is double).
  */
-template <typename Scalar = double>
-class LinearSolverUtility {
- public:
+template <typename Scalar = double> class LinearSolverUtility {
+public:
   /**
    * @brief Enumerates different types of solvers.
    */
@@ -53,15 +52,13 @@ class LinearSolverUtility {
   LinearSolverUtility<Scalar>(SolverType solver_type_,
                               Preconditioner preconditioner_type_,
                               Scalar tolerance_, Scalar max_iterations_)
-      : solver_type(solver_type_),
-        preconditioner_type(preconditioner_type_),
-        tolerance(tolerance_),
-        max_iterations(max_iterations_) {}
+      : solver_type(solver_type_), preconditioner_type(preconditioner_type_),
+        tolerance(tolerance_), max_iterations(max_iterations_) {}
   /**
    * @brief Move assignment operator.
    * @param other_ The LinearSolverUtility object to move from.
    */
-  void operator=(LinearSolverUtility<Scalar>&& other_) {
+  void operator=(LinearSolverUtility<Scalar> &&other_) {
     solver_type = other_.solver_type;
     preconditioner_type = other_.preconditioner_type;
     tolerance = other_.tolerance;
@@ -88,8 +85,9 @@ class LinearSolverUtility {
    * @return The initialized solver control object.
    */
   template <typename SizeType, typename NormType>
-  dealii::SolverControl get_initialized_solver_control(
-      const SizeType size, const NormType norm) const {
+  dealii::SolverControl
+  get_initialized_solver_control(const SizeType size,
+                                 const NormType norm) const {
     return dealii::SolverControl(static_cast<SizeType>(size * max_iterations),
                                  tolerance * norm);
   }
@@ -100,21 +98,20 @@ class LinearSolverUtility {
    * @param solver_control The solver control object.
    */
   template <typename Vector>
-  void initialize_solver(std::unique_ptr<dealii::SolverBase<Vector>>& solver,
-                         dealii::SolverControl& solver_control) const {
+  void initialize_solver(std::unique_ptr<dealii::SolverBase<Vector>> &solver,
+                         dealii::SolverControl &solver_control) const {
     switch (solver_type) {
-      case SolverType::GMRES: {
-        solver = std::make_unique<dealii::SolverGMRES<Vector>>(solver_control);
-        break;
-      }
-      case SolverType::BiCGSTAB: {
-        solver =
-            std::make_unique<dealii::SolverBicgstab<Vector>>(solver_control);
-        break;
-      }
-      default: {
-        solver = std::make_unique<dealii::SolverGMRES<Vector>>(solver_control);
-      }
+    case SolverType::GMRES: {
+      solver = std::make_unique<dealii::SolverGMRES<Vector>>(solver_control);
+      break;
+    }
+    case SolverType::BiCGSTAB: {
+      solver = std::make_unique<dealii::SolverBicgstab<Vector>>(solver_control);
+      break;
+    }
+    default: {
+      solver = std::make_unique<dealii::SolverGMRES<Vector>>(solver_control);
+    }
     }
   }
   /**
@@ -125,44 +122,44 @@ class LinearSolverUtility {
    */
   template <typename Matrix>
   void initialize_preconditioner(
-      std::unique_ptr<dealii::TrilinosWrappers::PreconditionBase>&
-          preconditioner,
-      Matrix const& matrix) const {
+      std::unique_ptr<dealii::TrilinosWrappers::PreconditionBase>
+          &preconditioner,
+      Matrix const &matrix) const {
     switch (preconditioner_type) {
-      case Preconditioner::IDENTITY: {
-        preconditioner =
-            std::make_unique<dealii::TrilinosWrappers::PreconditionIdentity>();
-        // We have to perform a dynamic cast as the PreconditionBase class has
-        // not the initialize method
-        auto derived_ptr =
-            dynamic_cast<dealii::TrilinosWrappers::PreconditionIdentity*>(
-                preconditioner.get());
-        derived_ptr->initialize(matrix);
-        break;
-      }
-      case Preconditioner::SSOR: {
-        preconditioner =
-            std::make_unique<dealii::TrilinosWrappers::PreconditionSSOR>();
-        // We have to perform a dynamic cast as the PreconditionBase class has
-        // not the initialize method
-        auto derived_ptr =
-            dynamic_cast<dealii::TrilinosWrappers::PreconditionSSOR*>(
-                preconditioner.get());
-        derived_ptr->initialize(
-            matrix,
-            dealii::TrilinosWrappers::PreconditionSSOR::AdditionalData(1.0));
-        break;
-      }
-      default: {
-        preconditioner =
-            std::make_unique<dealii::TrilinosWrappers::PreconditionIdentity>();
-        // We have to perform a dynamic cast as the PreconditionBase class has
-        // not the initialize method
-        auto derived_ptr =
-            dynamic_cast<dealii::TrilinosWrappers::PreconditionIdentity*>(
-                preconditioner.get());
-        derived_ptr->initialize(matrix);
-      }
+    case Preconditioner::IDENTITY: {
+      preconditioner =
+          std::make_unique<dealii::TrilinosWrappers::PreconditionIdentity>();
+      // We have to perform a dynamic cast as the PreconditionBase class has
+      // not the initialize method
+      auto derived_ptr =
+          dynamic_cast<dealii::TrilinosWrappers::PreconditionIdentity *>(
+              preconditioner.get());
+      derived_ptr->initialize(matrix);
+      break;
+    }
+    case Preconditioner::SSOR: {
+      preconditioner =
+          std::make_unique<dealii::TrilinosWrappers::PreconditionSSOR>();
+      // We have to perform a dynamic cast as the PreconditionBase class has
+      // not the initialize method
+      auto derived_ptr =
+          dynamic_cast<dealii::TrilinosWrappers::PreconditionSSOR *>(
+              preconditioner.get());
+      derived_ptr->initialize(
+          matrix,
+          dealii::TrilinosWrappers::PreconditionSSOR::AdditionalData(1.0));
+      break;
+    }
+    default: {
+      preconditioner =
+          std::make_unique<dealii::TrilinosWrappers::PreconditionIdentity>();
+      // We have to perform a dynamic cast as the PreconditionBase class has
+      // not the initialize method
+      auto derived_ptr =
+          dynamic_cast<dealii::TrilinosWrappers::PreconditionIdentity *>(
+              preconditioner.get());
+      derived_ptr->initialize(matrix);
+    }
     }
   }
   /**
@@ -181,29 +178,29 @@ class LinearSolverUtility {
    */
   template <typename Solver, typename Matrix, typename Solution,
             typename Vector, typename Preconditioner>
-  void solve(std::unique_ptr<Solver> const& solver, Matrix const& matrix,
-             Solution& solution, Vector const& rhs,
-             std::unique_ptr<Preconditioner> const& preconditioner) {
+  void solve(std::unique_ptr<Solver> const &solver, Matrix const &matrix,
+             Solution &solution, Vector const &rhs,
+             std::unique_ptr<Preconditioner> const &preconditioner) {
     // We have to cast the solver pointer to the derived type as the dealii base
     // solver class has not the solve method
     switch (solver_type) {
-      case SolverType::GMRES: {
-        auto derived_ptr =
-            dynamic_cast<dealii::SolverGMRES<Vector>*>(solver.get());
-        derived_ptr->solve(matrix, solution, rhs, *preconditioner);
-        break;
-      }
-      case SolverType::BiCGSTAB: {
-        auto derived_ptr =
-            dynamic_cast<dealii::SolverBicgstab<Vector>*>(solver.get());
-        derived_ptr->solve(matrix, solution, rhs, *preconditioner);
-        break;
-      }
-      default: {
-        auto derived_ptr =
-            dynamic_cast<dealii::SolverGMRES<Vector>*>(solver.get());
-        derived_ptr->solve(matrix, solution, rhs, *preconditioner);
-      }
+    case SolverType::GMRES: {
+      auto derived_ptr =
+          dynamic_cast<dealii::SolverGMRES<Vector> *>(solver.get());
+      derived_ptr->solve(matrix, solution, rhs, *preconditioner);
+      break;
+    }
+    case SolverType::BiCGSTAB: {
+      auto derived_ptr =
+          dynamic_cast<dealii::SolverBicgstab<Vector> *>(solver.get());
+      derived_ptr->solve(matrix, solution, rhs, *preconditioner);
+      break;
+    }
+    default: {
+      auto derived_ptr =
+          dynamic_cast<dealii::SolverGMRES<Vector> *>(solver.get());
+      derived_ptr->solve(matrix, solution, rhs, *preconditioner);
+    }
     }
   }
   /**
@@ -227,7 +224,7 @@ class LinearSolverUtility {
    */
   Scalar get_max_iterations() const { return max_iterations; }
 
- private:
+private:
   SolverType solver_type;             /**< Solver type */
   Preconditioner preconditioner_type; /**< Preconditioner type */
   Scalar tolerance;                   /**< Tolerance value */
@@ -241,7 +238,7 @@ class LinearSolverUtility {
  * @param lsu The linear solver utility.
  */
 template <typename Scalar>
-void operator<<(std::ostream& out, LinearSolverUtility<Scalar> const& lsu) {
+void operator<<(std::ostream &out, LinearSolverUtility<Scalar> const &lsu) {
   out << "  Solver: "
       << LinearSolverUtility<
              Scalar>::solver_type_matcher_rev[lsu.get_solver_type()]
@@ -281,4 +278,4 @@ std::map<typename LinearSolverUtility<Scalar>::Preconditioner, std::string>
         {LinearSolverUtility<Scalar>::Preconditioner::IDENTITY, "IDENTITY"},
         {LinearSolverUtility<Scalar>::Preconditioner::SSOR, "SSOR"}};
 
-#endif  // LINEAR_SOLVER_CONFIGURATION_HPP
+#endif // LINEAR_SOLVER_CONFIGURATION_HPP

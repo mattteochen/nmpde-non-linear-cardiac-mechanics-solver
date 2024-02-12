@@ -1,18 +1,132 @@
-Add into blah blah....\hypertarget{index_autotoc_md1}{}\doxysection{Codebase}\label{index_autotoc_md1}
-An abstract base solver class {\ttfamily \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}} has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
+Add into blah blah....\hypertarget{index_autotoc_md1}{}\doxysection{Constructive law\+: transversely isotropic constitutive law}\label{index_autotoc_md1}
+This section covers the finite element solver for materials that follow the \href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ transversely isotropic constitutive law}}.
 
-The base class takes in account a pressure component that pushes on {\ttfamily x} boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please {\itshape {\bfseries{override}}} all the needed implementations (this might the {\ttfamily assemble} method).
+An abstract base solver class {\ttfamily Base\+Solver} has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
+
+The base class takes in account a pressure component that pushes on {\itshape {\bfseries{x}}} boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please {\itshape {\bfseries{override}}} all the needed implementations (this might the {\ttfamily assemble} method).
 
 Dirichlet boundaries condition values are assigned in the derived class.
 
-The application control point lives in the \href{https://www.dealii.org/current/doxygen/deal.II/classParameterHandler.html}{\texttt{ {\ttfamily parameters.\+prm}}} configuration file.
+{\ttfamily Base\+Solver}\textquotesingle{}s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#ifndef DEMO\_HPP}
+\DoxyCodeLine{\#define DEMO\_HPP}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#include <BaseSolver.hpp>}
+\DoxyCodeLine{}
+\DoxyCodeLine{template <int dim, typename Scalar>}
+\DoxyCodeLine{class Demo : public BaseSolver<dim, Scalar> \{}
+\DoxyCodeLine{  using Base = BaseSolver<dim, Scalar>;}
+\DoxyCodeLine{public:}
+\DoxyCodeLine{  Demo(const std::string \&parameters\_file\_name\_,}
+\DoxyCodeLine{            const std::string \&mesh\_file\_name\_,}
+\DoxyCodeLine{            const std::string \&problem\_name\_)}
+\DoxyCodeLine{      : Base(parameters\_file\_name\_, mesh\_file\_name\_, problem\_name\_) \{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  void initialise\_boundaries\_tag() override \{}
+\DoxyCodeLine{    //  Set Newmann boundary faces}
+\DoxyCodeLine{    for (auto \&t : Base::boundaries\_utility.get\_newmann\_boundaries\_tags()) \{}
+\DoxyCodeLine{      Base::newmann\_boundary\_faces.insert(t);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{    // Set Dirichlet boundary faces}
+\DoxyCodeLine{    for (auto \&t : Base::boundaries\_utility.get\_dirichlet\_boundaries\_tags()) \{}
+\DoxyCodeLine{      Base::dirichlet\_boundary\_functions[t] = \&zero\_function;}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{  \};}
+\DoxyCodeLine{}
+\DoxyCodeLine{ protected:}
+\DoxyCodeLine{  dealii::Functions::ZeroFunction<dim> zero\_function;}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{\#endif  // DEMO\_HPP}
+\end{DoxyCode}
+\hypertarget{index_autotoc_md2}{}\doxysubsection{Non Linear Solver}\label{index_autotoc_md2}
+As the cardiac problem is non linear, we have employed the \href{https://en.wikipedia.org/wiki/Newton\%27s_method}{\texttt{ Newton method}}. The Jacobian matrix has been created by using {\ttfamily dealii} built-\/in \href{https://www.dealii.org/current/doxygen/deal.II/group__auto__symb__diff.html}{\texttt{ AD}} packages.\hypertarget{index_autotoc_md3}{}\doxysubsection{Linear Solver}\label{index_autotoc_md3}
+Currently the following {\itshape {\bfseries{iterative solvers}}} are supported in order to solve a single Newton iteration\+:
+\begin{DoxyItemize}
+\item \mbox{[}x\mbox{]} G\+M\+R\+ES
+\item \mbox{[}x\mbox{]} Bi\+C\+G\+S\+T\+AB
+\item \mbox{[}\mbox{]} CG
+\end{DoxyItemize}
 
-{\ttfamily \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}}\textquotesingle{}s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions (see {\ttfamily \mbox{\hyperlink{classSlabCubic}{Slab\+Cubic}}} or {\ttfamily \mbox{\hyperlink{classIdealizedLV}{Idealized\+LV}}}).\hypertarget{index_autotoc_md2}{}\doxysection{Non Linear Solver}\label{index_autotoc_md2}
-As the cardiac problem is non linear, we have employed the \href{https://en.wikipedia.org/wiki/Newton\%27s_method}{\texttt{ Newton method}}. The Jacobian matrix has been created by using {\ttfamily dealii} built-\/in \href{https://www.dealii.org/current/doxygen/deal.II/group__auto__symb__diff.html}{\texttt{ AD}} packages.\hypertarget{index_autotoc_md3}{}\doxysection{Linear Solver}\label{index_autotoc_md3}
-Currently the following {\itshape {\bfseries{iterative solvers}}} are supported in order to solve a single Newton iteration\+: \mbox{[}x\mbox{]} G\+M\+R\+ES \mbox{[}x\mbox{]} Bi\+C\+G\+S\+T\+AB \mbox{[}\mbox{]} CG
+{\itshape {\bfseries{Preconditioners}}} available\+:
+\begin{DoxyItemize}
+\item \mbox{[}x\mbox{]} S\+S\+OR
+\end{DoxyItemize}\hypertarget{index_autotoc_md4}{}\doxysubsection{Configuration file}\label{index_autotoc_md4}
+The single entry point for all run time and application specific parameters can be specified inside a configuration file called {\ttfamily your\+\_\+config\+\_\+name.\+prm}.
 
-{\itshape {\bfseries{Preconditioners}}} available\+: \mbox{[}x\mbox{]} S\+S\+OR\hypertarget{index_autotoc_md4}{}\doxysection{Configuration file}\label{index_autotoc_md4}
-The single entry point for all run time and application specific parameters can be specified inside a configuration file called {\ttfamily your\+\_\+config\+\_\+name.\+prm}.\hypertarget{index_autotoc_md5}{}\doxysection{Compiling}\label{index_autotoc_md5}
+Changes can be tested without recompilation if they can be modified through the configuration file.
+
+A mock configuration file\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{subsection LinearSolver}
+\DoxyCodeLine{  \# Type of solver used to solve the linear system}
+\DoxyCodeLine{  set SolverType                = BiCGSTAB}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# Linear solver residual (scaled by residual norm)}
+\DoxyCodeLine{  set Residual                  = 1e-\/6}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# Linear solver iterations multiplier (to be multiplied to matrix size)}
+\DoxyCodeLine{  set MaxIteration              = 1.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# Preconditioner type}
+\DoxyCodeLine{  set PreconditionerType        = SSOR}
+\DoxyCodeLine{end}
+\DoxyCodeLine{}
+\DoxyCodeLine{subsection PolynomialDegree}
+\DoxyCodeLine{  \# Degree of the polynomial for finite elements}
+\DoxyCodeLine{  set Degree                    = 1}
+\DoxyCodeLine{end}
+\DoxyCodeLine{}
+\DoxyCodeLine{subsection NewtonMethod}
+\DoxyCodeLine{  \# Newton method residual}
+\DoxyCodeLine{  set Residual                  = 1e-\/6}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# Newton method max iterations}
+\DoxyCodeLine{  set MaxIterations             = 100}
+\DoxyCodeLine{end}
+\DoxyCodeLine{}
+\DoxyCodeLine{subsection Material}
+\DoxyCodeLine{  \# b\_f value of the strain energy tensor}
+\DoxyCodeLine{  set b\_f                       = 8.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# b\_t value of the strain energy tensor}
+\DoxyCodeLine{  set b\_t                       = 2.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# b\_fs value of the strain energy tensor}
+\DoxyCodeLine{  set b\_fs                       = 4.0}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# C value of the strain energy tensor}
+\DoxyCodeLine{  set C                          = 2000.0}
+\DoxyCodeLine{end}
+\DoxyCodeLine{}
+\DoxyCodeLine{subsection Boundaries}
+\DoxyCodeLine{  \# Dirichlet boundaries tags}
+\DoxyCodeLine{  set Dirichlet                  = 40}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \# Newmann boundaries tags}
+\DoxyCodeLine{  set Newmann                    = 60}
+\DoxyCodeLine{end}
+\DoxyCodeLine{}
+\DoxyCodeLine{subsection Pressure}
+\DoxyCodeLine{  \# External pressure value}
+\DoxyCodeLine{  set Value                      = 4.0}
+\DoxyCodeLine{end}
+\end{DoxyCode}
+
+
+{\bfseries{Please be sure to add every subsection shown above as for missing sections, the program sets a default value that may lead to undefined results}}.\hypertarget{index_autotoc_md5}{}\doxysection{Enviroenment}\label{index_autotoc_md5}
+This project is dependent on several c++ packages as\+:
+\begin{DoxyItemize}
+\item \href{https://www.dealii.org/current/doxygen/deal.II/}{\texttt{ dealii}} $>$= v9.\+0
+\item \href{https://www.open-mpi.org/}{\texttt{ M\+PI}} $>$= v3.\+1
+\item \href{https://www.boost.org/}{\texttt{ B\+O\+O\+ST}} $>$= v1.\+76.\+0
+\end{DoxyItemize}
+
+To ease the configuration, a scientific docker enviroenment can be found \href{https://hub.docker.com/r/pcafrica/mk}{\texttt{ here}}.\hypertarget{index_autotoc_md6}{}\doxysection{Compiling}\label{index_autotoc_md6}
+The following commands are dedicated for enviroenment with {\ttfamily mk} modules installed.
+
 To build the executable, make sure you have loaded the needed modules with 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\$ module load gcc-\/glibc dealii}
@@ -31,5 +145,10 @@ Then run the following commands\+:
 The executable will be created into {\ttfamily build}, and can be executed through 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\$ mpirun -\/n x executable\_name}
+\end{DoxyCode}
+\hypertarget{index_autotoc_md7}{}\doxysection{Formatting}\label{index_autotoc_md7}
+All the source files are formatted by using {\ttfamily clang-\/format} with {\ttfamily L\+L\+VM} coding style. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{clang-\/format -\/i -\/style=LLVM -\/-\/sort-\/includes your\_file}
 \end{DoxyCode}
  
