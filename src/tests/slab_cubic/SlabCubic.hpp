@@ -9,7 +9,7 @@
 #include <BaseSolver.hpp>
 
 /**
- * @class Class representing the Slab Cubic solver
+ * @brief Class representing the Slab Cubic solver
  */
 template <int dim, typename Scalar>
 class SlabCubic : public BaseSolver<dim, Scalar> {
@@ -30,15 +30,19 @@ class SlabCubic : public BaseSolver<dim, Scalar> {
             const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}
   /**
-   * @brief Initialise boundaries tag
+   * @brief Initialise boundaries tag. Boundaries are problem specific hence we
+   * override the base virtual implementation.
    */
   void initialise_boundaries_tag() override {
-    // TODO: use parameter handler
     //  Set Newmann boundary faces
-    Base::newmann_boundary_faces.insert(60);
+    for (auto &t : Base::boundaries_utility.get_newmann_boundaries_tags()) {
+      Base::newmann_boundary_faces.insert(t);
+    }
 
     // Set Dirichlet boundary faces
-    Base::dirichlet_boundary_functions[40] = &zero_function;
+    for (auto &t : Base::boundaries_utility.get_dirichlet_boundaries_tags()) {
+      Base::dirichlet_boundary_functions[t] = &zero_function;
+    }
   };
 
  protected:
