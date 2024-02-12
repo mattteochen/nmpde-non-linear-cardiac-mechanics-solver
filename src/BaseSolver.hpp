@@ -1,3 +1,8 @@
+/**
+ * @file BaseSolver.hpp
+ * @brief Header file defining the abstract base solver class.
+ */
+
 #ifndef BASESOLVER_HPP
 #define BASESOLVER_HPP
 
@@ -30,18 +35,19 @@
 #include <deal.II/physics/elasticity/kinematics.h>
 #include <deal.II/physics/elasticity/standard_tensors.h>
 
+#include <LinearSolverUtility.hpp>
+#include <NewtonSolverUtility.hpp>
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <map>
-
-#include "LinearSolverUtility.hpp"
+#include <string>
 
 using namespace dealii;
 
 /**
- * @class Class representing a base solver for Green Lagrange stress tensor and
- * Piola Kirchhoff tensor based problems
+ * @class Abstract class representing a base solver for Green Lagrange stress
+ * tensor and Piola Kirchhoff tensor based problems
  * @tparam dim The problem dimension
  * @tparam Scalar The scalar type for the problem, by default a double
  */
@@ -62,11 +68,17 @@ class BaseSolver {
    * Material related parameters
    */
   struct Material {
-    // TODO: use parameter handler
-    static constexpr Scalar b_f = static_cast<Scalar>(8);
-    static constexpr Scalar b_t = static_cast<Scalar>(2);
-    static constexpr Scalar b_fs = static_cast<Scalar>(4);
-    static constexpr Scalar C = static_cast<Scalar>(2000);
+    static Scalar b_f;
+    static Scalar b_t;
+    static Scalar b_fs;
+    static Scalar C;
+
+    static std::string show() {
+      return "  b_f: " + std::to_string(Material::b_f) + "\n" +
+             "  b_t : " + std::to_string(b_t) + "\n" +
+             "  b_fs: " + std::to_string(b_fs) + "\n" +
+             "  C: " + std::to_string(C) + "\n";
+    }
   };
   /**
    * @class Class representing the pressure component
@@ -110,7 +122,7 @@ class BaseSolver {
      * @return The exponent q
      */
     template <typename TensorType>
-    NumberType compute(const TensorType &gst) {
+    NumberType compute(TensorType const &gst) {
       return q = Material::b_f * gst[0][0] * gst[0][0] +
                  Material::b_t *
                      (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
@@ -137,17 +149,15 @@ class BaseSolver {
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
    * @param mesh_file_name_ The mesh file name
-   * @param r_ The polynomial degree
    * @param problem_name_ The problem name
    */
   BaseSolver(const std::string &parameters_file_name_,
-             const std::string &mesh_file_name_, const unsigned int &r_,
+             const std::string &mesh_file_name_,
              const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
         pcout(std::cout, mpi_rank == 0),
         mesh_file_name(mesh_file_name_),
-        r(r_),
         mesh(MPI_COMM_WORLD),
         problem_name(problem_name_) {
     // Initalized the parameter handler
@@ -231,7 +241,7 @@ class BaseSolver {
   /**
    * The polynomial degree
    */
-  const unsigned int r;
+  unsigned int r;
   /**
    * The distributed triangulation
    */
@@ -292,6 +302,35 @@ class BaseSolver {
    * The linear solver utiility
    */
   LinearSolverUtility<Scalar> linear_solver_utility;
+  /**
+   * The Newton method solver utiility
+   */
+  NewtonSolverUtility<Scalar> newton_solver_utility;
 };
+
+/**
+ * @brief Define static member of BaseSolver<dim, Scalar>::Material::b_f.
+ * Needed for linking.
+ */
+template <int dim, typename Scalar>
+Scalar BaseSolver<dim, Scalar>::Material::b_f;
+/**
+ * @brief Define static member of BaseSolver<dim, Scalar>::Material::b_t
+ * Needed for linking.
+ */
+template <int dim, typename Scalar>
+Scalar BaseSolver<dim, Scalar>::Material::b_t;
+/**
+ * @brief Define static member of BaseSolver<dim, Scalar>::Material::b_fs
+ * Needed for linking.
+ */
+template <int dim, typename Scalar>
+Scalar BaseSolver<dim, Scalar>::Material::b_fs;
+/**
+ * @brief Define static member of BaseSolver<dim, Scalar>::Material::C
+ * Needed for linking.
+ */
+template <int dim, typename Scalar>
+Scalar BaseSolver<dim, Scalar>::Material::C;
 
 #endif  // BASESOLVER_HPP
