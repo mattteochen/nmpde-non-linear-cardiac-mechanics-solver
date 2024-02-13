@@ -56,9 +56,10 @@ The Jacobian matrix has been created by using `dealii` built-in [AD](https://www
 Currently the following ***iterative solvers*** are supported in order to solve a single Newton iteration:
 - [x] GMRES
 - [x] BiCGSTAB
-- [] CG
 
 ***Preconditioners*** available:
+- [x] ILU
+- [x] SOR
 - [x] SSOR
 
 ### Configuration file
