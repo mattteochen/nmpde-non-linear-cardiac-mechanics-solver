@@ -1,0 +1,75 @@
+\hypertarget{classReporter}{}\doxysection{Reporter Class Reference}
+\label{classReporter}\index{Reporter@{Reporter}}
+
+
+Class for managing test result reports to output file.  
+
+
+
+
+{\ttfamily \#include $<$Reporter.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classReporter_aea49205d49cf09776af0d7056033870e}\label{classReporter_aea49205d49cf09776af0d7056033870e}} 
+\mbox{\hyperlink{classReporter_aea49205d49cf09776af0d7056033870e}{Reporter}} ()=default
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classReporter_a5537208fe998e81647466e642e9f4c2f}{Reporter}} (const std\+::string report\+\_\+file\+\_\+name, const std\+::string header, const std\+::string problem\+\_\+name)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename... Var$>$ }\\void \mbox{\hyperlink{classReporter_a9b412c1904f1e18a3839e963dfe19ee4}{write}} (Var... vars)
+\begin{DoxyCompactList}\small\item\em Write data to the report file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for managing test result reports to output file. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classReporter_a5537208fe998e81647466e642e9f4c2f}\label{classReporter_a5537208fe998e81647466e642e9f4c2f}} 
+\index{Reporter@{Reporter}!Reporter@{Reporter}}
+\index{Reporter@{Reporter}!Reporter@{Reporter}}
+\doxysubsubsection{\texorpdfstring{Reporter()}{Reporter()}}
+{\footnotesize\ttfamily Reporter\+::\+Reporter (\begin{DoxyParamCaption}\item[{const std\+::string}]{report\+\_\+file\+\_\+name,  }\item[{const std\+::string}]{header,  }\item[{const std\+::string}]{problem\+\_\+name }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em report\+\_\+file\+\_\+name} & The name of the report file. \\
+\hline
+{\em header} & The report file columns tags. \\
+\hline
+{\em problem\+\_\+name} & The name of the problem. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classReporter_a9b412c1904f1e18a3839e963dfe19ee4}\label{classReporter_a9b412c1904f1e18a3839e963dfe19ee4}} 
+\index{Reporter@{Reporter}!write@{write}}
+\index{write@{write}!Reporter@{Reporter}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily template$<$typename... Var$>$ \\
+void Reporter\+::write (\begin{DoxyParamCaption}\item[{Var...}]{vars }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Write data to the report file. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em Var} & Variable argument types. \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em vars} & Variable arguments to write to the report file. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/\mbox{\hyperlink{Reporter_8hpp}{Reporter.\+hpp}}\end{DoxyCompactItemize}

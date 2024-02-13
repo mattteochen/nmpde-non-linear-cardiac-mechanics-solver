@@ -9,6 +9,7 @@
 #include <transversely_isotropic_constructive_law/BaseSolver.hpp>
 
 /**
+ * @class IdealizedLV
  * @brief Class representing the an Idealized LV solver
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */

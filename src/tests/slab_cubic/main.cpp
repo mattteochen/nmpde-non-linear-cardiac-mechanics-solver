@@ -2,14 +2,24 @@
 
 int main(int argc, char *argv[]) {
   dealii::Utilities::MPI::MPI_InitFinalize mpi_init(argc, argv);
-  const std::string mesh_file_name =
-      "../../../../lifex_fiber_generation_examples/mesh/slab_cubic.msh";
-  const std::string parameter_file_name = "../parameters.prm";
+
   const std::string problem_name = "slab_cubic";
-  SlabCubic<3, double> s(parameter_file_name, mesh_file_name, problem_name);
-  s.initialise_boundaries_tag();
-  s.setup();
-  s.solve_newton();
-  s.output();
+  std::string mesh_file_name =
+      "../../../../lifex_fiber_generation_examples/mesh/slab_cubic.msh";
+  std::string parameter_file_name = "../parameters.prm";
+  if (argc > 1) {
+    mesh_file_name = argv[1];
+  }
+  if (argc > 2) {
+    parameter_file_name = argv[2];
+  }
+
+  SlabCubic<3, double> problem(parameter_file_name, mesh_file_name,
+                               problem_name);
+  problem.initialise_boundaries_tag();
+  problem.setup();
+  problem.solve_newton();
+  problem.output();
+
   return 0;
 }

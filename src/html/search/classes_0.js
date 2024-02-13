@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['idealizedlv_7',['IdealizedLV',['../classIdealizedLV.html',1,'']]]
+  ['basesolver_94',['BaseSolver',['../classBaseSolver.html',1,'']]],
+  ['boundariesutility_95',['BoundariesUtility',['../classBoundariesUtility.html',1,'']]]
 ];

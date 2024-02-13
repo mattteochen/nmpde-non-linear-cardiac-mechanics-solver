@@ -17,6 +17,8 @@ enum \mbox{\hyperlink{classLinearSolverUtility_ada37cd28e18fafc5cb189317df5118ae
  \}
 \begin{DoxyCompactList}\small\item\em Enumerates different types of solvers. \end{DoxyCompactList}\item 
 enum \mbox{\hyperlink{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009}{Preconditioner}} \{ \mbox{\hyperlink{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009ad8156d3c6735d75d8a1b8dedd0e79c8b}{Preconditioner\+::\+I\+D\+E\+N\+T\+I\+TY}}, 
+\mbox{\hyperlink{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009af77d68d6b47fa42d89a943d976a0759d}{Preconditioner\+::\+I\+LU}}, 
+\mbox{\hyperlink{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe}{Preconditioner\+::\+S\+OR}}, 
 \mbox{\hyperlink{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169}{Preconditioner\+::\+S\+S\+OR}}
  \}
 \begin{DoxyCompactList}\small\item\em Enumerates different types of preconditioners. \end{DoxyCompactList}\end{DoxyCompactItemize}
@@ -87,6 +89,14 @@ Enumerates different types of preconditioners.
 \begin{DoxyEnumFields}{Enumerator}
 \raisebox{\heightof{T}}[0pt][0pt]{\index{IDENTITY@{IDENTITY}!LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}}\index{LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}!IDENTITY@{IDENTITY}}}\mbox{\Hypertarget{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009ad8156d3c6735d75d8a1b8dedd0e79c8b}\label{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009ad8156d3c6735d75d8a1b8dedd0e79c8b}} 
 I\+D\+E\+N\+T\+I\+TY&Identity preconditioner \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ILU@{ILU}!LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}}\index{LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}!ILU@{ILU}}}\mbox{\Hypertarget{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009af77d68d6b47fa42d89a943d976a0759d}\label{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009af77d68d6b47fa42d89a943d976a0759d}} 
+I\+LU&I\+LU preconditioner \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{SOR@{SOR}!LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}}\index{LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}!SOR@{SOR}}}\mbox{\Hypertarget{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe}\label{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe}} 
+S\+OR&S\+OR preconditioner \\
 \hline
 
 \raisebox{\heightof{T}}[0pt][0pt]{\index{SSOR@{SSOR}!LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}}\index{LinearSolverUtility$<$ Scalar $>$@{LinearSolverUtility$<$ Scalar $>$}!SSOR@{SSOR}}}\mbox{\Hypertarget{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169}\label{classLinearSolverUtility_a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169}} 
@@ -344,6 +354,8 @@ std\+::map$<$ std\+::string, typename \mbox{\hyperlink{classLinearSolverUtility}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{= \{}
 \DoxyCodeLine{        \{\textcolor{stringliteral}{"IDENTITY"}, \mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::IDENTITY}}\},}
+\DoxyCodeLine{        \{\textcolor{stringliteral}{"ILU"}, \mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::ILU}}\},}
+\DoxyCodeLine{        \{\textcolor{stringliteral}{"SOR"}, \mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::SOR}}\},}
 \DoxyCodeLine{        \{\textcolor{stringliteral}{"SSOR"}, \mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::SSOR}}\}\}}
 
 \end{DoxyCode}
@@ -358,6 +370,8 @@ std\+::map$<$ typename \mbox{\hyperlink{classLinearSolverUtility}{Linear\+Solver
 \begin{DoxyCode}{0}
 \DoxyCodeLine{= \{}
 \DoxyCodeLine{        \{\mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::IDENTITY}}, \textcolor{stringliteral}{"IDENTITY"}\},}
+\DoxyCodeLine{        \{\mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::ILU}}, \textcolor{stringliteral}{"ILU"}\},}
+\DoxyCodeLine{        \{\mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::SOR}}, \textcolor{stringliteral}{"SOR"}\},}
 \DoxyCodeLine{        \{\mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::Preconditioner::SSOR}}, \textcolor{stringliteral}{"SSOR"}\}\}}
 
 \end{DoxyCode}
@@ -371,9 +385,8 @@ std\+::map$<$ std\+::string, typename \mbox{\hyperlink{classLinearSolverUtility}
 {\bfseries Initial value\+:}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{= \{}
-\DoxyCodeLine{        \{\textcolor{stringliteral}{"GMRES"}, \mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::SolverType::GMRES}}\},}
 \DoxyCodeLine{        \{\textcolor{stringliteral}{"BiCGSTAB"}, \mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::SolverType::BiCGSTAB}}\},}
-\DoxyCodeLine{\}}
+\DoxyCodeLine{        \{\textcolor{stringliteral}{"GMRES"}, \mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::SolverType::GMRES}}\}\}}
 
 \end{DoxyCode}
 Map for solver type matching \mbox{\Hypertarget{classLinearSolverUtility_af3522ba35688c6214241cebc891fcf95}\label{classLinearSolverUtility_af3522ba35688c6214241cebc891fcf95}} 
@@ -386,13 +399,12 @@ std\+::map$<$ typename \mbox{\hyperlink{classLinearSolverUtility}{Linear\+Solver
 {\bfseries Initial value\+:}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{= \{}
-\DoxyCodeLine{        \{\mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::SolverType::GMRES}}, \textcolor{stringliteral}{"GMRES"}\},}
 \DoxyCodeLine{        \{\mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::SolverType::BiCGSTAB}}, \textcolor{stringliteral}{"BiCGSTAB"}\},}
-\DoxyCodeLine{\}}
+\DoxyCodeLine{        \{\mbox{\hyperlink{classLinearSolverUtility}{LinearSolverUtility<Scalar>::SolverType::GMRES}}, \textcolor{stringliteral}{"GMRES"}\}\}}
 
 \end{DoxyCode}
 Reverse map for solver type matching 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-lib/\mbox{\hyperlink{LinearSolverUtility_8hpp}{Linear\+Solver\+Utility.\+hpp}}\end{DoxyCompactItemize}
+lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\mbox{\hyperlink{LinearSolverUtility_8hpp}{Linear\+Solver\+Utility.\+hpp}}\end{DoxyCompactItemize}

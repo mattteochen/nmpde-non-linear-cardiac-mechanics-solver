@@ -1,6 +1,7 @@
 /**
  * @file BaseSolver.hpp
- * @brief Header file defining the abstract base solver class.
+ * @brief Header file defining the abstract base solver class for materials
+ * having the transversely isotropic constructive law.
  */
 
 #ifndef BASESOLVER_HPP
@@ -35,6 +36,8 @@
 #include <deal.II/physics/elasticity/kinematics.h>
 #include <deal.II/physics/elasticity/standard_tensors.h>
 
+#include <Reporter.hpp>
+#include <chrono>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -47,6 +50,7 @@
 using namespace dealii;
 
 /**
+ * @class BaseSolver
  * @brief Abstract class representing a base solver for non linear cardiac
  * mechanics by using the transversely isotropic constitutive law by Guccione et
  * al. (https://pubmed.ncbi.nlm.nih.gov/8550635/).

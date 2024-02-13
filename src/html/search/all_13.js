@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zero_5ffunction_88',['zero_function',['../classSlabCubic.html#aea0bd1d0680b182200785a4a7e01e171',1,'SlabCubic::zero_function()'],['../classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022',1,'IdealizedLV::zero_function()']]]
+  ['write_91',['write',['../classReporter.html#a9b412c1904f1e18a3839e963dfe19ee4',1,'Reporter']]]
 ];
