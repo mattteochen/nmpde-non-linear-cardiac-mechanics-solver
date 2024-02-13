@@ -2,7 +2,7 @@
 \label{classBaseSolver}\index{BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
 
 
-Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}).  
+Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  
 
 
 
@@ -11,7 +11,8 @@ Abstract class representing a base solver for non linear cardiac mechanics by us
 
 
 
-Inheritance diagram for Base\+Solver$<$ dim, Scalar $>$\+:\nopagebreak
+Inheritance diagram for Base\+Solver$<$ dim, Scalar $>$\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -20,7 +21,8 @@ Inheritance diagram for Base\+Solver$<$ dim, Scalar $>$\+:\nopagebreak
 \end{figure}
 
 
-Collaboration diagram for Base\+Solver$<$ dim, Scalar $>$\+:\nopagebreak
+Collaboration diagram for Base\+Solver$<$ dim, Scalar $>$\+:
+\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -49,8 +51,9 @@ bool \mbox{\hyperlink{classBaseSolver_a354b9ee602a939e0202a0989aaaf861d}{is\+\_\
 \mbox{\Hypertarget{classBaseSolver_aaf5ef630e0939bf3bd3c921da641d5b7}\label{classBaseSolver_aaf5ef630e0939bf3bd3c921da641d5b7}} 
 virtual \mbox{\hyperlink{classBaseSolver_aaf5ef630e0939bf3bd3c921da641d5b7}{$\sim$\+Base\+Solver}} ()
 \begin{DoxyCompactList}\small\item\em Virtual destructor for abstract class. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classBaseSolver_a727a6637ad911ae0e85d4b072f8e08f9}{setup}} ()
-\begin{DoxyCompactList}\small\item\em Setup the problem by loading the mesh, creating the finite element and initialising the linear system. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classBaseSolver_a727a6637ad911ae0e85d4b072f8e08f9}\label{classBaseSolver_a727a6637ad911ae0e85d4b072f8e08f9}} 
+void {\bfseries setup} ()
+\item 
 void \mbox{\hyperlink{classBaseSolver_a91e8223c7ebb58833c2dd3f3cd4d64db}{solve\+\_\+newton}} ()
 \begin{DoxyCompactList}\small\item\em Solve the non linear problem using the Newton method. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classBaseSolver_aa463430a542ce8497c4d755245da4b7b}{output}} () const
@@ -125,10 +128,16 @@ Parameter\+Handler \mbox{\hyperlink{classBaseSolver_af62b9b59d184491b221d6a70085
 \subsubsection*{template$<$int dim, typename Scalar = double$>$\newline
 class Base\+Solver$<$ dim, Scalar $>$}
 
-Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}). 
+Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
+
+Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}).
 
 
 \begin{DoxyTemplParams}{Template Parameters}
+{\em dim} & The problem dimension space \\
+\hline
+{\em Scalar} & The scalar type being used\\
+\hline
 {\em dim} & The problem dimension \\
 \hline
 {\em Scalar} & The scalar type for the problem, by default a double \\
@@ -238,24 +247,6 @@ Parse the parameter input.
 {\em parameters\+\_\+file\+\_\+name\+\_\+} & The input configuration parameter file name \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classBaseSolver_a727a6637ad911ae0e85d4b072f8e08f9}\label{classBaseSolver_a727a6637ad911ae0e85d4b072f8e08f9}} 
-\index{BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}!setup@{setup}}
-\index{setup@{setup}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
-\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
-{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
-void \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::setup}
-
-
-
-Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
-
-
-\begin{DoxyTemplParams}{Template Parameters}
-{\em dim} & The problem dimension space \\
-\hline
-{\em Scalar} & The scalar type being used \\
-\hline
-\end{DoxyTemplParams}
 \mbox{\Hypertarget{classBaseSolver_a91e8223c7ebb58833c2dd3f3cd4d64db}\label{classBaseSolver_a91e8223c7ebb58833c2dd3f3cd4d64db}} 
 \index{BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}!solve\_newton@{solve\_newton}}
 \index{solve\_newton@{solve\_newton}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
@@ -481,5 +472,5 @@ The system solution with no ghost elements
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-lib/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\item 
-lib/\mbox{\hyperlink{BaseSolver_8cpp}{Base\+Solver.\+cpp}}\end{DoxyCompactItemize}
+lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\item 
+lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\mbox{\hyperlink{BaseSolver_8cpp}{Base\+Solver.\+cpp}}\end{DoxyCompactItemize}

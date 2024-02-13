@@ -9,6 +9,7 @@
 #include <transversely_isotropic_constructive_law/BaseSolver.hpp>
 
 /**
+ * @class SlabCubic
  * @brief Class representing the Slab Cubic solver
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */

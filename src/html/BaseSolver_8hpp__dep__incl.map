@@ -1,6 +1,6 @@
-<map id="lib/BaseSolver.hpp" name="lib/BaseSolver.hpp">
-<area shape="rect" id="node1" title="Header file defining the abstract base solver class." alt="" coords="211,5,354,32"/>
-<area shape="rect" id="node2" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,87,147,114"/>
-<area shape="rect" id="node3" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="171,87,394,114"/>
-<area shape="rect" id="node4" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="419,80,557,121"/>
+<map id="lib/transversely_isotropic_constructive_law/BaseSolver.hpp" name="lib/transversely_isotropic_constructive_law/BaseSolver.hpp">
+<area shape="rect" id="node1" title="Header file defining the abstract base solver class for materials having the transversely isotropic c..." alt="" coords="263,5,505,47"/>
+<area shape="rect" id="node2" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,95,248,136"/>
+<area shape="rect" id="node3" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="273,102,495,129"/>
+<area shape="rect" id="node4" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="520,95,659,136"/>
 </map>

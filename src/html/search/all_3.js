@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['zero_5ffunction_6',['zero_function',['../classSlabCubic.html#aea0bd1d0680b182200785a4a7e01e171',1,'SlabCubic::zero_function()'],['../classIdealizedLV.html#a2358de846a9d987d6ce09f0d72bc6022',1,'IdealizedLV::zero_function()']]]
+  ['delta_5fowned_14',['delta_owned',['../classBaseSolver.html#abc28c3e1f3748769548d9662aa746c21',1,'BaseSolver']]],
+  ['dirichlet_5fboundaries_15',['dirichlet_boundaries',['../classBoundariesUtility.html#aac31790baf16435a82db6b7b748e0cb8',1,'BoundariesUtility']]],
+  ['dirichlet_5fboundary_5ffunctions_16',['dirichlet_boundary_functions',['../classBaseSolver.html#add973afcdc2c7ba1a1deb22adf6c4519',1,'BaseSolver']]],
+  ['dof_5fhandler_17',['dof_handler',['../classBaseSolver.html#a3d446af61f10485f6a7e33391ece74f7',1,'BaseSolver']]]
 ];

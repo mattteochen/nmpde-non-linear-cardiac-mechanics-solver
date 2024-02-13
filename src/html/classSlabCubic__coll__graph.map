@@ -1,4 +1,9 @@
 <map id="SlabCubic&lt; dim, Scalar &gt;" name="SlabCubic&lt; dim, Scalar &gt;">
-<area shape="rect" id="node1" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="10,80,199,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,204,32"/>
+<area shape="rect" id="node1" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="843,97,1032,124"/>
+<area shape="rect" id="node2" href="$classBaseSolver.html" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="595,97,793,124"/>
+<area shape="rect" id="node3" href="$classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="227,5,361,32"/>
+<area shape="rect" id="node4" href="$classNewtonSolverUtility.html" title=" " alt="" coords="217,57,371,98"/>
+<area shape="rect" id="node5" href="$classLinearSolverUtility.html" title=" " alt="" coords="223,122,365,163"/>
+<area shape="rect" id="node6" href="$classBaseSolver_1_1ConstantPressureFunction.html" title="Class representing the applied pressure component." alt="" coords="187,187,401,229"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,195,137,221"/>
 </map>

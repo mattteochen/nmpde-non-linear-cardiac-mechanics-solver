@@ -1,4 +1,4 @@
 <map id="SlabCubic&lt; dim, Scalar &gt;" name="SlabCubic&lt; dim, Scalar &gt;">
 <area shape="rect" id="node1" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="10,80,199,107"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,204,32"/>
+<area shape="rect" id="node2" href="$classBaseSolver.html" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="5,5,204,32"/>
 </map>
