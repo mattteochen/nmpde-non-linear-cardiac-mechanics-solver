@@ -10,6 +10,7 @@
 #include <iostream>
 
 /**
+ * @class NewtonSolverUtility
  * @brief Utility class for configuring Newton solvers.
  * @tparam Scalar The scalar type used in the solver configuration.
  */

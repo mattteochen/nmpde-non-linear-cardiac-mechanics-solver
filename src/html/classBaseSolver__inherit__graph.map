@@ -1,5 +1,5 @@
 <map id="BaseSolver&lt; dim, Scalar &gt;" name="BaseSolver&lt; dim, Scalar &gt;">
-<area shape="rect" id="node1" title="Abstract class representing a base solver for non linear cardiac mechanics by using the transversely ..." alt="" coords="115,5,313,32"/>
+<area shape="rect" id="node1" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="115,5,313,32"/>
 <area shape="rect" id="node2" href="$classIdealizedLV.html" title="Class representing the an Idealized LV solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="5,80,204,107"/>
 <area shape="rect" id="node3" href="$classSlabCubic.html" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="229,80,418,107"/>
 </map>

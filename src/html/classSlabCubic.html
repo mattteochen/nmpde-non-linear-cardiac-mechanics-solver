@@ -81,7 +81,7 @@ Inheritance diagram for SlabCubic&lt; dim, Scalar &gt;:</div>
 <div class="center"><img src="classSlabCubic__inherit__graph.png" border="0" usemap="#SlabCubic_3_01dim_00_01Scalar_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="SlabCubic_3_01dim_00_01Scalar_01_4_inherit__map" id="SlabCubic_3_01dim_00_01Scalar_01_4_inherit__map">
 <area shape="rect" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="10,80,199,107"/>
-<area shape="rect" title=" " alt="" coords="5,5,204,32"/>
+<area shape="rect" href="classBaseSolver.html" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="5,5,204,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -89,8 +89,13 @@ Collaboration diagram for SlabCubic&lt; dim, Scalar &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSlabCubic__coll__graph.png" border="0" usemap="#SlabCubic_3_01dim_00_01Scalar_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="SlabCubic_3_01dim_00_01Scalar_01_4_coll__map" id="SlabCubic_3_01dim_00_01Scalar_01_4_coll__map">
-<area shape="rect" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="10,80,199,107"/>
-<area shape="rect" title=" " alt="" coords="5,5,204,32"/>
+<area shape="rect" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="843,97,1032,124"/>
+<area shape="rect" href="classBaseSolver.html" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="595,97,793,124"/>
+<area shape="rect" href="classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="227,5,361,32"/>
+<area shape="rect" href="classNewtonSolverUtility.html" title=" " alt="" coords="217,57,371,98"/>
+<area shape="rect" href="classLinearSolverUtility.html" title=" " alt="" coords="223,122,365,163"/>
+<area shape="rect" href="classBaseSolver_1_1ConstantPressureFunction.html" title="Class representing the applied pressure component." alt="" coords="187,187,401,229"/>
+<area shape="rect" title=" " alt="" coords="5,195,137,221"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -103,11 +108,97 @@ Public Member Functions</h2></td></tr>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSlabCubic.html#a775227d0e4408c290e29f752ad76551f">initialise_boundaries_tag</a> () override</td></tr>
 <tr class="memdesc:a775227d0e4408c290e29f752ad76551f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag. Boundaries are problem specific hence we override the base virtual implementation. <br /></td></tr>
 <tr class="separator:a775227d0e4408c290e29f752ad76551f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classBaseSolver"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classBaseSolver')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classBaseSolver.html">BaseSolver&lt; dim, Scalar &gt;</a></td></tr>
+<tr class="memitem:a354b9ee602a939e0202a0989aaaf861d inherit pub_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a354b9ee602a939e0202a0989aaaf861d">is_face_at_newmann_boundary</a> (const int face)</td></tr>
+<tr class="memdesc:a354b9ee602a939e0202a0989aaaf861d inherit pub_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a given faces is at a Newmann boundary.  <a href="classBaseSolver.html#a354b9ee602a939e0202a0989aaaf861d">More...</a><br /></td></tr>
+<tr class="separator:a354b9ee602a939e0202a0989aaaf861d inherit pub_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc24f91bd585cf7d207bff16ff8e4830 inherit pub_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#abc24f91bd585cf7d207bff16ff8e4830">BaseSolver</a> (const std::string &amp;parameters_file_name_, const std::string &amp;mesh_file_name_, const std::string &amp;problem_name_)</td></tr>
+<tr class="memdesc:abc24f91bd585cf7d207bff16ff8e4830 inherit pub_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classBaseSolver.html#abc24f91bd585cf7d207bff16ff8e4830">More...</a><br /></td></tr>
+<tr class="separator:abc24f91bd585cf7d207bff16ff8e4830 inherit pub_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf5ef630e0939bf3bd3c921da641d5b7 inherit pub_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top"><a id="aaf5ef630e0939bf3bd3c921da641d5b7"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aaf5ef630e0939bf3bd3c921da641d5b7">~BaseSolver</a> ()</td></tr>
+<tr class="memdesc:aaf5ef630e0939bf3bd3c921da641d5b7 inherit pub_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for abstract class. <br /></td></tr>
+<tr class="separator:aaf5ef630e0939bf3bd3c921da641d5b7 inherit pub_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a727a6637ad911ae0e85d4b072f8e08f9 inherit pub_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top"><a id="a727a6637ad911ae0e85d4b072f8e08f9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()</td></tr>
+<tr class="separator:a727a6637ad911ae0e85d4b072f8e08f9 inherit pub_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91e8223c7ebb58833c2dd3f3cd4d64db inherit pub_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">solve_newton</a> ()</td></tr>
+<tr class="memdesc:a91e8223c7ebb58833c2dd3f3cd4d64db inherit pub_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the non linear problem using the Newton method.  <a href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">More...</a><br /></td></tr>
+<tr class="separator:a91e8223c7ebb58833c2dd3f3cd4d64db inherit pub_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa463430a542ce8497c4d755245da4b7b inherit pub_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">output</a> () const</td></tr>
+<tr class="memdesc:aa463430a542ce8497c4d755245da4b7b inherit pub_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the output.  <a href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">More...</a><br /></td></tr>
+<tr class="separator:aa463430a542ce8497c4d755245da4b7b inherit pub_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:aea0bd1d0680b182200785a4a7e01e171"><td class="memItemLeft" align="right" valign="top">dealii::Functions::ZeroFunction&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSlabCubic.html#aea0bd1d0680b182200785a4a7e01e171">zero_function</a></td></tr>
 <tr class="separator:aea0bd1d0680b182200785a4a7e01e171"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classBaseSolver"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classBaseSolver')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classBaseSolver.html">BaseSolver&lt; dim, Scalar &gt;</a></td></tr>
+<tr class="memitem:abc078a12deb075a0452d224c5605ee9f inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#abc078a12deb075a0452d224c5605ee9f">mpi_size</a></td></tr>
+<tr class="separator:abc078a12deb075a0452d224c5605ee9f inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a5edd1cb6c021e5eb8709f6a194a874 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a4a5edd1cb6c021e5eb8709f6a194a874">mpi_rank</a></td></tr>
+<tr class="separator:a4a5edd1cb6c021e5eb8709f6a194a874 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab37b175f3e844309c5aee6015b504b3a inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">ConditionalOStream&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#ab37b175f3e844309c5aee6015b504b3a">pcout</a></td></tr>
+<tr class="separator:ab37b175f3e844309c5aee6015b504b3a inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9314c7d37cde79a4dd6b58ef03a16131 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classBaseSolver_1_1ConstantPressureFunction.html">ConstantPressureFunction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a9314c7d37cde79a4dd6b58ef03a16131">pressure</a></td></tr>
+<tr class="separator:a9314c7d37cde79a4dd6b58ef03a16131 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50bb89e84a23ec0c4bd181f8c63c745e inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">std::set&lt; unsigned int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a50bb89e84a23ec0c4bd181f8c63c745e">newmann_boundary_faces</a></td></tr>
+<tr class="separator:a50bb89e84a23ec0c4bd181f8c63c745e inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add973afcdc2c7ba1a1deb22adf6c4519 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">std::map&lt; types::boundary_id, const Function&lt; dim &gt; * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#add973afcdc2c7ba1a1deb22adf6c4519">dirichlet_boundary_functions</a></td></tr>
+<tr class="separator:add973afcdc2c7ba1a1deb22adf6c4519 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b6a972920a7c4e0368212282df9ea7d inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::pair&lt; int, int &gt;, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a8b6a972920a7c4e0368212282df9ea7d">piola_kirchhoff_b_weights</a></td></tr>
+<tr class="separator:a8b6a972920a7c4e0368212282df9ea7d inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a854c1e14c453d015aceff7a59df8d2 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a7a854c1e14c453d015aceff7a59df8d2">mesh_file_name</a></td></tr>
+<tr class="separator:a7a854c1e14c453d015aceff7a59df8d2 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15d87994a19fb601174284419bc4864a inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a15d87994a19fb601174284419bc4864a">r</a></td></tr>
+<tr class="separator:a15d87994a19fb601174284419bc4864a inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a429ef515c9ffb4403fd095b90e534a inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">parallel::fullydistributed::Triangulation&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a0a429ef515c9ffb4403fd095b90e534a">mesh</a></td></tr>
+<tr class="separator:a0a429ef515c9ffb4403fd095b90e534a inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad704c6335f54832f071fd3111bbe756e inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; FiniteElement&lt; dim &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#ad704c6335f54832f071fd3111bbe756e">fe</a></td></tr>
+<tr class="separator:ad704c6335f54832f071fd3111bbe756e inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1cc5678ee09f7c4f93ffc6e866818ed inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; Quadrature&lt; dim &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#ad1cc5678ee09f7c4f93ffc6e866818ed">quadrature</a></td></tr>
+<tr class="separator:ad1cc5678ee09f7c4f93ffc6e866818ed inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e9235f9bd1628055c87a55d2b657b7a inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; Quadrature&lt; dim - 1 &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a1e9235f9bd1628055c87a55d2b657b7a">quadrature_face</a></td></tr>
+<tr class="separator:a1e9235f9bd1628055c87a55d2b657b7a inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d446af61f10485f6a7e33391ece74f7 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">DoFHandler&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a3d446af61f10485f6a7e33391ece74f7">dof_handler</a></td></tr>
+<tr class="separator:a3d446af61f10485f6a7e33391ece74f7 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87008a2e79b74d740a5213b235e6f712 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">IndexSet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a87008a2e79b74d740a5213b235e6f712">locally_owned_dofs</a></td></tr>
+<tr class="separator:a87008a2e79b74d740a5213b235e6f712 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade35893f1a8aae7f477cca5560b2cf1d inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">IndexSet&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#ade35893f1a8aae7f477cca5560b2cf1d">locally_relevant_dofs</a></td></tr>
+<tr class="separator:ade35893f1a8aae7f477cca5560b2cf1d inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32ae521e850edfc5df03ee1e7d2c24de inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">TrilinosWrappers::SparseMatrix&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a32ae521e850edfc5df03ee1e7d2c24de">jacobian_matrix</a></td></tr>
+<tr class="separator:a32ae521e850edfc5df03ee1e7d2c24de inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9aa4be11aa9ad50199a19e2ae2ee9e90 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">TrilinosWrappers::MPI::Vector&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a9aa4be11aa9ad50199a19e2ae2ee9e90">residual_vector</a></td></tr>
+<tr class="separator:a9aa4be11aa9ad50199a19e2ae2ee9e90 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc28c3e1f3748769548d9662aa746c21 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">TrilinosWrappers::MPI::Vector&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#abc28c3e1f3748769548d9662aa746c21">delta_owned</a></td></tr>
+<tr class="separator:abc28c3e1f3748769548d9662aa746c21 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bbe1fed6869a7e6a60acb3aead72e57 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">TrilinosWrappers::MPI::Vector&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a3bbe1fed6869a7e6a60acb3aead72e57">solution_owned</a></td></tr>
+<tr class="separator:a3bbe1fed6869a7e6a60acb3aead72e57 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41d902ebf553a7ac67de4e10cfa756ee inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">TrilinosWrappers::MPI::Vector&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a41d902ebf553a7ac67de4e10cfa756ee">solution</a></td></tr>
+<tr class="separator:a41d902ebf553a7ac67de4e10cfa756ee inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2696a3057ff583c31e0181ea7530eb52 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a2696a3057ff583c31e0181ea7530eb52">problem_name</a></td></tr>
+<tr class="separator:a2696a3057ff583c31e0181ea7530eb52 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af62b9b59d184491b221d6a70085f3554 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top">ParameterHandler&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#af62b9b59d184491b221d6a70085f3554">prm</a></td></tr>
+<tr class="separator:af62b9b59d184491b221d6a70085f3554 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a385d0aaafabf8d4c6bb1908bd7086568 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classLinearSolverUtility.html">LinearSolverUtility</a>&lt; Scalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a385d0aaafabf8d4c6bb1908bd7086568">linear_solver_utility</a></td></tr>
+<tr class="separator:a385d0aaafabf8d4c6bb1908bd7086568 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d7e41ca05f45a5861def22b5185ba81 inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classNewtonSolverUtility.html">NewtonSolverUtility</a>&lt; Scalar &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a1d7e41ca05f45a5861def22b5185ba81">newton_solver_utility</a></td></tr>
+<tr class="separator:a1d7e41ca05f45a5861def22b5185ba81 inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d29ea8fb40c04a3a1e251bd5da3c73c inherit pro_attribs_classBaseSolver"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classBoundariesUtility.html">BoundariesUtility</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a8d29ea8fb40c04a3a1e251bd5da3c73c">boundaries_utility</a></td></tr>
+<tr class="separator:a8d29ea8fb40c04a3a1e251bd5da3c73c inherit pro_attribs_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pro_methods_classBaseSolver"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classBaseSolver')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classBaseSolver.html">BaseSolver&lt; dim, Scalar &gt;</a></td></tr>
+<tr class="memitem:a7ac7bc7fcd68e6458b4c87ffcb700a6e inherit pro_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e">assemble_system</a> ()</td></tr>
+<tr class="memdesc:a7ac7bc7fcd68e6458b4c87ffcb700a6e inherit pro_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado: <a href="https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html">https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html</a>.  <a href="classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e">More...</a><br /></td></tr>
+<tr class="separator:a7ac7bc7fcd68e6458b4c87ffcb700a6e inherit pro_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee9eb50ca5ff8ce3d21ac6d758e8120b inherit pro_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aee9eb50ca5ff8ce3d21ac6d758e8120b">solve_system</a> ()</td></tr>
+<tr class="memdesc:aee9eb50ca5ff8ce3d21ac6d758e8120b inherit pro_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolver.html#aee9eb50ca5ff8ce3d21ac6d758e8120b">More...</a><br /></td></tr>
+<tr class="separator:aee9eb50ca5ff8ce3d21ac6d758e8120b inherit pro_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01a93460f997b586b4e983c050f9cec0 inherit pro_methods_classBaseSolver"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a01a93460f997b586b4e983c050f9cec0">parse_parameters</a> (const std::string &amp;parameters_file_name_)</td></tr>
+<tr class="memdesc:a01a93460f997b586b4e983c050f9cec0 inherit pro_methods_classBaseSolver"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the parameter input.  <a href="classBaseSolver.html#a01a93460f997b586b4e983c050f9cec0">More...</a><br /></td></tr>
+<tr class="separator:a01a93460f997b586b4e983c050f9cec0 inherit pro_methods_classBaseSolver"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;int dim, typename Scalar&gt;<br />

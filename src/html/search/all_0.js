@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['idealizedlv_0',['IdealizedLV',['../classIdealizedLV.html',1,'IdealizedLV&lt; dim, Scalar &gt;'],['../classIdealizedLV.html#a1ca0adf4de4ce10ea9e20b4367e2ea55',1,'IdealizedLV::IdealizedLV()']]],
-  ['idealizedlv_2ehpp_1',['IdealizedLV.hpp',['../IdealizedLV_8hpp.html',1,'']]],
-  ['initialise_5fboundaries_5ftag_2',['initialise_boundaries_tag',['../classSlabCubic.html#a775227d0e4408c290e29f752ad76551f',1,'SlabCubic::initialise_boundaries_tag()'],['../classIdealizedLV.html#a03935c261c52487e95d10da7dc0409ea',1,'IdealizedLV::initialise_boundaries_tag()']]]
+  ['assemble_5fsystem_0',['assemble_system',['../classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e',1,'BaseSolver']]]
 ];

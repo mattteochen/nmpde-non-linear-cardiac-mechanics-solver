@@ -10,7 +10,9 @@
 #include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
 #include <transversely_isotropic_constructive_law/NewtonSolverUtility.hpp>
 
-/** @brief Setup the problem by loading the mesh, creating the finite element
+/**
+ * @class BaseSolver
+ * @brief Setup the problem by loading the mesh, creating the finite element
  * and initialising the linear system.
  * @tparam dim The problem dimension space
  * @tparam Scalar The scalar type being used
@@ -341,28 +343,53 @@ void BaseSolver<dim, Scalar>::solve_newton() {
   unsigned int n_iter = 0;
   double residual_norm = newton_solver_utility.get_tolerance() + 1;
 
-  while (n_iter < newton_solver_utility.get_max_iterations() &&
-         residual_norm > newton_solver_utility.get_tolerance()) {
-    assemble_system();
-    residual_norm = residual_vector.l2_norm();
+  {
+    const std::chrono::high_resolution_clock::time_point begin_time =
+        std::chrono::high_resolution_clock::now();
+    while (n_iter < newton_solver_utility.get_max_iterations() &&
+           residual_norm > newton_solver_utility.get_tolerance()) {
+      assemble_system();
+      residual_norm = residual_vector.l2_norm();
 
-    pcout << "Newton iteration " << n_iter << "/"
-          << newton_solver_utility.get_max_iterations()
-          << " - ||r|| = " << std::scientific << std::setprecision(6)
-          << residual_norm << std::flush;
+      pcout << "Newton iteration " << n_iter << "/"
+            << newton_solver_utility.get_max_iterations()
+            << " - ||r|| = " << std::scientific << std::setprecision(6)
+            << residual_norm << std::flush;
 
-    // We actually solve the system only if the residual is larger than the
-    // tolerance.
-    if (residual_norm > newton_solver_utility.get_tolerance()) {
-      solve_system();
+      // We actually solve the system only if the residual is larger than the
+      // tolerance.
+      if (residual_norm > newton_solver_utility.get_tolerance()) {
+        solve_system();
 
-      solution_owned += delta_owned;
-      solution = solution_owned;
-    } else {
-      pcout << " < tolerance" << std::endl;
+        solution_owned += delta_owned;
+        solution = solution_owned;
+      } else {
+        pcout << " < tolerance" << std::endl;
+      }
+
+      ++n_iter;
     }
+    const std::chrono::high_resolution_clock::time_point end_time =
+        std::chrono::high_resolution_clock::now();
+    const long long diff =
+        std::chrono::duration_cast<std::chrono::microseconds>(end_time -
+                                                              begin_time)
+            .count();
+    pcout << std::endl
+          << "Newton metod ended in " << diff << " us" << std::endl;
 
-    ++n_iter;
+    if (mpi_rank == 0) {
+      const std::string report_name =
+          LinearSolverUtility<Scalar>::solver_type_matcher_rev
+              [linear_solver_utility.get_solver_type()] +
+          "_" +
+          LinearSolverUtility<Scalar>::preconditioner_type_matcher_rev
+              [linear_solver_utility.get_preconditioner_type()];
+      Reporter reporter(report_name + ".log",
+                        "TYPE,TIME(us),NEWTON_ITERATIONS,NEWTON_RESIDUAL_NORM",
+                        report_name);
+      reporter.write(diff, ',', n_iter, ',', residual_norm);
+    }
   }
 
   pcout << "===============================================" << std::endl;
@@ -426,8 +453,8 @@ void BaseSolver<dim, Scalar>::parse_parameters(
     prm.declare_entry("MaxIteration", "1.0", Patterns::Double(1.0),
                       "Linear solver max iterations multiplier");
 
-    prm.declare_entry("PreconditionerType", "SSOR",
-                      Patterns::Selection("IDENTITY|SSOR"),
+    prm.declare_entry("PreconditionerType", "ILU",
+                      Patterns::Selection("IDENTITY|SSOR|ILU|SOR"),
                       "Type of preconditioner");
   }
   prm.leave_subsection();

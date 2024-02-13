@@ -18,6 +18,7 @@
 #include <string>
 
 /**
+ * @class LinearSolverUtility
  * @brief Utility class for configuring linear solvers.
  * @tparam Scalar The scalar type used in the linear solver configuration
  * (default is double).
@@ -36,6 +37,8 @@ public:
    */
   enum class Preconditioner {
     IDENTITY, /**< Identity preconditioner */
+    ILU,      /**< ILU preconditioner */
+    SOR,      /**< SOR preconditioner */
     SSOR      /**< SSOR preconditioner */
   };
   /**
@@ -145,9 +148,29 @@ public:
       auto derived_ptr =
           dynamic_cast<dealii::TrilinosWrappers::PreconditionSSOR *>(
               preconditioner.get());
-      derived_ptr->initialize(
-          matrix,
-          dealii::TrilinosWrappers::PreconditionSSOR::AdditionalData(1.0));
+      derived_ptr->initialize(matrix);
+      break;
+    }
+    case Preconditioner::SOR: {
+      preconditioner =
+          std::make_unique<dealii::TrilinosWrappers::PreconditionSOR>();
+      // We have to perform a dynamic cast as the PreconditionBase class has
+      // not the initialize method
+      auto derived_ptr =
+          dynamic_cast<dealii::TrilinosWrappers::PreconditionSOR *>(
+              preconditioner.get());
+      derived_ptr->initialize(matrix);
+      break;
+    }
+    case Preconditioner::ILU: {
+      preconditioner =
+          std::make_unique<dealii::TrilinosWrappers::PreconditionILU>();
+      // We have to perform a dynamic cast as the PreconditionBase class has
+      // not the initialize method
+      auto derived_ptr =
+          dynamic_cast<dealii::TrilinosWrappers::PreconditionILU *>(
+              preconditioner.get());
+      derived_ptr->initialize(matrix);
       break;
     }
     default: {
@@ -255,27 +278,29 @@ void operator<<(std::ostream &out, LinearSolverUtility<Scalar> const &lsu) {
 template <typename Scalar>
 std::map<std::string, typename LinearSolverUtility<Scalar>::SolverType>
     LinearSolverUtility<Scalar>::solver_type_matcher = {
-        {"GMRES", LinearSolverUtility<Scalar>::SolverType::GMRES},
         {"BiCGSTAB", LinearSolverUtility<Scalar>::SolverType::BiCGSTAB},
-};
+        {"GMRES", LinearSolverUtility<Scalar>::SolverType::GMRES}};
 
 template <typename Scalar>
 std::map<typename LinearSolverUtility<Scalar>::SolverType, std::string>
     LinearSolverUtility<Scalar>::solver_type_matcher_rev = {
-        {LinearSolverUtility<Scalar>::SolverType::GMRES, "GMRES"},
         {LinearSolverUtility<Scalar>::SolverType::BiCGSTAB, "BiCGSTAB"},
-};
+        {LinearSolverUtility<Scalar>::SolverType::GMRES, "GMRES"}};
 
 template <typename Scalar>
 std::map<std::string, typename LinearSolverUtility<Scalar>::Preconditioner>
     LinearSolverUtility<Scalar>::preconditioner_type_matcher = {
         {"IDENTITY", LinearSolverUtility<Scalar>::Preconditioner::IDENTITY},
+        {"ILU", LinearSolverUtility<Scalar>::Preconditioner::ILU},
+        {"SOR", LinearSolverUtility<Scalar>::Preconditioner::SOR},
         {"SSOR", LinearSolverUtility<Scalar>::Preconditioner::SSOR}};
 
 template <typename Scalar>
 std::map<typename LinearSolverUtility<Scalar>::Preconditioner, std::string>
     LinearSolverUtility<Scalar>::preconditioner_type_matcher_rev = {
         {LinearSolverUtility<Scalar>::Preconditioner::IDENTITY, "IDENTITY"},
+        {LinearSolverUtility<Scalar>::Preconditioner::ILU, "ILU"},
+        {LinearSolverUtility<Scalar>::Preconditioner::SOR, "SOR"},
         {LinearSolverUtility<Scalar>::Preconditioner::SSOR, "SSOR"}};
 
 #endif // LINEAR_SOLVER_CONFIGURATION_HPP

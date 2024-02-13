@@ -1,13 +1,13 @@
 Add into blah blah....\hypertarget{index_autotoc_md1}{}\doxysection{Constructive law\+: transversely isotropic constitutive law}\label{index_autotoc_md1}
 This section covers the finite element solver for materials that follow the \href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ transversely isotropic constitutive law}}.
 
-An abstract base solver class {\ttfamily Base\+Solver} has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
+An abstract base solver class {\ttfamily \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}} has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
 
 The base class takes in account a pressure component that pushes on {\itshape {\bfseries{x}}} boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please {\itshape {\bfseries{override}}} all the needed implementations (this might the {\ttfamily assemble} method).
 
 Dirichlet boundaries condition values are assigned in the derived class.
 
-{\ttfamily Base\+Solver}\textquotesingle{}s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions\+: 
+{\ttfamily \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}}\textquotesingle{}s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions\+: 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{\#ifndef DEMO\_HPP}
 \DoxyCodeLine{\#define DEMO\_HPP}
