@@ -581,5 +581,4 @@ void BaseSolver<dim, Scalar>::parse_parameters(
 }
 
 // Explicit template initializations
-template class BaseSolver<2, double>;
 template class BaseSolver<3, double>;
