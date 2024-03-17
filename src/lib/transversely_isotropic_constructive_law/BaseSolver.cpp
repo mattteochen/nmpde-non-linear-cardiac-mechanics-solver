@@ -3,8 +3,6 @@
  * @brief Implementation file for the base solver class.
  */
 
-#include <deal.II/base/patterns.h>
-
 #include <transversely_isotropic_constructive_law/BaseSolver.hpp>
 #include <transversely_isotropic_constructive_law/BoundariesUtility.hpp>
 #include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
@@ -126,6 +124,35 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
 }
 
 /**
+ * @brief Assemble the Piola Kirchhoff tensor
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
+ * @param out_tensor A reference to the output tensor
+ * @param solution_gradient_quadrature The input tensor to compute the
+ * Kinematics component
+ * @param weight_key The key to index the Piola Kirchhoff weight map
+ */
+template <int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
+    Tensor<2, dim, ADNumberType> &out_tensor,
+    Tensor<2, dim, ADNumberType> &solution_gradient_quadrature) {
+  // Compute deformation gradient tensor
+  const auto F =
+      Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
+  // Compute green Lagrange tensor
+  const auto E = Physics::Elasticity::Kinematics::E(F);
+  // Compute exponent Q
+  ExponentQ<ADNumberType> exponent_q;
+  const auto exp_q = exponent_q.compute(E);
+  for (uint32_t i = 0; i < dim; ++i) {
+    for (uint32_t j = 0; j < dim; ++j) {
+      out_tensor[i][j] = Material::C * piola_kirchhoff_b_weights[{i, j}] *
+                         E[i][j] * std::exp(exp_q);
+    }
+  }
+}
+
+/**
  * @brief Assemble the system for a Newton iteration. The residual vector and
  * Jacobian matrix are evaluated leveraging automatic differentiation by Sacado:
  * https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html
@@ -157,9 +184,6 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 
   FEValuesExtractors::Vector displacement(0);
 
-  constexpr Differentiation::AD::NumberTypes ADTypeCode =
-      Differentiation::AD::NumberTypes::sacado_dfad_dfad;
-
   for (const auto &cell : dof_handler.active_cell_iterators()) {
     if (!cell->is_locally_owned())
       continue;
@@ -172,11 +196,6 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 
     // Retirive the dof indices
     cell->get_dof_indices(dof_indices);
-
-    // Create some aliases for the AD helper.
-    using ADHelper =
-        Differentiation::AD::ResidualLinearization<ADTypeCode, double>;
-    using ADNumberType = typename ADHelper::ad_type;
 
     // Create and initialize an instance of the helper class.
     ADHelper ad_helper(n_independent_vars, n_dependent_vars);
@@ -216,23 +235,10 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 
       // Loop over quadrature points
       for (unsigned int q = 0; q < n_q; ++q) {
-        // Compute deformation gradient tensor
-        const auto F =
-            Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
-        // Compute green Lagrange tensor
-        const auto E = Physics::Elasticity::Kinematics::E(F);
-        // Compute exponent Q
-        ExponentQ<ADNumberType> exponent_q;
-        const auto exp_q = exponent_q.compute(E);
-        // Compute Piola Kirchhoff tensor
+        // compute the piola kirchhoff tensor
         Tensor<2, dim, ADNumberType> piola_kirchhoff;
-        for (uint32_t i = 0; i < dim; ++i) {
-          for (uint32_t j = 0; j < dim; ++j) {
-            piola_kirchhoff[i][j] = Material::C *
-                                    piola_kirchhoff_b_weights[{i, j}] *
-                                    E[i][j] * std::exp(exp_q);
-          }
-        }
+        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q]);
+
         // Compute the integration weight
         const auto quadrature_integration_w = fe_values.JxW(q);
 
