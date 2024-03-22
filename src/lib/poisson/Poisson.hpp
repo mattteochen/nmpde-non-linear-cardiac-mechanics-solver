@@ -76,7 +76,7 @@ public:
         endocardium_function(0), epicardium_function(1), mesh(MPI_COMM_WORLD),
         pcout(std::cout, mpi_rank == 0) {
     dirichlet_boundary_functions[20] = &endocardium_function;
-    dirichlet_boundary_functions[50] = &epicardium_function;
+    dirichlet_boundary_functions[10] = &epicardium_function;
   }
 
   void setup();
