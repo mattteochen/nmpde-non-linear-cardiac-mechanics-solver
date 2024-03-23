@@ -1,3 +1,8 @@
+subsection TriangulationType
+  # Type of triangulation cell
+  set Type                      = Q
+end
+
 subsection LinearSolver
   # Type of solver used to solve the linear system
   set SolverType                = GMRES
@@ -6,7 +11,7 @@ subsection LinearSolver
   set Residual                  = 1e-6
 
   # Linear solver iterations multiplier (to be multiplied to matrix size)
-  set MaxIteration              = 5.0
+  set MaxIteration              = 1.0
 
   # Preconditioner type
   set PreconditionerType        = ILU

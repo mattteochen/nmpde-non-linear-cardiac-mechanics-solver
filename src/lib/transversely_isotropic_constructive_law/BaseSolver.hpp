@@ -17,6 +17,7 @@
 #include <deal.II/dofs/dof_handler.h>
 #include <deal.II/dofs/dof_tools.h>
 #include <deal.II/fe/fe_simplex_p.h>
+#include <deal.II/fe/fe_q.h>
 #include <deal.II/fe/fe_system.h>
 #include <deal.II/fe/fe_values.h>
 #include <deal.II/grid/grid_in.h>
@@ -84,6 +85,14 @@ template <int dim, typename Scalar = double> class BaseSolver {
 
 public:
   /**
+   * @brief: Triangulation geometry
+   */
+  enum class TriangulationType {
+    T,
+    Q
+  };
+
+  /**
    * @brief Material related parameters. Reference papaer:
    * https://pubmed.ncbi.nlm.nih.gov/26807042/
    */
@@ -149,7 +158,7 @@ public:
 
   protected:
     /**
-     * @brief Pressure value in kPa
+     * @brief Pressure value in Pa
      */
     double pressure = 0.0;
   };
@@ -355,6 +364,10 @@ protected:
    * The boundaries tag utiility
    */
   BoundariesUtility boundaries_utility;
+  /**
+   * The mesh triangulation type
+   */
+  TriangulationType triangulation_type;
 };
 
 /**
