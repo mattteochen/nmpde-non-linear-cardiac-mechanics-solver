@@ -54,20 +54,34 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
 
     // To construct a vector-valued finite element space, we use the FESystem
     // class. It is still derived from FiniteElement.
-    FE_SimplexP<dim> fe_scalar(r);
-    fe = std::make_unique<FESystem<dim>>(fe_scalar, dim);
+    switch (triangulation_type) {
+      case TriangulationType::T: {
+        pcout << "  Using triangulation: T" << std::endl;
+        fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
+        quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
+        quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
+        break;
+      };
+      case TriangulationType::Q: {
+        pcout << "  Using triangulation: Q" << std::endl;
+        fe = std::make_unique<FESystem<dim>>(FE_Q<dim>(r), dim);
+        quadrature = std::make_unique<QGauss<dim>>(r + 1);
+        quadrature_face = std::make_unique<QGauss<dim - 1>>(r + 1);
+        break;
+      };
+      default: {
+        pcout << "  Using triangulation: T" << std::endl;
+        fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
+        quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
+        quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
+      }
+    };
 
     pcout << "  Degree                     = " << fe->degree << std::endl;
     pcout << "  DoFs per cell              = " << fe->dofs_per_cell
           << std::endl;
-
-    quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
-
     pcout << "  Quadrature points per cell = " << quadrature->size()
           << std::endl;
-
-    quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
-
     pcout << "  Quadrature points per face = " << quadrature_face->size()
           << std::endl;
   }
@@ -447,6 +461,15 @@ template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::parse_parameters(
     const std::string &parameters_file_name_) {
   // Add the linear solver subsection
+  prm.enter_subsection("TriangulationType");
+  {
+    prm.declare_entry("Type", "T",
+                      Patterns::Selection("T|Q"),
+                      "Triangulation cell type");
+
+  }
+  prm.leave_subsection();
+
   prm.enter_subsection("LinearSolver");
   {
     prm.declare_entry("SolverType", "GMRES",
@@ -516,13 +539,20 @@ void BaseSolver<dim, Scalar>::parse_parameters(
   prm.enter_subsection("Pressure");
   {
     prm.declare_entry("Value", "0.0", Patterns::Double(0.0),
-                      "External pressure value (kPa)");
+                      "External pressure value (Pa)");
   }
   prm.leave_subsection();
 
   // Read input file
   prm.parse_input(parameters_file_name_);
   // prm.print_parameters(std::cout, ParameterHandler::OutputStyle::JSON);
+
+  // Parse the triangulation type
+  prm.enter_subsection("TriangulationType");
+  {
+    triangulation_type = prm.get("Type") == "T" ? TriangulationType::T : TriangulationType::Q;
+  }
+  prm.leave_subsection();
 
   // Parse linear solver subsection to the configuration object
   prm.enter_subsection("LinearSolver");
