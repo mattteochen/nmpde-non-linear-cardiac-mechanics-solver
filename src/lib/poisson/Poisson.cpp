@@ -3,7 +3,8 @@
  * @brief Implementation file for the Poisson class.
  */
 
-#include "Poisson.hpp"
+#include <poisson/Poisson.hpp>
+#include <fstream>
 
 /**
  * @class Poisson
@@ -49,6 +50,15 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::setup() {
     // initializing linear algebra classes.
     locally_owned_dofs = dof_handler.locally_owned_dofs();
   }
+  
+  pcout << "Poisson solver" << std::endl;
+  pcout << "  Degree                     = " << fe->degree << std::endl;
+  pcout << "  DoFs per cell              = " << fe->dofs_per_cell
+        << std::endl;
+  pcout << "  Quadrature points per cell = " << quadrature->size()
+        << std::endl;
+  pcout << "  Number of DoFs = " << dof_handler.n_dofs() << std::endl;
+  pcout << "===============================================" << std::endl;
 
   // Initialize the linear system.
   {
@@ -115,10 +125,15 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::assemble() {
     }
 
     cell->get_dof_indices(dof_indices);
+    // as this is an utility solver, save the global dof indices reference to be
+    // communicated to the caller solver
+    aggregate_dof_indices.push_back(dof_indices);
 
     system_matrix.add(dof_indices, cell_matrix);
     system_rhs.add(dof_indices, cell_rhs);
   }
+  pcout << "Poisson assemble" << std::endl;
+  std::cout << "  aggregate dof indices cache size (processor: " << mpi_rank << ") = " << aggregate_dof_indices.size() << std::endl;
 
   system_matrix.compress(VectorOperation::add);
   system_rhs.compress(VectorOperation::add);
@@ -128,8 +143,9 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::assemble() {
     std::map<types::global_dof_index, double> boundary_values;
     VectorTools::interpolate_boundary_values(
         dof_handler, dirichlet_boundary_functions, boundary_values);
+    //setting the flag to false as for https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
     MatrixTools::apply_boundary_values(boundary_values, system_matrix, solution,
-                                       system_rhs, true);
+                                       system_rhs, false);
   }
 }
 
@@ -148,7 +164,8 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::solve() {
     preconditioner.initialize(
         system_matrix, TrilinosWrappers::PreconditionSSOR::AdditionalData(1.0));
 
-    pcout << "  Solving the Poisson problem" << std::endl;
+    pcout << "-----------------------------------------------" << std::endl;
+    pcout << "Solving the Poisson problem" << std::endl;
     solver.solve(system_matrix, solution, system_rhs, preconditioner);
     pcout << "  " << solver_control.last_step() << " CG iterations"
           << std::endl;
@@ -166,6 +183,7 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::solve() {
     // This performs the necessary communication so that the locally relevant
     // DoFs are received from other processes and stored inside solution_ghost.
     solution_ghost = solution;
+    pcout << "  Solution size: " << solution_ghost.size() << std::endl;
   }
 }
 
@@ -178,6 +196,17 @@ template <int dim, typename Scalar>
 const TrilinosWrappers::MPI::Vector &
 Poisson<dim, Scalar>::get_solution() const {
   return solution_ghost;
+}
+
+/**
+ * @brief Retrieve a reference to the cached dof indices
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
+ */
+template <int dim, typename Scalar>
+const std::vector<std::vector<types::global_dof_index>> &
+Poisson<dim, Scalar>::get_aggregate_dof_indices() const {
+  return aggregate_dof_indices;
 }
 
 // Explicit template initializations

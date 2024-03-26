@@ -1,20 +1,15 @@
-subsection TriangulationType
-  # Type of triangulation cell
-  set Type                      = T
-end
-
 subsection LinearSolver
   # Type of solver used to solve the linear system
-  set SolverType                = GMRES
+  set SolverType                = BiCGSTAB
 
   # Linear solver residual (scaled by residual norm)
   set Residual                  = 1e-6
 
   # Linear solver iterations multiplier (to be multiplied to matrix size)
-  set MaxIteration              = 1.0
+  set MaxIteration              = 10.0
 
   # Preconditioner type
-  set PreconditionerType        = ILU
+  set PreconditionerType        = IDENTITY
 end
 
 subsection PolynomialDegree
@@ -54,5 +49,5 @@ end
 
 subsection Pressure
   # External pressure value
-  set Value                      = 1000.0
+  set Value                      = 4.0
 end

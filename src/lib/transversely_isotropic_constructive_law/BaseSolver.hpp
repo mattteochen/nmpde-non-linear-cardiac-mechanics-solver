@@ -69,7 +69,7 @@ template <int dim, typename Scalar = double> class BaseSolver {
   using LinearSolver =
       std::unique_ptr<SolverBase<TrilinosWrappers::MPI::Vector>>;
   /**
-   * Alias for the AD helper
+   * Sacado automatic differentiation type code from
    */
   static constexpr Differentiation::AD::NumberTypes ADTypeCode =
       Differentiation::AD::NumberTypes::sacado_dfad_dfad;
@@ -79,10 +79,9 @@ template <int dim, typename Scalar = double> class BaseSolver {
   using ADHelper =
       Differentiation::AD::ResidualLinearization<ADTypeCode, double>;
   /**
-   * Alias for the AD helper
+   * Alias for the AD number type
    */
   using ADNumberType = typename ADHelper::ad_type;
-
 public:
   /**
    * @brief: Triangulation geometry
@@ -243,16 +242,17 @@ public:
    */
   virtual ~BaseSolver() {}
 
-  void setup();
+  virtual void setup();
 
-  void solve_newton();
+  virtual void solve_newton();
 
-  void output() const;
+  virtual void output() const;
 
 protected:
   virtual void compute_piola_kirchhoff(
       Tensor<2, dim, ADNumberType> &out_tensor,
-      Tensor<2, dim, ADNumberType> &solution_gradient_quadrature);
+      Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
+      const unsigned cell_index);
 
   virtual void assemble_system();
 
