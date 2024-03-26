@@ -6,20 +6,21 @@
 #ifndef IDEALIZED_LV_HPP
 #define IDEALIZED_LV_HPP
 
-#include <transversely_isotropic_constructive_law/BaseSolver.hpp>
 #include <Assert.hpp>
+#include <poisson/Poisson.hpp>
+#include <transversely_isotropic_constructive_law/BaseSolver.hpp>
 
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/fe/mapping_fe.h>
+#include <deal.II/lac/trilinos_solver.h>
 
 #include <cmath>
 #include <fstream>
-#include <poisson/Poisson.hpp>
 #include <string>
 
 /**
  * @class IdealizedLVfiber
- * @brief Class representing the an Idealized LV solver
+ * @brief Class representing the an Idealized LV solver with fiber contraction
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
@@ -55,7 +56,15 @@ public:
                    const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_),
         zero_function(dealii::Functions::ZeroFunction<dim>(dim)),
-        poisson_solver(mesh_file_name_, 1) {}
+        poisson_solver(mesh_file_name_, 1) {
+    Base::prm.enter_subsection("Pressure");
+    { fiber_pressure = Base::prm.get_double("FiberValue"); }
+    Base::prm.leave_subsection();
+    Base::pcout << "Problem pressure configuration" << std::endl;
+    Base::pcout << "  Value: " << Base::pressure.value() << std::endl;
+    Base::pcout << "  FiberValue: " << fiber_pressure << std::endl;
+    Base::pcout << "===============================================" << std::endl;
+  }
   /**
    * @brief Initialise boundaries tag. Boundaries are problem specific hence we
    * override the base virtual implementation.
@@ -72,11 +81,7 @@ public:
     }
   };
   /**
-   * @brief Overridden function.
-   * 
-   * This implementation takes count for the active fiber contraction.
-   * 
-   * @see Base::baseFunction()
+   * @see Base::compute_piola_kirchhoff()
    */
   void compute_piola_kirchhoff(
       Tensor<2, dim, ADNumberType> &out_tensor,
@@ -101,7 +106,6 @@ public:
     const auto& poisson_solution = poisson_solver.get_solution();
     const auto& poisson_dof_indices = poisson_solver.get_aggregate_dof_indices();
     //TODO: move const parameter insdie the config file
-    const double T_a_pressure = 6000.0;
     Tensor<1, dim> f;
     for (unsigned i=0; i<poisson_solver.fe->dofs_per_cell; ++i) {
       const auto global_index = poisson_dof_indices[cell_index][i];
@@ -163,12 +167,20 @@ public:
         f[i] += dx_du[i] * std::sin(alpha_rad) + dx_dv[i] * std::cos(alpha_rad);
       } 
     }
-    //TODO: debug the outer product
-    const auto ff = T_a_pressure * dealii::outer_product(f, f);
+    const auto ff = fiber_pressure * dealii::outer_product(f, f);
     out_tensor += ff;
   }
   /**
-   * @brief Solve the non linear problem using the Newton method
+   * @see Base::solve_system()
+   */
+  // void solve_system() override {
+  //   dealii::SolverControl sc(static_cast<int>(Base::jacobian_matrix.m() * 1.0), 1e-6);
+  //   dealii::TrilinosWrappers::SolverDirect solver(sc);
+  //   solver.initialize(Base::jacobian_matrix);
+  //   solver.solve(Base::delta_owned, Base::residual_vector);
+  // }
+  /**
+   * @see Base::solve_newton()
    */
   void solve_newton() override {
     Base::pcout << "==============================================="
@@ -226,6 +238,10 @@ protected:
    * Utility object to solve Poisson problems
    */
   Poisson<dim, Scalar> poisson_solver;
+  /**
+   * The fiber pressure T_a value (https://pubmed.ncbi.nlm.nih.gov/26807042/)
+   */
+  Scalar fiber_pressure;
 };
 
 #endif // IDEALIZED_LV_HPP

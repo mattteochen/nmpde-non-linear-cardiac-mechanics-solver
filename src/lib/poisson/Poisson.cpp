@@ -104,9 +104,11 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::assemble() {
   system_matrix = 0.0;
   system_rhs = 0.0;
 
+  unsigned cell_counter = 0;
   for (const auto &cell : dof_handler.active_cell_iterators()) {
     if (!cell->is_locally_owned())
       continue;
+    cell_counter++;
 
     fe_values.reinit(cell);
 
@@ -133,7 +135,8 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::assemble() {
     system_rhs.add(dof_indices, cell_rhs);
   }
   pcout << "Poisson assemble" << std::endl;
-  std::cout << "  aggregate dof indices cache size (processor: " << mpi_rank << ") = " << aggregate_dof_indices.size() << std::endl;
+  std::cout << "  Poisson aggregate dof indices cache size (processor: " << mpi_rank << ") = " << aggregate_dof_indices.size() << std::endl;
+  std::cout << "  Poisson cell_counter (processor: " << mpi_rank << ") = " << cell_counter << std::endl;
 
   system_matrix.compress(VectorOperation::add);
   system_rhs.compress(VectorOperation::add);

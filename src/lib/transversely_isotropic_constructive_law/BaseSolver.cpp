@@ -314,7 +314,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
     //we only count local owned cells
     cell_index++;
   }
-  pcout << "  cell index max (processor " << mpi_rank << ") = " << cell_index << std::endl;
+  std::cout << "  Base cell index (processor " << mpi_rank << ") = " << cell_index << std::endl;
   // out_f.close();
   // Share between MPI processes
   jacobian_matrix.compress(VectorOperation::add);
@@ -545,6 +545,8 @@ void BaseSolver<dim, Scalar>::parse_parameters(
   {
     prm.declare_entry("Value", "0.0", Patterns::Double(0.0),
                       "External pressure value (Pa)");
+    prm.declare_entry("FiberValue", "0.0", Patterns::Double(0.0),
+                      "Fiber pressure value (Pa)");
   }
   prm.leave_subsection();
 

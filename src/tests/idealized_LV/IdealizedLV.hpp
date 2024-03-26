@@ -30,7 +30,11 @@ public:
   IdealizedLV(const std::string &parameters_file_name_,
               const std::string &mesh_file_name_,
               const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}
+      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {
+    Base::pcout << "Problem pressure configuration" << std::endl;
+    Base::pcout << "  Value: " << Base::pressure.value() << std::endl;
+    Base::pcout << "===============================================" << std::endl;
+  }
   /**
    * @brief Initialise boundaries tag. Boundaries are problem specific hence we
    * override the base virtual implementation.
