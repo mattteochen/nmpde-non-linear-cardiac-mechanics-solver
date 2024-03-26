@@ -9,6 +9,7 @@
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/quadrature_lib.h>
 #include <deal.II/distributed/fully_distributed_tria.h>
+#include <deal.II/dofs/dof_accessor.h>
 #include <deal.II/dofs/dof_handler.h>
 #include <deal.II/dofs/dof_tools.h>
 #include <deal.II/fe/fe_simplex_p.h>
@@ -87,7 +88,8 @@ public:
 
   const TrilinosWrappers::MPI::Vector &get_solution() const;
 
-protected:
+  const std::vector<std::vector<types::global_dof_index>>& get_aggregate_dof_indices() const;
+
   /**
    * The input mesh file name
    */
@@ -161,6 +163,10 @@ protected:
    * DoFs owned by current process
    */
   IndexSet locally_owned_dofs;
+  /**
+   * Cache of dof indices
+   */
+  std::vector<std::vector<types::global_dof_index>> aggregate_dof_indices;
 };
 
 #endif

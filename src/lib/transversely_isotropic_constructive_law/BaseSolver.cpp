@@ -69,12 +69,6 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
         quadrature_face = std::make_unique<QGauss<dim - 1>>(r + 1);
         break;
       };
-      default: {
-        pcout << "  Using triangulation: T" << std::endl;
-        fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
-        quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
-        quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
-      }
     };
 
     pcout << "  Degree                     = " << fe->degree << std::endl;
@@ -149,7 +143,8 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
     Tensor<2, dim, ADNumberType> &out_tensor,
-    Tensor<2, dim, ADNumberType> &solution_gradient_quadrature) {
+    Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
+    const unsigned /*cell_index*/) {
   // Compute deformation gradient tensor
   const auto F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
@@ -197,10 +192,14 @@ void BaseSolver<dim, Scalar>::assemble_system() {
   residual_vector = 0.0;
 
   FEValuesExtractors::Vector displacement(0);
-
+  
+  unsigned cell_index = 0;
+  // std::ofstream out_f("owned_cells_base_solver" + std::to_string(mpi_rank) + ".log");
   for (const auto &cell : dof_handler.active_cell_iterators()) {
     if (!cell->is_locally_owned())
       continue;
+    // else 
+    //   out_f << cell->subdomain_id() << std::endl;
 
     // Retrive the indipendent and dependent variables num
     // Setting them to dofs_per_cell as
@@ -251,7 +250,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
       for (unsigned int q = 0; q < n_q; ++q) {
         // compute the piola kirchhoff tensor
         Tensor<2, dim, ADNumberType> piola_kirchhoff;
-        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q]);
+        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q], cell_index);
 
         // Compute the integration weight
         const auto quadrature_integration_w = fe_values.JxW(q);
@@ -262,7 +261,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
-              quadrature_integration_w; // L(d)
+              quadrature_integration_w; // L(q)
         }
       }
       // Loop over quadrature points for Neumann boundaries conditions
@@ -312,7 +311,11 @@ void BaseSolver<dim, Scalar>::assemble_system() {
       jacobian_matrix.add(dof_indices, cell_matrix);
       residual_vector.add(dof_indices, cell_rhs);
     }
+    //we only count local owned cells
+    cell_index++;
   }
+  pcout << "  cell index max (processor " << mpi_rank << ") = " << cell_index << std::endl;
+  // out_f.close();
   // Share between MPI processes
   jacobian_matrix.compress(VectorOperation::add);
   residual_vector.compress(VectorOperation::add);
@@ -322,8 +325,9 @@ void BaseSolver<dim, Scalar>::assemble_system() {
     std::map<types::global_dof_index, double> boundary_values;
     VectorTools::interpolate_boundary_values(
         dof_handler, dirichlet_boundary_functions, boundary_values);
+    //setting the flag to false as for https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
     MatrixTools::apply_boundary_values(boundary_values, jacobian_matrix,
-                                       delta_owned, residual_vector, true);
+                                       delta_owned, residual_vector, false);
   }
 }
 
@@ -369,7 +373,6 @@ void BaseSolver<dim, Scalar>::solve_newton() {
     while (n_iter < newton_solver_utility.get_max_iterations() &&
            residual_norm > newton_solver_utility.get_tolerance()) {
       assemble_system();
-      residual_norm = residual_vector.l2_norm();
 
       pcout << "Newton iteration " << n_iter << "/"
             << newton_solver_utility.get_max_iterations()
@@ -380,6 +383,8 @@ void BaseSolver<dim, Scalar>::solve_newton() {
       // tolerance.
       if (residual_norm > newton_solver_utility.get_tolerance()) {
         solve_system();
+
+        residual_norm = delta_owned.l2_norm();
 
         solution_owned += delta_owned;
         solution = solution_owned;
