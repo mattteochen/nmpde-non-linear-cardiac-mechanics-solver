@@ -146,6 +146,13 @@ public:
       pressure = other.pressure;
     }
     /**
+     * @brief Retrieve the pressure value
+     * @return The configured pressure value
+     */
+    double value() const {
+      return pressure;
+    }
+    /**
      * @brief Evaluate the pressure at a given point
      * @param p The evaluation point
      * @param component The component id
