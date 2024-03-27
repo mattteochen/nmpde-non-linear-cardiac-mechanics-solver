@@ -258,7 +258,7 @@ public:
 protected:
   virtual void compute_piola_kirchhoff(
       Tensor<2, dim, ADNumberType> &out_tensor,
-      Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
+      const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
       const unsigned cell_index);
 
   virtual void assemble_system();

@@ -143,7 +143,7 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
 template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
     Tensor<2, dim, ADNumberType> &out_tensor,
-    Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
+    const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
     const unsigned /*cell_index*/) {
   // Compute deformation gradient tensor
   const auto F =
