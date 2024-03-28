@@ -9,7 +9,7 @@ subsection LinearSolver
   set MaxIteration              = 1.0
 
   # Preconditioner type
-  set PreconditionerType        = SSOR
+  set PreconditionerType        = ILU
 end
 
 subsection PolynomialDegree
@@ -36,7 +36,7 @@ subsection Material
   set b_fs                       = 4.0
 
   # C value of the strain energy tensor
-  set C                          = 2000.0
+  set C                          = 10000.0
 end
 
 subsection Boundaries
@@ -49,8 +49,8 @@ end
 
 subsection Pressure
   # External pressure value
-  set Value                      = 15.0
+  set Value                      = 150.0
 
   # Fiber value
-  set FiberValue                 = 60.0
+  set FiberValue                 = 600.0
 end
