@@ -1,5 +1,5 @@
 /**
- * @file IdealizedLVfiber.hpp
+ * @file IdealizedLVFiber.hpp
  * @brief Header file defining the idealized lv solver class.
  */
 
@@ -8,7 +8,7 @@
 
 #include <Assert.hpp>
 #include <poisson/Poisson.hpp>
-#include <transversely_isotropic_constructive_law/BaseSolver.hpp>
+#include <cardiac_mechanics/BaseSolver.hpp>
 
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/fe/mapping_fe.h>
@@ -21,12 +21,12 @@
 #endif
 
 /**
- * @class IdealizedLVfiber
+ * @class IdealizedLVFiber
  * @brief Class representing the an Idealized LV solver with fiber contraction
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
-class IdealizedLVfiber : public BaseSolver<dim, Scalar> {
+class IdealizedLVFiber : public BaseSolver<dim, Scalar> {
   /**
    * Alias for base class
    */
@@ -53,7 +53,7 @@ public:
    * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
-  IdealizedLVfiber(const std::string &parameters_file_name_,
+  IdealizedLVFiber(const std::string &parameters_file_name_,
                    const std::string &mesh_file_name_,
                    const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_),
@@ -63,8 +63,8 @@ public:
     { fiber_pressure = Base::prm.get_double("FiberValue"); }
     Base::prm.leave_subsection();
     Base::pcout << "Problem pressure configuration" << std::endl;
-    Base::pcout << "  Value: " << Base::pressure.value() << std::endl;
-    Base::pcout << "  FiberValue: " << fiber_pressure << std::endl;
+    Base::pcout << "  Boundary pressure value: " << Base::pressure.value() << " Pa" << std::endl;
+    Base::pcout << "  Fiber pressure value: " << fiber_pressure << " Pa" << std::endl;
     Base::pcout << "===============================================" << std::endl;
   }
   /**
@@ -106,8 +106,8 @@ public:
 
     const auto& poisson_solution = poisson_solver.get_solution();
     const auto& poisson_dof_indices = poisson_solver.get_aggregate_dof_indices();
-    //TODO: move const parameter insdie the config file
     Tensor<1, dim, ADNumberType> f;
+
     for (unsigned i=0; i<poisson_solver.fe->dofs_per_cell; ++i) {
       const auto global_index = poisson_dof_indices[cell_index][i];
       const auto& support_point = dofs_support_points[global_index];
@@ -141,7 +141,9 @@ public:
       const Scalar v_rad2 = v_deg2 * (M_PI / 180.0);
       const Scalar alpha_deg = 90.0 - 180.0 * t;
       const Scalar alpha_rad = alpha_deg * (M_PI / 180.0);
-
+        
+      //sometimes when the argument of the std::asin or std::acos is ~1/~-1 we have detected numerical imprecisions that will lead to NaN.
+      //We are skipping those Dofs contributions (from tests we have detected only one point over ~74k total Dofs (with r = 1))
       if ((std::isnan(v_rad1) && std::isnan(v_rad2)) || std::isnan(u_rad)) {
 #ifdef BUILD_TYPE_DEBUG
         std::cout << "ERR: rank: " << Base::mpi_rank

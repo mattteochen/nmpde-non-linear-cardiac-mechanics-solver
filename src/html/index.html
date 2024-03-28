@@ -68,8 +68,8 @@ $(function() {
 <div class="contents">
 <div class="textblock"><p>Add into blah blah....</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Constructive law: transversely isotropic constitutive law</h1>
-<p>This section covers the finite element solver for materials that follow the <a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">transversely isotropic constitutive law</a>.</p>
+Constructive law: isotropic and transversely isotropic constitutive law</h1>
+<p>This section covers the finite element solver for materials that follow the <a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">isotropic/transversely isotropic constitutive law</a>.</p>
 <p>An abstract base solver class <code><a class="el" href="classBaseSolver.html" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system...">BaseSolver</a></code> has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.</p>
 <p>The base class takes in account a pressure component that pushes on <em><b>x</b></em> boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please <em><b>override</b></em> all the needed implementations (this might the <code>assemble</code> method).</p>
 <p>Dirichlet boundaries condition values are assigned in the derived class.</p>

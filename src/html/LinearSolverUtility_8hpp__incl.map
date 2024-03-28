@@ -1,5 +1,5 @@
-<map id="lib/transversely_isotropic_constructive_law/LinearSolverUtility.hpp" name="lib/transversely_isotropic_constructive_law/LinearSolverUtility.hpp">
-<area shape="rect" id="node1" title="Header file defining the LinearSolverUtility class for configuring linear solvers." alt="" coords="446,5,737,47"/>
+<map id="lib/cardiac_mechanics/LinearSolverUtility.hpp" name="lib/cardiac_mechanics/LinearSolverUtility.hpp">
+<area shape="rect" id="node1" title="Header file defining the LinearSolverUtility class for configuring linear solvers." alt="" coords="505,5,678,47"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,95,135,136"/>
 <area shape="rect" id="node3" title=" " alt="" coords="159,95,288,136"/>
 <area shape="rect" id="node4" title=" " alt="" coords="312,95,441,136"/>

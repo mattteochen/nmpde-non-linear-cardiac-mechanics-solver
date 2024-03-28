@@ -30,14 +30,20 @@ Collaboration diagram for Base\+Solver$<$ dim, Scalar $>$\+::ExponentQ$<$ Number
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a5de9daa3b0cdaf004dea98f64c45835a}{get\+\_\+q}} ()
+Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a6666822b448f65a1e37cd9d29c9ebe05}{get\+\_\+q}} () const
 \begin{DoxyCompactList}\small\item\em Retrieve the Q value. \end{DoxyCompactList}\item 
 {\footnotesize template$<$typename Tensor\+Type $>$ }\\Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a9fc03a9e78ac1f25606c0b5794b895b0}{compute}} (Tensor\+Type const \&gst)
 \begin{DoxyCompactList}\small\item\em Evaluate the Q exponent at a given green Lagrange strain tensor. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
-Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}{q}} = static\+\_\+cast$<$Scalar$>$(0)
+Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}{q}} = Number\+Type(0.\+0)
+\item 
+const Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_acc6ded6cbf83b5c709c8f17290fbeec3}{b\+\_\+f}} = Number\+Type(Material\+::b\+\_\+f)
+\item 
+const Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a8f8f323cd5471dc0472c8a0cb0b9770d}{b\+\_\+t}} = Number\+Type(Material\+::b\+\_\+t)
+\item 
+const Number\+Type \mbox{\hyperlink{classBaseSolver_1_1ExponentQ_a228c96afaa24378f468d8b9e9c329ede}{b\+\_\+fs}} = Number\+Type(Material\+::b\+\_\+fs)
 \end{DoxyCompactItemize}
 
 
@@ -82,13 +88,13 @@ Evaluate the Q exponent at a given green Lagrange strain tensor.
 \begin{DoxyReturn}{Returns}
 The exponent q 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a5de9daa3b0cdaf004dea98f64c45835a}\label{classBaseSolver_1_1ExponentQ_a5de9daa3b0cdaf004dea98f64c45835a}} 
+\mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a6666822b448f65a1e37cd9d29c9ebe05}\label{classBaseSolver_1_1ExponentQ_a6666822b448f65a1e37cd9d29c9ebe05}} 
 \index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!get\_q@{get\_q}}
 \index{get\_q@{get\_q}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
 \doxysubsubsection{\texorpdfstring{get\_q()}{get\_q()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
 template$<$typename Number\+Type $>$ \\
-Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::get\+\_\+q (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::get\+\_\+q (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -100,16 +106,40 @@ The exponent q
 
 
 \doxysubsection{Member Data Documentation}
-\mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}\label{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}} 
+\mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_acc6ded6cbf83b5c709c8f17290fbeec3}\label{classBaseSolver_1_1ExponentQ_acc6ded6cbf83b5c709c8f17290fbeec3}} 
+\index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!b\_f@{b\_f}}
+\index{b\_f@{b\_f}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
+\doxysubsubsection{\texorpdfstring{b\_f}{b\_f}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+template$<$typename Number\+Type $>$ \\
+const Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::b\+\_\+f = Number\+Type(Material\+::b\+\_\+f)\hspace{0.3cm}{\ttfamily [protected]}}
+
+Number\+Type representation of \mbox{\hyperlink{structBaseSolver_1_1Material_a39f42652937811a25512f9a04f80d407}{Material\+::b\+\_\+f}} coefficient \mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a228c96afaa24378f468d8b9e9c329ede}\label{classBaseSolver_1_1ExponentQ_a228c96afaa24378f468d8b9e9c329ede}} 
+\index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!b\_fs@{b\_fs}}
+\index{b\_fs@{b\_fs}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
+\doxysubsubsection{\texorpdfstring{b\_fs}{b\_fs}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+template$<$typename Number\+Type $>$ \\
+const Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::b\+\_\+fs = Number\+Type(Material\+::b\+\_\+fs)\hspace{0.3cm}{\ttfamily [protected]}}
+
+Number\+Type representation of \mbox{\hyperlink{structBaseSolver_1_1Material_a15f1db5b2b9ffe5ccddbe785418f3b7a}{Material\+::b\+\_\+fs}} coefficient \mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a8f8f323cd5471dc0472c8a0cb0b9770d}\label{classBaseSolver_1_1ExponentQ_a8f8f323cd5471dc0472c8a0cb0b9770d}} 
+\index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!b\_t@{b\_t}}
+\index{b\_t@{b\_t}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
+\doxysubsubsection{\texorpdfstring{b\_t}{b\_t}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+template$<$typename Number\+Type $>$ \\
+const Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::b\+\_\+t = Number\+Type(Material\+::b\+\_\+t)\hspace{0.3cm}{\ttfamily [protected]}}
+
+Number\+Type representation of \mbox{\hyperlink{structBaseSolver_1_1Material_a5dc80734cd1fc563981031d05da1db0a}{Material\+::b\+\_\+t}} coefficient \mbox{\Hypertarget{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}\label{classBaseSolver_1_1ExponentQ_a22cfc322cde071eb2dcc15e35d7d89cc}} 
 \index{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}!q@{q}}
 \index{q@{q}!BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$@{BaseSolver$<$ dim, Scalar $>$::ExponentQ$<$ NumberType $>$}}
 \doxysubsubsection{\texorpdfstring{q}{q}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
 template$<$typename Number\+Type $>$ \\
-Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::q = static\+\_\+cast$<$Scalar$>$(0)\hspace{0.3cm}{\ttfamily [protected]}}
+Number\+Type \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}$<$ Number\+Type $>$\+::q = Number\+Type(0.\+0)\hspace{0.3cm}{\ttfamily [protected]}}
 
 The values of the exponent 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\end{DoxyCompactItemize}
+lib/cardiac\+\_\+mechanics/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\end{DoxyCompactItemize}

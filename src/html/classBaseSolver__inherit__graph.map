@@ -1,5 +1,6 @@
 <map id="BaseSolver&lt; dim, Scalar &gt;" name="BaseSolver&lt; dim, Scalar &gt;">
-<area shape="rect" id="node1" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="115,5,313,32"/>
-<area shape="rect" id="node2" href="$classIdealizedLV.html" title="Class representing the an Idealized LV solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="5,80,204,107"/>
-<area shape="rect" id="node3" href="$classSlabCubic.html" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="229,80,418,107"/>
+<area shape="rect" id="node1" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="5,64,204,91"/>
+<area shape="rect" id="node2" href="$classIdealizedLV.html" title="Class representing the an Idealized LV solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="252,5,451,32"/>
+<area shape="rect" id="node3" href="$classIdealizedLVFiber.html" title="Class representing the an Idealized LV solver with fiber contraction (https://pubmed...." alt="" coords="265,57,437,98"/>
+<area shape="rect" id="node4" href="$classSlabCubic.html" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="257,123,446,149"/>
 </map>

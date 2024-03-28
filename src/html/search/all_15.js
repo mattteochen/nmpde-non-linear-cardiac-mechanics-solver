@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7ebasesolver_93',['~BaseSolver',['../classBaseSolver.html#aaf5ef630e0939bf3bd3c921da641d5b7',1,'BaseSolver']]]
+  ['_7ebasesolver_116',['~BaseSolver',['../classBaseSolver.html#aaf5ef630e0939bf3bd3c921da641d5b7',1,'BaseSolver']]]
 ];

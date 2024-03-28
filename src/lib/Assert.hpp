@@ -1,3 +1,8 @@
+/**
+ * @file Assert.hpp
+ * @brief Header file containing an assertion macro
+ */
+
 #ifndef ASSERT_HPP
 #define ASSERT_HPP
 

@@ -6,7 +6,7 @@
 #ifndef IDEALIZED_LV_HPP
 #define IDEALIZED_LV_HPP
 
-#include <transversely_isotropic_constructive_law/BaseSolver.hpp>
+#include <cardiac_mechanics/BaseSolver.hpp>
 
 /**
  * @class IdealizedLV
@@ -31,8 +31,8 @@ public:
               const std::string &mesh_file_name_,
               const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_), zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
-    Base::pcout << "Problem pressure configuration" << std::endl;
-    Base::pcout << "  Value = " << Base::pressure.value() << std::endl;
+    Base::pcout << "Problem boundary pressure configuration" << std::endl;
+    Base::pcout << "  Value = " << Base::pressure.value() << " Pa" << std::endl;
     Base::pcout << "===============================================" << std::endl;
   }
   /**

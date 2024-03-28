@@ -100,9 +100,9 @@ Collaboration diagram for BaseSolver&lt; dim, Scalar &gt;::ExponentQ&lt; NumberT
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5de9daa3b0cdaf004dea98f64c45835a"><td class="memItemLeft" align="right" valign="top">NumberType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#a5de9daa3b0cdaf004dea98f64c45835a">get_q</a> ()</td></tr>
-<tr class="memdesc:a5de9daa3b0cdaf004dea98f64c45835a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the Q value.  <a href="classBaseSolver_1_1ExponentQ.html#a5de9daa3b0cdaf004dea98f64c45835a">More...</a><br /></td></tr>
-<tr class="separator:a5de9daa3b0cdaf004dea98f64c45835a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6666822b448f65a1e37cd9d29c9ebe05"><td class="memItemLeft" align="right" valign="top">NumberType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#a6666822b448f65a1e37cd9d29c9ebe05">get_q</a> () const</td></tr>
+<tr class="memdesc:a6666822b448f65a1e37cd9d29c9ebe05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the Q value.  <a href="classBaseSolver_1_1ExponentQ.html#a6666822b448f65a1e37cd9d29c9ebe05">More...</a><br /></td></tr>
+<tr class="separator:a6666822b448f65a1e37cd9d29c9ebe05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fc03a9e78ac1f25606c0b5794b895b0"><td class="memTemplParams" colspan="2">template&lt;typename TensorType &gt; </td></tr>
 <tr class="memitem:a9fc03a9e78ac1f25606c0b5794b895b0"><td class="memTemplItemLeft" align="right" valign="top">NumberType&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#a9fc03a9e78ac1f25606c0b5794b895b0">compute</a> (TensorType const &amp;gst)</td></tr>
 <tr class="memdesc:a9fc03a9e78ac1f25606c0b5794b895b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the Q exponent at a given green Lagrange strain tensor.  <a href="classBaseSolver_1_1ExponentQ.html#a9fc03a9e78ac1f25606c0b5794b895b0">More...</a><br /></td></tr>
@@ -110,8 +110,14 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a22cfc322cde071eb2dcc15e35d7d89cc"><td class="memItemLeft" align="right" valign="top">NumberType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#a22cfc322cde071eb2dcc15e35d7d89cc">q</a> = static_cast&lt;Scalar&gt;(0)</td></tr>
+<tr class="memitem:a22cfc322cde071eb2dcc15e35d7d89cc"><td class="memItemLeft" align="right" valign="top">NumberType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#a22cfc322cde071eb2dcc15e35d7d89cc">q</a> = NumberType(0.0)</td></tr>
 <tr class="separator:a22cfc322cde071eb2dcc15e35d7d89cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc6ded6cbf83b5c709c8f17290fbeec3"><td class="memItemLeft" align="right" valign="top">const NumberType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#acc6ded6cbf83b5c709c8f17290fbeec3">b_f</a> = NumberType(Material::b_f)</td></tr>
+<tr class="separator:acc6ded6cbf83b5c709c8f17290fbeec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f8f323cd5471dc0472c8a0cb0b9770d"><td class="memItemLeft" align="right" valign="top">const NumberType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#a8f8f323cd5471dc0472c8a0cb0b9770d">b_t</a> = NumberType(Material::b_t)</td></tr>
+<tr class="separator:a8f8f323cd5471dc0472c8a0cb0b9770d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a228c96afaa24378f468d8b9e9c329ede"><td class="memItemLeft" align="right" valign="top">const NumberType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver_1_1ExponentQ.html#a228c96afaa24378f468d8b9e9c329ede">b_fs</a> = NumberType(Material::b_fs)</td></tr>
+<tr class="separator:a228c96afaa24378f468d8b9e9c329ede"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;int dim, typename Scalar = double&gt;<br />
@@ -173,8 +179,8 @@ template&lt;typename TensorType &gt; </div>
 
 </div>
 </div>
-<a id="a5de9daa3b0cdaf004dea98f64c45835a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5de9daa3b0cdaf004dea98f64c45835a">&#9670;&nbsp;</a></span>get_q()</h2>
+<a id="a6666822b448f65a1e37cd9d29c9ebe05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6666822b448f65a1e37cd9d29c9ebe05">&#9670;&nbsp;</a></span>get_q()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,7 +196,7 @@ template&lt;typename NumberType &gt; </div>
           <td class="memname">NumberType <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolver_1_1ExponentQ.html">ExponentQ</a>&lt; NumberType &gt;::get_q </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -206,6 +212,87 @@ template&lt;typename NumberType &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="acc6ded6cbf83b5c709c8f17290fbeec3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc6ded6cbf83b5c709c8f17290fbeec3">&#9670;&nbsp;</a></span>b_f</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<div class="memtemplate">
+template&lt;typename NumberType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const NumberType <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolver_1_1ExponentQ.html">ExponentQ</a>&lt; NumberType &gt;::b_f = NumberType(Material::b_f)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>NumberType representation of <a class="el" href="structBaseSolver_1_1Material.html#a39f42652937811a25512f9a04f80d407" title="Define static member of BaseSolver&lt;dim, Scalar&gt;::Material::b_f. Needed for linking.">Material::b_f</a> coefficient </p>
+
+</div>
+</div>
+<a id="a228c96afaa24378f468d8b9e9c329ede"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a228c96afaa24378f468d8b9e9c329ede">&#9670;&nbsp;</a></span>b_fs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<div class="memtemplate">
+template&lt;typename NumberType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const NumberType <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolver_1_1ExponentQ.html">ExponentQ</a>&lt; NumberType &gt;::b_fs = NumberType(Material::b_fs)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>NumberType representation of <a class="el" href="structBaseSolver_1_1Material.html#a15f1db5b2b9ffe5ccddbe785418f3b7a" title="Define static member of BaseSolver&lt;dim, Scalar&gt;::Material::b_fs Needed for linking.">Material::b_fs</a> coefficient </p>
+
+</div>
+</div>
+<a id="a8f8f323cd5471dc0472c8a0cb0b9770d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f8f323cd5471dc0472c8a0cb0b9770d">&#9670;&nbsp;</a></span>b_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<div class="memtemplate">
+template&lt;typename NumberType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const NumberType <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolver_1_1ExponentQ.html">ExponentQ</a>&lt; NumberType &gt;::b_t = NumberType(Material::b_t)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>NumberType representation of <a class="el" href="structBaseSolver_1_1Material.html#a5dc80734cd1fc563981031d05da1db0a" title="Define static member of BaseSolver&lt;dim, Scalar&gt;::Material::b_t Needed for linking.">Material::b_t</a> coefficient </p>
+
+</div>
+</div>
 <a id="a22cfc322cde071eb2dcc15e35d7d89cc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a22cfc322cde071eb2dcc15e35d7d89cc">&#9670;&nbsp;</a></span>q</h2>
 
@@ -220,7 +307,7 @@ template&lt;typename NumberType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">NumberType <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolver_1_1ExponentQ.html">ExponentQ</a>&lt; NumberType &gt;::q = static_cast&lt;Scalar&gt;(0)</td>
+          <td class="memname">NumberType <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolver_1_1ExponentQ.html">ExponentQ</a>&lt; NumberType &gt;::q = NumberType(0.0)</td>
         </tr>
       </table>
   </td>
@@ -234,7 +321,7 @@ template&lt;typename NumberType &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>lib/transversely_isotropic_constructive_law/<a class="el" href="BaseSolver_8hpp_source.html">BaseSolver.hpp</a></li>
+<li>lib/cardiac_mechanics/<a class="el" href="BaseSolver_8hpp_source.html">BaseSolver.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

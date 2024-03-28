@@ -1,10 +1,15 @@
-\hypertarget{BaseSolver_8hpp}{}\doxysection{lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\+Base\+Solver.hpp File Reference}
-\label{BaseSolver_8hpp}\index{lib/transversely\_isotropic\_constructive\_law/BaseSolver.hpp@{lib/transversely\_isotropic\_constructive\_law/BaseSolver.hpp}}
+\hypertarget{BaseSolver_8hpp}{}\doxysection{lib/cardiac\+\_\+mechanics/\+Base\+Solver.hpp File Reference}
+\label{BaseSolver_8hpp}\index{lib/cardiac\_mechanics/BaseSolver.hpp@{lib/cardiac\_mechanics/BaseSolver.hpp}}
 
 
-Header file defining the abstract base solver class for materials having the transversely isotropic constructive law.  
+Header file defining the abstract base solver class for materials having the isotropic or transversely isotropic constructive law.  
 
 
+{\ttfamily \#include $<$cardiac\+\_\+mechanics/\+Boundaries\+Utility.\+hpp$>$}\newline
+{\ttfamily \#include $<$cardiac\+\_\+mechanics/\+Linear\+Solver\+Utility.\+hpp$>$}\newline
+{\ttfamily \#include $<$cardiac\+\_\+mechanics/\+Newton\+Solver\+Utility.\+hpp$>$}\newline
+{\ttfamily \#include $<$Assert.\+hpp$>$}\newline
+{\ttfamily \#include $<$Reporter.\+hpp$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/base/conditional\+\_\+ostream.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/base/parameter\+\_\+handler.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/base/point.\+h$>$}\newline
@@ -15,6 +20,7 @@ Header file defining the abstract base solver class for materials having the tra
 {\ttfamily \#include $<$deal.\+I\+I/dofs/dof\+\_\+handler.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/dofs/dof\+\_\+tools.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/fe/fe\+\_\+simplex\+\_\+p.\+h$>$}\newline
+{\ttfamily \#include $<$deal.\+I\+I/fe/fe\+\_\+q.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/fe/fe\+\_\+system.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/fe/fe\+\_\+values.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/grid/grid\+\_\+in.\+h$>$}\newline
@@ -26,16 +32,11 @@ Header file defining the abstract base solver class for materials having the tra
 {\ttfamily \#include $<$deal.\+I\+I/numerics/vector\+\_\+tools.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/physics/elasticity/kinematics.\+h$>$}\newline
 {\ttfamily \#include $<$deal.\+I\+I/physics/elasticity/standard\+\_\+tensors.\+h$>$}\newline
-{\ttfamily \#include $<$Reporter.\+hpp$>$}\newline
+{\ttfamily \#include $<$Sacado.\+hpp$>$}\newline
 {\ttfamily \#include $<$chrono$>$}\newline
 {\ttfamily \#include $<$cmath$>$}\newline
-{\ttfamily \#include $<$fstream$>$}\newline
 {\ttfamily \#include $<$iostream$>$}\newline
 {\ttfamily \#include $<$map$>$}\newline
-{\ttfamily \#include $<$string$>$}\newline
-{\ttfamily \#include $<$transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\+Boundaries\+Utility.\+hpp$>$}\newline
-{\ttfamily \#include $<$transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\+Linear\+Solver\+Utility.\+hpp$>$}\newline
-{\ttfamily \#include $<$transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\+Newton\+Solver\+Utility.\+hpp$>$}\newline
 Include dependency graph for Base\+Solver.\+hpp\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
@@ -64,5 +65,5 @@ class \mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{Base\+Solver$<$ dim, Scalar
 
 
 \doxysubsection{Detailed Description}
-Header file defining the abstract base solver class for materials having the transversely isotropic constructive law. 
+Header file defining the abstract base solver class for materials having the isotropic or transversely isotropic constructive law. 
 

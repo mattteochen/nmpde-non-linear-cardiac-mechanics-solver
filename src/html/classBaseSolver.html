@@ -64,6 +64,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
@@ -82,9 +83,10 @@ Inheritance diagram for BaseSolver&lt; dim, Scalar &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBaseSolver__inherit__graph.png" border="0" usemap="#BaseSolver_3_01dim_00_01Scalar_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="BaseSolver_3_01dim_00_01Scalar_01_4_inherit__map" id="BaseSolver_3_01dim_00_01Scalar_01_4_inherit__map">
-<area shape="rect" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="115,5,313,32"/>
-<area shape="rect" href="classIdealizedLV.html" title="Class representing the an Idealized LV solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="5,80,204,107"/>
-<area shape="rect" href="classSlabCubic.html" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="229,80,418,107"/>
+<area shape="rect" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="5,64,204,91"/>
+<area shape="rect" href="classIdealizedLV.html" title="Class representing the an Idealized LV solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="252,5,451,32"/>
+<area shape="rect" href="classIdealizedLVFiber.html" title="Class representing the an Idealized LV solver with fiber contraction (https://pubmed...." alt="" coords="265,57,437,98"/>
+<area shape="rect" href="classSlabCubic.html" title="Class representing the Slab Cubic solver (https://pubmed.ncbi.nlm.nih.gov/26807042/)" alt="" coords="257,123,446,149"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -113,15 +115,23 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structBaseSolver_1_1Material.html" title="Material related parameters. Reference papaer: https://pubmed.ncbi.nlm.nih.gov/26807042/.">Material</a> related parameters. Reference papaer: <a href="https://pubmed.ncbi.nlm.nih.gov/26807042/">https://pubmed.ncbi.nlm.nih.gov/26807042/</a>.  <a href="structBaseSolver_1_1Material.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a0c8340b7709a04916a1a209f3d76d8cc"><td class="memItemLeft" align="right" valign="top"><a id="a0c8340b7709a04916a1a209f3d76d8cc"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a0c8340b7709a04916a1a209f3d76d8cc">TriangulationType</a> { <b>T</b>, 
+<b>Q</b>
+ }</td></tr>
+<tr class="memdesc:a0c8340b7709a04916a1a209f3d76d8cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">: Triangulation geometry <br /></td></tr>
+<tr class="separator:a0c8340b7709a04916a1a209f3d76d8cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aee0e43a88b539a02e5e11a400a62aac1"><td class="memItemLeft" align="right" valign="top"><a id="aee0e43a88b539a02e5e11a400a62aac1"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aee0e43a88b539a02e5e11a400a62aac1">initialise_boundaries_tag</a> ()=0</td></tr>
 <tr class="memdesc:aee0e43a88b539a02e5e11a400a62aac1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag. This must be implemented by the derived class. <br /></td></tr>
 <tr class="separator:aee0e43a88b539a02e5e11a400a62aac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a354b9ee602a939e0202a0989aaaf861d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a354b9ee602a939e0202a0989aaaf861d">is_face_at_newmann_boundary</a> (const int face)</td></tr>
-<tr class="memdesc:a354b9ee602a939e0202a0989aaaf861d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a given faces is at a Newmann boundary.  <a href="classBaseSolver.html#a354b9ee602a939e0202a0989aaaf861d">More...</a><br /></td></tr>
-<tr class="separator:a354b9ee602a939e0202a0989aaaf861d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3c81cd3a1cc3ed18cd65ab763279908"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aa3c81cd3a1cc3ed18cd65ab763279908">is_face_at_newmann_boundary</a> (const unsigned face)</td></tr>
+<tr class="memdesc:aa3c81cd3a1cc3ed18cd65ab763279908"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a given faces is at a Newmann boundary.  <a href="classBaseSolver.html#aa3c81cd3a1cc3ed18cd65ab763279908">More...</a><br /></td></tr>
+<tr class="separator:aa3c81cd3a1cc3ed18cd65ab763279908"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc24f91bd585cf7d207bff16ff8e4830"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#abc24f91bd585cf7d207bff16ff8e4830">BaseSolver</a> (const std::string &amp;parameters_file_name_, const std::string &amp;mesh_file_name_, const std::string &amp;problem_name_)</td></tr>
 <tr class="memdesc:abc24f91bd585cf7d207bff16ff8e4830"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classBaseSolver.html#abc24f91bd585cf7d207bff16ff8e4830">More...</a><br /></td></tr>
 <tr class="separator:abc24f91bd585cf7d207bff16ff8e4830"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,17 +140,20 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memdesc:aaf5ef630e0939bf3bd3c921da641d5b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for abstract class. <br /></td></tr>
 <tr class="separator:aaf5ef630e0939bf3bd3c921da641d5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a727a6637ad911ae0e85d4b072f8e08f9"><td class="memItemLeft" align="right" valign="top"><a id="a727a6637ad911ae0e85d4b072f8e08f9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()</td></tr>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()</td></tr>
 <tr class="separator:a727a6637ad911ae0e85d4b072f8e08f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">solve_newton</a> ()</td></tr>
+<tr class="memitem:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">solve_newton</a> ()</td></tr>
 <tr class="memdesc:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the non linear problem using the Newton method.  <a href="classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db">More...</a><br /></td></tr>
 <tr class="separator:a91e8223c7ebb58833c2dd3f3cd4d64db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa463430a542ce8497c4d755245da4b7b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">output</a> () const</td></tr>
+<tr class="memitem:aa463430a542ce8497c4d755245da4b7b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">output</a> () const</td></tr>
 <tr class="memdesc:aa463430a542ce8497c4d755245da4b7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write the output.  <a href="classBaseSolver.html#aa463430a542ce8497c4d755245da4b7b">More...</a><br /></td></tr>
 <tr class="separator:aa463430a542ce8497c4d755245da4b7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a77ae5822767dcd03f7010e5400a76abc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a77ae5822767dcd03f7010e5400a76abc">compute_piola_kirchhoff</a> (Tensor&lt; 2, dim, ADNumberType &gt; &amp;out_tensor, const Tensor&lt; 2, dim, ADNumberType &gt; &amp;solution_gradient_quadrature, const unsigned cell_index)</td></tr>
+<tr class="memdesc:a77ae5822767dcd03f7010e5400a76abc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the Piola Kirchhoff tensor.  <a href="classBaseSolver.html#a77ae5822767dcd03f7010e5400a76abc">More...</a><br /></td></tr>
+<tr class="separator:a77ae5822767dcd03f7010e5400a76abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ac7bc7fcd68e6458b4c87ffcb700a6e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e">assemble_system</a> ()</td></tr>
 <tr class="memdesc:a7ac7bc7fcd68e6458b4c87ffcb700a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado: <a href="https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html">https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html</a>.  <a href="classBaseSolver.html#a7ac7bc7fcd68e6458b4c87ffcb700a6e">More...</a><br /></td></tr>
 <tr class="separator:a7ac7bc7fcd68e6458b4c87ffcb700a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,13 +218,15 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:a1d7e41ca05f45a5861def22b5185ba81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d29ea8fb40c04a3a1e251bd5da3c73c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classBoundariesUtility.html">BoundariesUtility</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#a8d29ea8fb40c04a3a1e251bd5da3c73c">boundaries_utility</a></td></tr>
 <tr class="separator:a8d29ea8fb40c04a3a1e251bd5da3c73c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc31d403a04e930496c9f368f2999791"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classBaseSolver.html#a0c8340b7709a04916a1a209f3d76d8cc">TriangulationType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolver.html#acc31d403a04e930496c9f368f2999791">triangulation_type</a></td></tr>
+<tr class="separator:acc31d403a04e930496c9f368f2999791"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;int dim, typename Scalar = double&gt;<br />
 class BaseSolver&lt; dim, Scalar &gt;</h3>
 
 <p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system. </p>
-<p>Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (<a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">https://pubmed.ncbi.nlm.nih.gov/8550635/</a>).</p>
+<p>Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (<a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">https://pubmed.ncbi.nlm.nih.gov/8550635/</a>).</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
@@ -310,8 +325,71 @@ template&lt;int dim, typename Scalar &gt; </div>
 
 </div>
 </div>
-<a id="a354b9ee602a939e0202a0989aaaf861d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a354b9ee602a939e0202a0989aaaf861d">&#9670;&nbsp;</a></span>is_face_at_newmann_boundary()</h2>
+<a id="a77ae5822767dcd03f7010e5400a76abc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77ae5822767dcd03f7010e5400a76abc">&#9670;&nbsp;</a></span>compute_piola_kirchhoff()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::compute_piola_kirchhoff </td>
+          <td>(</td>
+          <td class="paramtype">Tensor&lt; 2, dim, ADNumberType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>out_tensor</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Tensor&lt; 2, dim, ADNumberType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>solution_gradient_quadrature</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned&#160;</td>
+          <td class="paramname"><em>cell_index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Assemble the Piola Kirchhoff tensor. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">out_tensor</td><td>A reference to the output tensor </td></tr>
+    <tr><td class="paramname">solution_gradient_quadrature</td><td>The current solution gradient at given quadrature node </td></tr>
+    <tr><td class="paramname">cell_index</td><td>The index of the current dealii cell </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented in <a class="el" href="classIdealizedLVFiber.html#a66c0537d2b4373b3dc214d52d1c55967">IdealizedLVFiber&lt; dim, Scalar &gt;</a>.</p>
+
+</div>
+</div>
+<a id="aa3c81cd3a1cc3ed18cd65ab763279908"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3c81cd3a1cc3ed18cd65ab763279908">&#9670;&nbsp;</a></span>is_face_at_newmann_boundary()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -324,7 +402,7 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
         <tr>
           <td class="memname">bool <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::is_face_at_newmann_boundary </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
+          <td class="paramtype">const unsigned&#160;</td>
           <td class="paramname"><em>face</em></td><td>)</td>
           <td></td>
         </tr>
@@ -354,11 +432,19 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int dim, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::output</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Write the output. </p>
@@ -422,11 +508,19 @@ template&lt;int dim, typename Scalar &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;int dim, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::solve_newton</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Solve the non linear problem using the Newton method. </p>
@@ -437,6 +531,8 @@ template&lt;int dim, typename Scalar &gt; </div>
   </table>
   </dd>
 </dl>
+
+<p>Reimplemented in <a class="el" href="classIdealizedLVFiber.html#ac18d227f0111234a05246626a8b30eae">IdealizedLVFiber&lt; dim, Scalar &gt;</a>.</p>
 
 </div>
 </div>
@@ -1124,9 +1220,34 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 
 </div>
 </div>
+<a id="acc31d403a04e930496c9f368f2999791"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc31d403a04e930496c9f368f2999791">&#9670;&nbsp;</a></span>triangulation_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classBaseSolver.html#a0c8340b7709a04916a1a209f3d76d8cc">TriangulationType</a> <a class="el" href="classBaseSolver.html">BaseSolver</a>&lt; dim, Scalar &gt;::triangulation_type</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The mesh triangulation type </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>lib/transversely_isotropic_constructive_law/<a class="el" href="BaseSolver_8hpp_source.html">BaseSolver.hpp</a></li>
-<li>lib/transversely_isotropic_constructive_law/<a class="el" href="BaseSolver_8cpp.html">BaseSolver.cpp</a></li>
+<li>lib/cardiac_mechanics/<a class="el" href="BaseSolver_8hpp_source.html">BaseSolver.hpp</a></li>
+<li>lib/cardiac_mechanics/<a class="el" href="BaseSolver_8cpp.html">BaseSolver.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

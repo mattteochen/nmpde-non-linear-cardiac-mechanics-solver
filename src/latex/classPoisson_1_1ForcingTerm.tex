@@ -1,0 +1,71 @@
+\hypertarget{classPoisson_1_1ForcingTerm}{}\doxysection{Poisson$<$ dim, Scalar $>$\+::Forcing\+Term Class Reference}
+\label{classPoisson_1_1ForcingTerm}\index{Poisson$<$ dim, Scalar $>$::ForcingTerm@{Poisson$<$ dim, Scalar $>$::ForcingTerm}}
+
+
+Class representing the forcing term component.  
+
+
+
+
+{\ttfamily \#include $<$Poisson.\+hpp$>$}
+
+
+
+Inheritance diagram for Poisson$<$ dim, Scalar $>$\+::Forcing\+Term\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=200pt]{classPoisson_1_1ForcingTerm__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Poisson$<$ dim, Scalar $>$\+::Forcing\+Term\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=200pt]{classPoisson_1_1ForcingTerm__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPoisson_1_1ForcingTerm_a97a51435ad0dc415f419a3937dbc3ff3}\label{classPoisson_1_1ForcingTerm_a97a51435ad0dc415f419a3937dbc3ff3}} 
+\mbox{\hyperlink{classPoisson_1_1ForcingTerm_a97a51435ad0dc415f419a3937dbc3ff3}{Forcing\+Term}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+virtual Scalar \mbox{\hyperlink{classPoisson_1_1ForcingTerm_adefa8cc20e5ec6f7c4a46d20ab9d2ce0}{value}} (const Point$<$ dim $>$ \&, const unsigned int=0) const override
+\begin{DoxyCompactList}\small\item\em Evaluate the forcing term at a given point. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$int dim, typename Scalar = double$>$\newline
+class Poisson$<$ dim, Scalar $>$\+::\+Forcing\+Term}
+
+Class representing the forcing term component. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPoisson_1_1ForcingTerm_adefa8cc20e5ec6f7c4a46d20ab9d2ce0}\label{classPoisson_1_1ForcingTerm_adefa8cc20e5ec6f7c4a46d20ab9d2ce0}} 
+\index{Poisson$<$ dim, Scalar $>$::ForcingTerm@{Poisson$<$ dim, Scalar $>$::ForcingTerm}!value@{value}}
+\index{value@{value}!Poisson$<$ dim, Scalar $>$::ForcingTerm@{Poisson$<$ dim, Scalar $>$::ForcingTerm}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+virtual Scalar \mbox{\hyperlink{classPoisson}{Poisson}}$<$ dim, Scalar $>$\+::Forcing\+Term\+::value (\begin{DoxyParamCaption}\item[{const Point$<$ dim $>$ \&}]{,  }\item[{const unsigned int}]{ = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Evaluate the forcing term at a given point. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & The evaluation point \\
+\hline
+{\em component} & The component id \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/poisson/\mbox{\hyperlink{Poisson_8hpp}{Poisson.\+hpp}}\end{DoxyCompactItemize}

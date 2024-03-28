@@ -48,6 +48,6 @@ subsection Boundaries
 end
 
 subsection Pressure
-  # External pressure value
+  # Boundary pressure value
   set Value                      = 4.0
 end
