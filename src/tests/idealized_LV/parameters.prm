@@ -1,3 +1,8 @@
+subsection TriangulationType
+  # Type of triangulation cell
+  set Type                      = T
+end
+
 subsection LinearSolver
   # Type of solver used to solve the linear system
   set SolverType                = BiCGSTAB
@@ -49,5 +54,5 @@ end
 
 subsection Pressure
   # External pressure value
-  set Value                      = 4.0
+  set Value                      = 2000.0
 end

@@ -1,6 +1,6 @@
 subsection LinearSolver
   # Type of solver used to solve the linear system
-  set SolverType                = BiCGSTAB
+  set SolverType                = GMRES
 
   # Linear solver residual (scaled by residual norm)
   set Residual                  = 1e-6
@@ -9,7 +9,7 @@ subsection LinearSolver
   set MaxIteration              = 1.0
 
   # Preconditioner type
-  set PreconditionerType        = SOR
+  set PreconditionerType        = SSOR
 end
 
 subsection PolynomialDegree
@@ -49,5 +49,5 @@ end
 
 subsection Pressure
   # External pressure value
-  set Value                      = 2000.0
+  set Value                      = 4.0
 end

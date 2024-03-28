@@ -49,5 +49,5 @@ end
 
 subsection Pressure
   # External pressure value
-  set Value                      = 2000.0
+  set Value                      = 4.0
 end

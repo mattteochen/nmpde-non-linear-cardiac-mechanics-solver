@@ -7,6 +7,12 @@
 #ifndef BASESOLVER_HPP
 #define BASESOLVER_HPP
 
+#include <transversely_isotropic_constructive_law/BoundariesUtility.hpp>
+#include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
+#include <transversely_isotropic_constructive_law/NewtonSolverUtility.hpp>
+#include <Assert.hpp>
+#include <Reporter.hpp>
+
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/parameter_handler.h>
 #include <deal.II/base/point.h>
@@ -17,6 +23,7 @@
 #include <deal.II/dofs/dof_handler.h>
 #include <deal.II/dofs/dof_tools.h>
 #include <deal.II/fe/fe_simplex_p.h>
+#include <deal.II/fe/fe_q.h>
 #include <deal.II/fe/fe_system.h>
 #include <deal.II/fe/fe_values.h>
 #include <deal.II/grid/grid_in.h>
@@ -35,17 +42,16 @@
 // definition of tensors and kinematic quantities
 #include <deal.II/physics/elasticity/kinematics.h>
 #include <deal.II/physics/elasticity/standard_tensors.h>
+#include <Sacado.hpp>
 
-#include <Reporter.hpp>
 #include <chrono>
 #include <cmath>
-#include <fstream>
 #include <iostream>
 #include <map>
+#ifdef BUILD_TYPE_DEBUG
+#warning "Building in DEBUG mode"
 #include <string>
-#include <transversely_isotropic_constructive_law/BoundariesUtility.hpp>
-#include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
-#include <transversely_isotropic_constructive_law/NewtonSolverUtility.hpp>
+#endif
 
 using namespace dealii;
 
@@ -67,8 +73,29 @@ template <int dim, typename Scalar = double> class BaseSolver {
    */
   using LinearSolver =
       std::unique_ptr<SolverBase<TrilinosWrappers::MPI::Vector>>;
-
+  /**
+   * Sacado automatic differentiation type code from
+   */
+  static constexpr Differentiation::AD::NumberTypes ADTypeCode =
+      Differentiation::AD::NumberTypes::sacado_dfad;
+  /**
+   * Alias for the AD helper
+   */
+  using ADHelper =
+      Differentiation::AD::ResidualLinearization<ADTypeCode, double>;
+  /**
+   * Alias for the AD number type
+   */
+  using ADNumberType = typename ADHelper::ad_type;
 public:
+  /**
+   * @brief: Triangulation geometry
+   */
+  enum class TriangulationType {
+    T,
+    Q
+  };
+
   /**
    * @brief Material related parameters. Reference papaer:
    * https://pubmed.ncbi.nlm.nih.gov/26807042/
@@ -115,7 +142,7 @@ public:
      * @brief Parametrized constructor
      * @param pressure_ The pressure value;
      */
-    ConstantPressureFunction(const double pressure_) : pressure(pressure_) {}
+    ConstantPressureFunction(const Scalar pressure_) : pressure(pressure_) {}
     /**
      * @brief Copy operator
      * @param other The input ConstantPressureFunction object
@@ -124,20 +151,27 @@ public:
       pressure = other.pressure;
     }
     /**
+     * @brief Retrieve the pressure value
+     * @return The configured pressure value
+     */
+    Scalar value() const {
+      return pressure;
+    }
+    /**
      * @brief Evaluate the pressure at a given point
      * @param p The evaluation point
      * @param component The component id
      */
-    virtual double value(const Point<dim> & /*p*/,
+    virtual Scalar value(const Point<dim> & /*p*/,
                          const unsigned int /*component*/ = 0) const override {
       return pressure;
     }
 
   protected:
     /**
-     * @brief Pressure value in kPa
+     * @brief Pressure value in Pa
      */
-    double pressure = 0.0;
+    Scalar pressure = static_cast<Scalar>(0.0);
   };
   /**
    * @brief Class representing the exponent Q.
@@ -150,14 +184,26 @@ public:
     /**
      * The values of the exponent
      */
-    NumberType q = static_cast<Scalar>(0);
+    NumberType q = NumberType(0.0);
+    /**
+     * NumberType representation of Material::b_f coefficient
+     */
+    const NumberType b_f = NumberType(Material::b_f);
+    /**
+     * NumberType representation of Material::b_t coefficient
+     */
+    const NumberType b_t = NumberType(Material::b_t);
+    /**
+     * NumberType representation of Material::b_fs coefficient
+     */
+    const NumberType b_fs = NumberType(Material::b_fs);
 
   public:
     /**
      * @brief Retrieve the Q value
      * @return The exponent q
      */
-    NumberType get_q() { return q; }
+    NumberType get_q() const { return q; }
     /**
      * @brief Evaluate the Q exponent at a given green Lagrange strain tensor
      * @tparam TensorType The specialised dealii:Tensor type representing the
@@ -166,11 +212,11 @@ public:
      * @return The exponent q
      */
     template <typename TensorType> NumberType compute(TensorType const &gst) {
-      return q = Material::b_f * gst[0][0] * gst[0][0] +
-                 Material::b_t *
+      return q = b_f * gst[0][0] * gst[0][0] +
+                 b_t *
                      (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
                       gst[1][2] * gst[1][2] + gst[2][1] * gst[2][1]) +
-                 Material::b_fs *
+                 b_fs *
                      (gst[0][1] * gst[0][1] + gst[1][0] * gst[1][0] +
                       gst[0][2] * gst[0][2] + gst[2][0] * gst[2][0]);
     }
@@ -185,7 +231,7 @@ public:
    * @param face The face values
    * @return The requested query
    */
-  bool is_face_at_newmann_boundary(const int face) {
+  bool is_face_at_newmann_boundary(const unsigned face) {
     return newmann_boundary_faces.find(face) != newmann_boundary_faces.end();
   }
   /**
@@ -204,7 +250,7 @@ public:
     // Initalized the parameter handler
     parse_parameters(parameters_file_name_);
 
-    // Set the Piola Kirchhoff b values
+    // Set the Piola Kirchhoff b_x values
     piola_kirchhoff_b_weights[{0, 0}] = Material::b_f;
     piola_kirchhoff_b_weights[{1, 1}] = Material::b_t;
     piola_kirchhoff_b_weights[{2, 2}] = Material::b_t;
@@ -220,13 +266,18 @@ public:
    */
   virtual ~BaseSolver() {}
 
-  void setup();
+  virtual void setup();
 
-  void solve_newton();
+  virtual void solve_newton();
 
-  void output() const;
+  virtual void output() const;
 
 protected:
+  virtual void compute_piola_kirchhoff(
+      Tensor<2, dim, ADNumberType> &out_tensor,
+      const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
+      const unsigned cell_index);
+
   virtual void assemble_system();
 
   virtual void solve_system();
@@ -337,6 +388,10 @@ protected:
    * The boundaries tag utiility
    */
   BoundariesUtility boundaries_utility;
+  /**
+   * The mesh triangulation type
+   */
+  TriangulationType triangulation_type;
 };
 
 /**

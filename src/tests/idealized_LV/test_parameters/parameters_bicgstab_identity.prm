@@ -6,7 +6,7 @@ subsection LinearSolver
   set Residual                  = 1e-6
 
   # Linear solver iterations multiplier (to be multiplied to matrix size)
-  set MaxIteration              = 10.0
+  set MaxIteration              = 1.0
 
   # Preconditioner type
   set PreconditionerType        = IDENTITY
@@ -49,5 +49,5 @@ end
 
 subsection Pressure
   # External pressure value
-  set Value                      = 4.0
+  set Value                      = 2000.0
 end

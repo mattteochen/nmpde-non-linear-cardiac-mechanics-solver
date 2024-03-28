@@ -3,12 +3,7 @@
  * @brief Implementation file for the base solver class.
  */
 
-#include <deal.II/base/patterns.h>
-
 #include <transversely_isotropic_constructive_law/BaseSolver.hpp>
-#include <transversely_isotropic_constructive_law/BoundariesUtility.hpp>
-#include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
-#include <transversely_isotropic_constructive_law/NewtonSolverUtility.hpp>
 
 /**
  * @class BaseSolver
@@ -56,20 +51,28 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
 
     // To construct a vector-valued finite element space, we use the FESystem
     // class. It is still derived from FiniteElement.
-    FE_SimplexP<dim> fe_scalar(r);
-    fe = std::make_unique<FESystem<dim>>(fe_scalar, dim);
+    switch (triangulation_type) {
+      case TriangulationType::T: {
+        pcout << "  Using triangulation: T" << std::endl;
+        fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
+        quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
+        quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
+        break;
+      };
+      case TriangulationType::Q: {
+        pcout << "  Using triangulation: Q" << std::endl;
+        fe = std::make_unique<FESystem<dim>>(FE_Q<dim>(r), dim);
+        quadrature = std::make_unique<QGauss<dim>>(r + 1);
+        quadrature_face = std::make_unique<QGauss<dim - 1>>(r + 1);
+        break;
+      };
+    };
 
     pcout << "  Degree                     = " << fe->degree << std::endl;
     pcout << "  DoFs per cell              = " << fe->dofs_per_cell
           << std::endl;
-
-    quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
-
     pcout << "  Quadrature points per cell = " << quadrature->size()
           << std::endl;
-
-    quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
-
     pcout << "  Quadrature points per face = " << quadrature_face->size()
           << std::endl;
   }
@@ -126,6 +129,73 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
 }
 
 /**
+ * @brief Assemble the Piola Kirchhoff tensor
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
+ * @param out_tensor A reference to the output tensor
+ * @param solution_gradient_quadrature The input tensor to compute the
+ * Kinematics component
+ * @param weight_key The key to index the Piola Kirchhoff weight map
+ */
+template <int dim, typename Scalar>
+void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
+    Tensor<2, dim, ADNumberType> &out_tensor,
+    const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
+    const unsigned /*cell_index*/) {
+  // Compute deformation gradient tensor
+  const auto F =
+      Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
+  // Compute green Lagrange tensor
+  const auto E = Physics::Elasticity::Kinematics::E(F);
+#ifdef BUILD_TYPE_DEBUG
+  for (unsigned row=0; row<dim; row++) {
+    const auto& F_i = F[row];
+    const auto& E_i = E[row];
+    for (unsigned col=0; col<dim; col++) {
+      const double scalar_F = F_i[col].val();
+      const double scalar_E = E_i[col].val();
+      ASSERT(dealii::numbers::is_finite(scalar_F), "rank = " << mpi_rank << " F NaN: " << scalar_F << std::endl);
+      ASSERT(dealii::numbers::is_finite(scalar_E), "rank = " << mpi_rank << " E NaN: " << scalar_E << std::endl);
+    }
+  }
+#endif
+  // Compute exponent Q
+  ExponentQ<ADNumberType> exponent_q;
+  const auto Q = exponent_q.compute(E);
+#ifdef BUILD_TYPE_DEBUG
+  ASSERT(dealii::numbers::is_finite(Q.val()), "rank = " << mpi_rank << " Q NaN: " << Q.val() << std::endl);
+#endif
+  for (uint32_t i = 0; i < dim; ++i) {
+    for (uint32_t j = 0; j < dim; ++j) {
+#ifdef BUILD_TYPE_DEBUG
+      const double exp_Q_val = Sacado::Fad::exp(Q).val();
+      std::string solution_gradient_quadrature_str = "";
+      if (!dealii::numbers::is_finite(exp_Q_val)) {
+        for (unsigned k=0; k<dim; ++k) {
+          const auto& solution_gradient_quadrature_k = solution_gradient_quadrature[k];
+          for (unsigned l=0; l<dim; ++l) {
+            solution_gradient_quadrature_str += std::to_string(solution_gradient_quadrature_k[l].val()) + " ";
+          }
+        }
+      }
+      ASSERT(dealii::numbers::is_finite(exp_Q_val), "e^Q not finite: " << exp_Q_val << " Q: " << Q.val() << " sol_grad_quad: " << solution_gradient_quadrature_str << std::endl);
+#endif
+      out_tensor[i][j] += Material::C * piola_kirchhoff_b_weights[{i, j}] *
+                         E[i][j] * Sacado::Fad::exp(Q);
+    }
+  }
+#ifdef BUILD_TYPE_DEBUG
+  for (unsigned row=0; row<dim; row++) {
+    const auto& PK_i = out_tensor[row];
+    for (unsigned col=0; col<dim; col++) {
+      const double scalar = PK_i[col].val();
+      ASSERT(dealii::numbers::is_finite(scalar), "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
+    }
+  }
+#endif
+}
+
+/**
  * @brief Assemble the system for a Newton iteration. The residual vector and
  * Jacobian matrix are evaluated leveraging automatic differentiation by Sacado:
  * https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html
@@ -154,15 +224,14 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 
   jacobian_matrix = 0.0;
   residual_vector = 0.0;
+  unsigned int cell_index = 0;
 
   FEValuesExtractors::Vector displacement(0);
-
-  constexpr Differentiation::AD::NumberTypes ADTypeCode =
-      Differentiation::AD::NumberTypes::sacado_dfad_dfad;
-
+  
   for (const auto &cell : dof_handler.active_cell_iterators()) {
-    if (!cell->is_locally_owned())
+    if (!cell->is_locally_owned()) {
       continue;
+    }
 
     // Retrive the indipendent and dependent variables num
     // Setting them to dofs_per_cell as
@@ -172,11 +241,6 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 
     // Retirive the dof indices
     cell->get_dof_indices(dof_indices);
-
-    // Create some aliases for the AD helper.
-    using ADHelper =
-        Differentiation::AD::ResidualLinearization<ADTypeCode, double>;
-    using ADNumberType = typename ADHelper::ad_type;
 
     // Create and initialize an instance of the helper class.
     ADHelper ad_helper(n_independent_vars, n_dependent_vars);
@@ -216,23 +280,10 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 
       // Loop over quadrature points
       for (unsigned int q = 0; q < n_q; ++q) {
-        // Compute deformation gradient tensor
-        const auto F =
-            Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
-        // Compute green Lagrange tensor
-        const auto E = Physics::Elasticity::Kinematics::E(F);
-        // Compute exponent Q
-        ExponentQ<ADNumberType> exponent_q;
-        const auto exp_q = exponent_q.compute(E);
-        // Compute Piola Kirchhoff tensor
+        // compute the piola kirchhoff tensor
         Tensor<2, dim, ADNumberType> piola_kirchhoff;
-        for (uint32_t i = 0; i < dim; ++i) {
-          for (uint32_t j = 0; j < dim; ++j) {
-            piola_kirchhoff[i][j] = Material::C *
-                                    piola_kirchhoff_b_weights[{i, j}] *
-                                    E[i][j] * std::exp(exp_q);
-          }
-        }
+        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q], cell_index);
+
         // Compute the integration weight
         const auto quadrature_integration_w = fe_values.JxW(q);
 
@@ -242,7 +293,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
-              quadrature_integration_w; // L(d)
+              quadrature_integration_w; // L(q)
         }
       }
       // Loop over quadrature points for Neumann boundaries conditions
@@ -292,6 +343,8 @@ void BaseSolver<dim, Scalar>::assemble_system() {
       jacobian_matrix.add(dof_indices, cell_matrix);
       residual_vector.add(dof_indices, cell_rhs);
     }
+    //we only count local owned cells
+    cell_index++;
   }
   // Share between MPI processes
   jacobian_matrix.compress(VectorOperation::add);
@@ -302,8 +355,9 @@ void BaseSolver<dim, Scalar>::assemble_system() {
     std::map<types::global_dof_index, double> boundary_values;
     VectorTools::interpolate_boundary_values(
         dof_handler, dirichlet_boundary_functions, boundary_values);
+    //setting the flag to false as for https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
     MatrixTools::apply_boundary_values(boundary_values, jacobian_matrix,
-                                       delta_owned, residual_vector, true);
+                                       delta_owned, residual_vector, false);
   }
 }
 
@@ -349,7 +403,6 @@ void BaseSolver<dim, Scalar>::solve_newton() {
     while (n_iter < newton_solver_utility.get_max_iterations() &&
            residual_norm > newton_solver_utility.get_tolerance()) {
       assemble_system();
-      residual_norm = residual_vector.l2_norm();
 
       pcout << "Newton iteration " << n_iter << "/"
             << newton_solver_utility.get_max_iterations()
@@ -360,6 +413,8 @@ void BaseSolver<dim, Scalar>::solve_newton() {
       // tolerance.
       if (residual_norm > newton_solver_utility.get_tolerance()) {
         solve_system();
+
+        residual_norm = delta_owned.l2_norm();
 
         solution_owned += delta_owned;
         solution = solution_owned;
@@ -441,6 +496,15 @@ template <int dim, typename Scalar>
 void BaseSolver<dim, Scalar>::parse_parameters(
     const std::string &parameters_file_name_) {
   // Add the linear solver subsection
+  prm.enter_subsection("TriangulationType");
+  {
+    prm.declare_entry("Type", "T",
+                      Patterns::Selection("T|Q"),
+                      "Triangulation cell type");
+
+  }
+  prm.leave_subsection();
+
   prm.enter_subsection("LinearSolver");
   {
     prm.declare_entry("SolverType", "GMRES",
@@ -510,13 +574,22 @@ void BaseSolver<dim, Scalar>::parse_parameters(
   prm.enter_subsection("Pressure");
   {
     prm.declare_entry("Value", "0.0", Patterns::Double(0.0),
-                      "External pressure value (kPa)");
+                      "External pressure value (Pa)");
+    prm.declare_entry("FiberValue", "0.0", Patterns::Double(0.0),
+                      "Fiber pressure value (Pa)");
   }
   prm.leave_subsection();
 
   // Read input file
   prm.parse_input(parameters_file_name_);
   // prm.print_parameters(std::cout, ParameterHandler::OutputStyle::JSON);
+
+  // Parse the triangulation type
+  prm.enter_subsection("TriangulationType");
+  {
+    triangulation_type = prm.get("Type") == "T" ? TriangulationType::T : TriangulationType::Q;
+  }
+  prm.leave_subsection();
 
   // Parse linear solver subsection to the configuration object
   prm.enter_subsection("LinearSolver");
