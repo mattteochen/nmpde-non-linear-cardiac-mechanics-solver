@@ -33,18 +33,20 @@ Collaboration diagram for Base\+Solver$<$ dim, Scalar $>$\+::Constant\+Pressure\
 \mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_a211840519ba0e0403b13948781bc85a1}\label{classBaseSolver_1_1ConstantPressureFunction_a211840519ba0e0403b13948781bc85a1}} 
 \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_a211840519ba0e0403b13948781bc85a1}{Constant\+Pressure\+Function}} ()
 \begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_ac2213cbf060cc44ebdceb96ebf750d59}{Constant\+Pressure\+Function}} (const double pressure\+\_\+)
+\mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_acb92fe98aded0dd3bec31fb2fac6d0aa}{Constant\+Pressure\+Function}} (const Scalar pressure\+\_\+)
 \begin{DoxyCompactList}\small\item\em Parametrized constructor. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_a91e6e6d8f6f14a0d07bb51edbba30306}{operator=}} (\mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction}{Constant\+Pressure\+Function}} \&\&other)
 \begin{DoxyCompactList}\small\item\em Copy operator. \end{DoxyCompactList}\item 
-virtual double \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_a0957e38c3cc0849a254426e7be296b75}{value}} (const Point$<$ dim $>$ \&, const unsigned int=0) const override
+Scalar \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_a7b3e6e0041179d463629e24c1ca5326e}{value}} () const
+\begin{DoxyCompactList}\small\item\em Retrieve the pressure value. \end{DoxyCompactList}\item 
+virtual Scalar \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_a4e93d3372cb5fe8d8bfe3200c2ac1506}{value}} (const Point$<$ dim $>$ \&, const unsigned int=0) const override
 \begin{DoxyCompactList}\small\item\em Evaluate the pressure at a given point. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_ac25de543b51e6d613a4b460402924bf2}\label{classBaseSolver_1_1ConstantPressureFunction_ac25de543b51e6d613a4b460402924bf2}} 
-double \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_ac25de543b51e6d613a4b460402924bf2}{pressure}} = 0.\+0
-\begin{DoxyCompactList}\small\item\em Pressure value in k\+Pa. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_ad263beeec399297d0a51371645c16008}\label{classBaseSolver_1_1ConstantPressureFunction_ad263beeec399297d0a51371645c16008}} 
+Scalar \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction_ad263beeec399297d0a51371645c16008}{pressure}} = static\+\_\+cast$<$Scalar$>$(0.\+0)
+\begin{DoxyCompactList}\small\item\em Pressure value in Pa. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -54,12 +56,12 @@ class Base\+Solver$<$ dim, Scalar $>$\+::\+Constant\+Pressure\+Function}
 Class representing the applied pressure component. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_ac2213cbf060cc44ebdceb96ebf750d59}\label{classBaseSolver_1_1ConstantPressureFunction_ac2213cbf060cc44ebdceb96ebf750d59}} 
+\mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_acb92fe98aded0dd3bec31fb2fac6d0aa}\label{classBaseSolver_1_1ConstantPressureFunction_acb92fe98aded0dd3bec31fb2fac6d0aa}} 
 \index{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction@{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction}!ConstantPressureFunction@{ConstantPressureFunction}}
 \index{ConstantPressureFunction@{ConstantPressureFunction}!BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction@{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction}}
 \doxysubsubsection{\texorpdfstring{ConstantPressureFunction()}{ConstantPressureFunction()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
-\mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::Constant\+Pressure\+Function\+::\+Constant\+Pressure\+Function (\begin{DoxyParamCaption}\item[{const double}]{pressure\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::Constant\+Pressure\+Function\+::\+Constant\+Pressure\+Function (\begin{DoxyParamCaption}\item[{const Scalar}]{pressure\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -89,12 +91,26 @@ Copy operator.
 {\em other} & The input \mbox{\hyperlink{classBaseSolver_1_1ConstantPressureFunction}{Constant\+Pressure\+Function}} object \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_a0957e38c3cc0849a254426e7be296b75}\label{classBaseSolver_1_1ConstantPressureFunction_a0957e38c3cc0849a254426e7be296b75}} 
+\mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_a7b3e6e0041179d463629e24c1ca5326e}\label{classBaseSolver_1_1ConstantPressureFunction_a7b3e6e0041179d463629e24c1ca5326e}} 
 \index{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction@{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction}!value@{value}}
 \index{value@{value}!BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction@{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction}}
-\doxysubsubsection{\texorpdfstring{value()}{value()}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
-virtual double \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::Constant\+Pressure\+Function\+::value (\begin{DoxyParamCaption}\item[{const Point$<$ dim $>$ \&}]{,  }\item[{const unsigned int}]{ = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+Scalar \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::Constant\+Pressure\+Function\+::value (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retrieve the pressure value. 
+
+\begin{DoxyReturn}{Returns}
+The configured pressure value 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classBaseSolver_1_1ConstantPressureFunction_a4e93d3372cb5fe8d8bfe3200c2ac1506}\label{classBaseSolver_1_1ConstantPressureFunction_a4e93d3372cb5fe8d8bfe3200c2ac1506}} 
+\index{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction@{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction}!value@{value}}
+\index{value@{value}!BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction@{BaseSolver$<$ dim, Scalar $>$::ConstantPressureFunction}}
+\doxysubsubsection{\texorpdfstring{value()}{value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+virtual Scalar \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::Constant\+Pressure\+Function\+::value (\begin{DoxyParamCaption}\item[{const Point$<$ dim $>$ \&}]{,  }\item[{const unsigned int}]{ = {\ttfamily 0} }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
 
 
 
@@ -111,4 +127,4 @@ Evaluate the pressure at a given point.
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\end{DoxyCompactItemize}
+lib/cardiac\+\_\+mechanics/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\end{DoxyCompactItemize}

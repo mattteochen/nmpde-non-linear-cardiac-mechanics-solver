@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['material_101',['Material',['../structBaseSolver_1_1Material.html',1,'BaseSolver']]]
+  ['linearsolverutility_124',['LinearSolverUtility',['../classLinearSolverUtility.html',1,'']]],
+  ['linearsolverutility_3c_20double_20_3e_125',['LinearSolverUtility&lt; double &gt;',['../classLinearSolverUtility.html',1,'']]]
 ];

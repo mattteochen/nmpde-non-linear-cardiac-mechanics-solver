@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['solution_181',['solution',['../classBaseSolver.html#a41d902ebf553a7ac67de4e10cfa756ee',1,'BaseSolver']]],
-  ['solution_5fowned_182',['solution_owned',['../classBaseSolver.html#a3bbe1fed6869a7e6a60acb3aead72e57',1,'BaseSolver']]],
-  ['solver_5ftype_5fmatcher_183',['solver_type_matcher',['../classLinearSolverUtility.html#aac982ca9747d3afedea4b9cec5481e84',1,'LinearSolverUtility']]],
-  ['solver_5ftype_5fmatcher_5frev_184',['solver_type_matcher_rev',['../classLinearSolverUtility.html#af3522ba35688c6214241cebc891fcf95',1,'LinearSolverUtility']]]
+  ['q_220',['q',['../classBaseSolver_1_1ExponentQ.html#a22cfc322cde071eb2dcc15e35d7d89cc',1,'BaseSolver::ExponentQ']]],
+  ['quadrature_221',['quadrature',['../classBaseSolver.html#ad1cc5678ee09f7c4f93ffc6e866818ed',1,'BaseSolver::quadrature()'],['../classPoisson.html#a0e132370fe6ae0916067300d985cddd4',1,'Poisson::quadrature()']]],
+  ['quadrature_5fface_222',['quadrature_face',['../classBaseSolver.html#a1e9235f9bd1628055c87a55d2b657b7a',1,'BaseSolver']]]
 ];

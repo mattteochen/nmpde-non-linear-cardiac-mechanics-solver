@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['pcout_169',['pcout',['../classBaseSolver.html#ab37b175f3e844309c5aee6015b504b3a',1,'BaseSolver']]],
-  ['piola_5fkirchhoff_5fb_5fweights_170',['piola_kirchhoff_b_weights',['../classBaseSolver.html#a8b6a972920a7c4e0368212282df9ea7d',1,'BaseSolver']]],
-  ['preconditioner_5ftype_5fmatcher_171',['preconditioner_type_matcher',['../classLinearSolverUtility.html#ac91a63cd93f6ce6d18de9742b8368c44',1,'LinearSolverUtility']]],
-  ['preconditioner_5ftype_5fmatcher_5frev_172',['preconditioner_type_matcher_rev',['../classLinearSolverUtility.html#ad0355bd0dcdfe0a2da47dce88346686b',1,'LinearSolverUtility']]],
-  ['pressure_173',['pressure',['../classBaseSolver_1_1ConstantPressureFunction.html#ac25de543b51e6d613a4b460402924bf2',1,'BaseSolver::ConstantPressureFunction::pressure()'],['../classBaseSolver.html#a9314c7d37cde79a4dd6b58ef03a16131',1,'BaseSolver::pressure()']]],
-  ['prm_174',['prm',['../classBaseSolver.html#af62b9b59d184491b221d6a70085f3554',1,'BaseSolver']]],
-  ['problem_5fname_175',['problem_name',['../classBaseSolver.html#a2696a3057ff583c31e0181ea7530eb52',1,'BaseSolver']]]
+  ['max_5fiterations_204',['max_iterations',['../classNewtonSolverUtility.html#abd4e6df8a97e1449ceb64812c34b472b',1,'NewtonSolverUtility']]],
+  ['mesh_205',['mesh',['../classBaseSolver.html#a0a429ef515c9ffb4403fd095b90e534a',1,'BaseSolver::mesh()'],['../classPoisson.html#a8cc9c82e68c5e80416a6a313dc9585ed',1,'Poisson::mesh()']]],
+  ['mesh_5ffile_5fname_206',['mesh_file_name',['../classBaseSolver.html#a7a854c1e14c453d015aceff7a59df8d2',1,'BaseSolver::mesh_file_name()'],['../classPoisson.html#ac6a3051dcb66644aa7ed1da1984fc169',1,'Poisson::mesh_file_name()']]],
+  ['mpi_5frank_207',['mpi_rank',['../classBaseSolver.html#a4a5edd1cb6c021e5eb8709f6a194a874',1,'BaseSolver::mpi_rank()'],['../classPoisson.html#ab865e5fc1cb505b62337597adc722df6',1,'Poisson::mpi_rank()']]],
+  ['mpi_5fsize_208',['mpi_size',['../classBaseSolver.html#abc078a12deb075a0452d224c5605ee9f',1,'BaseSolver::mpi_size()'],['../classPoisson.html#a485e630e445b8439ca70feceb601e856',1,'Poisson::mpi_size()']]]
 ];

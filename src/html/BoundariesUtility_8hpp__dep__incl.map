@@ -1,7 +1,8 @@
-<map id="lib/transversely_isotropic_constructive_law/BoundariesUtility.hpp" name="lib/transversely_isotropic_constructive_law/BoundariesUtility.hpp">
-<area shape="rect" id="node1" title="Header file defining the boundary utility class." alt="" coords="113,5,396,47"/>
-<area shape="rect" id="node2" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,184,248,225"/>
-<area shape="rect" id="node3" href="$BaseSolver_8hpp.html" title="Header file defining the abstract base solver class for materials having the transversely isotropic c..." alt="" coords="237,95,480,136"/>
-<area shape="rect" id="node4" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="273,191,495,218"/>
-<area shape="rect" id="node5" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="520,184,659,225"/>
+<map id="lib/cardiac_mechanics/BoundariesUtility.hpp" name="lib/cardiac_mechanics/BoundariesUtility.hpp">
+<area shape="rect" id="node1" title="Header file defining the boundary utility class." alt="" coords="327,5,493,47"/>
+<area shape="rect" id="node2" href="$BaseSolver_8hpp.html" title="Header file defining the abstract base solver class for materials having the isotropic or transversel..." alt="" coords="327,95,493,136"/>
+<area shape="rect" id="node3" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,184,172,225"/>
+<area shape="rect" id="node4" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="196,191,419,218"/>
+<area shape="rect" id="node5" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="443,184,582,225"/>
+<area shape="rect" id="node6" href="$IdealizedLVFiber_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="606,184,801,225"/>
 </map>

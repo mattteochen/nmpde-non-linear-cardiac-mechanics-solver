@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['jacobian_5fmatrix_157',['jacobian_matrix',['../classBaseSolver.html#a32ae521e850edfc5df03ee1e7d2c24de',1,'BaseSolver']]]
+  ['endocardium_5ffunction_195',['endocardium_function',['../classPoisson.html#a423101da3956bbba127cb26b8d02b753',1,'Poisson']]],
+  ['epicardium_5ffunction_196',['epicardium_function',['../classPoisson.html#a23f87301e2520632210be6759da712d1',1,'Poisson']]]
 ];

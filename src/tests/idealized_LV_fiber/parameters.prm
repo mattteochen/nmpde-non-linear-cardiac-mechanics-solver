@@ -26,17 +26,17 @@ subsection NewtonMethod
 end
 
 subsection Material
-  # b_f value of the strain energy tensor
+  # b_f value
   set b_f                       = 8.0
 
-  # b_t value of the strain energy tensor
+  # b_t value
   set b_t                       = 2.0
 
-  # b_fs value of the strain energy tensor
+  # b_fs value
   set b_fs                       = 4.0
 
-  # C value of the strain energy tensor
-  set C                          = 10000.0
+  # C value
+  set C                          = 2000.0
 end
 
 subsection Boundaries
@@ -48,7 +48,7 @@ subsection Boundaries
 end
 
 subsection Pressure
-  # External pressure value
+  # Boundary pressure value
   set Value                      = 150.0
 
   # Fiber value

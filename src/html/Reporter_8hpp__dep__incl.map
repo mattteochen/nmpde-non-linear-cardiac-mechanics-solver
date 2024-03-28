@@ -1,7 +1,8 @@
 <map id="lib/Reporter.hpp" name="lib/Reporter.hpp">
-<area shape="rect" id="node1" title="Header file containing the reporter class for managing test reporting into log file." alt="" coords="321,5,447,32"/>
-<area shape="rect" id="node2" href="$BaseSolver_8hpp.html" title="Header file defining the abstract base solver class for materials having the transversely isotropic c..." alt="" coords="263,80,505,121"/>
-<area shape="rect" id="node3" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,169,248,211"/>
-<area shape="rect" id="node4" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="273,177,495,203"/>
-<area shape="rect" id="node5" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="520,169,659,211"/>
+<area shape="rect" id="node1" title="Header file containing the reporter class for managing test reporting into log file." alt="" coords="347,5,473,32"/>
+<area shape="rect" id="node2" href="$BaseSolver_8hpp.html" title="Header file defining the abstract base solver class for materials having the isotropic or transversel..." alt="" coords="327,80,493,121"/>
+<area shape="rect" id="node3" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,169,172,211"/>
+<area shape="rect" id="node4" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="196,177,419,203"/>
+<area shape="rect" id="node5" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="443,169,582,211"/>
+<area shape="rect" id="node6" href="$IdealizedLVFiber_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="606,169,801,211"/>
 </map>

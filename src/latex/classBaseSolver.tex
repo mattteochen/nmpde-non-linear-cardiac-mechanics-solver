@@ -36,13 +36,21 @@ class \mbox{\hyperlink{classBaseSolver_1_1ExponentQ}{ExponentQ}}
 \begin{DoxyCompactList}\small\item\em Class representing the exponent Q. This parameter is used by the construction of the strain energy function\+: \href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}}. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structBaseSolver_1_1Material}{Material}}
 \begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{structBaseSolver_1_1Material}{Material}} related parameters. Reference papaer\+: \href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classBaseSolver_a0c8340b7709a04916a1a209f3d76d8cc}\label{classBaseSolver_a0c8340b7709a04916a1a209f3d76d8cc}} 
+enum \mbox{\hyperlink{classBaseSolver_a0c8340b7709a04916a1a209f3d76d8cc}{Triangulation\+Type}} \{ {\bfseries T}, 
+{\bfseries Q}
+ \}
+\begin{DoxyCompactList}\small\item\em \+: Triangulation geometry \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classBaseSolver_aee0e43a88b539a02e5e11a400a62aac1}\label{classBaseSolver_aee0e43a88b539a02e5e11a400a62aac1}} 
 virtual void \mbox{\hyperlink{classBaseSolver_aee0e43a88b539a02e5e11a400a62aac1}{initialise\+\_\+boundaries\+\_\+tag}} ()=0
 \begin{DoxyCompactList}\small\item\em Initialise boundaries tag. This must be implemented by the derived class. \end{DoxyCompactList}\item 
-bool \mbox{\hyperlink{classBaseSolver_a354b9ee602a939e0202a0989aaaf861d}{is\+\_\+face\+\_\+at\+\_\+newmann\+\_\+boundary}} (const int face)
+bool \mbox{\hyperlink{classBaseSolver_aa3c81cd3a1cc3ed18cd65ab763279908}{is\+\_\+face\+\_\+at\+\_\+newmann\+\_\+boundary}} (const unsigned face)
 \begin{DoxyCompactList}\small\item\em Determine if a given faces is at a Newmann boundary. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classBaseSolver_abc24f91bd585cf7d207bff16ff8e4830}{Base\+Solver}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+, const std\+::string \&mesh\+\_\+file\+\_\+name\+\_\+, const std\+::string \&problem\+\_\+name\+\_\+)
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
@@ -50,15 +58,17 @@ bool \mbox{\hyperlink{classBaseSolver_a354b9ee602a939e0202a0989aaaf861d}{is\+\_\
 virtual \mbox{\hyperlink{classBaseSolver_aaf5ef630e0939bf3bd3c921da641d5b7}{$\sim$\+Base\+Solver}} ()
 \begin{DoxyCompactList}\small\item\em Virtual destructor for abstract class. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classBaseSolver_a727a6637ad911ae0e85d4b072f8e08f9}\label{classBaseSolver_a727a6637ad911ae0e85d4b072f8e08f9}} 
-void {\bfseries setup} ()
+virtual void {\bfseries setup} ()
 \item 
-void \mbox{\hyperlink{classBaseSolver_a91e8223c7ebb58833c2dd3f3cd4d64db}{solve\+\_\+newton}} ()
+virtual void \mbox{\hyperlink{classBaseSolver_a91e8223c7ebb58833c2dd3f3cd4d64db}{solve\+\_\+newton}} ()
 \begin{DoxyCompactList}\small\item\em Solve the non linear problem using the Newton method. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classBaseSolver_aa463430a542ce8497c4d755245da4b7b}{output}} () const
+virtual void \mbox{\hyperlink{classBaseSolver_aa463430a542ce8497c4d755245da4b7b}{output}} () const
 \begin{DoxyCompactList}\small\item\em Write the output. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+virtual void \mbox{\hyperlink{classBaseSolver_a77ae5822767dcd03f7010e5400a76abc}{compute\+\_\+piola\+\_\+kirchhoff}} (Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&out\+\_\+tensor, const Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&solution\+\_\+gradient\+\_\+quadrature, const unsigned cell\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Assemble the Piola Kirchhoff tensor. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolver_a7ac7bc7fcd68e6458b4c87ffcb700a6e}{assemble\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado\+: \href{https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html}{\texttt{ https\+://www.\+dealii.\+org/current/doxygen/deal.\+I\+I/class\+Differentiation\+\_\+1\+\_\+1\+A\+D\+\_\+1\+\_\+1\+Residual\+Linearization.\+html}}. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolver_aee9eb50ca5ff8ce3d21ac6d758e8120b}{solve\+\_\+system}} ()
@@ -119,6 +129,8 @@ Parameter\+Handler \mbox{\hyperlink{classBaseSolver_af62b9b59d184491b221d6a70085
 \mbox{\hyperlink{classNewtonSolverUtility}{Newton\+Solver\+Utility}}$<$ Scalar $>$ \mbox{\hyperlink{classBaseSolver_a1d7e41ca05f45a5861def22b5185ba81}{newton\+\_\+solver\+\_\+utility}}
 \item 
 \mbox{\hyperlink{classBoundariesUtility}{Boundaries\+Utility}} \mbox{\hyperlink{classBaseSolver_a8d29ea8fb40c04a3a1e251bd5da3c73c}{boundaries\+\_\+utility}}
+\item 
+\mbox{\hyperlink{classBaseSolver_a0c8340b7709a04916a1a209f3d76d8cc}{Triangulation\+Type}} \mbox{\hyperlink{classBaseSolver_acc31d403a04e930496c9f368f2999791}{triangulation\+\_\+type}}
 \end{DoxyCompactItemize}
 
 
@@ -128,7 +140,7 @@ class Base\+Solver$<$ dim, Scalar $>$}
 
 Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
 
-Abstract class representing a base solver for non linear cardiac mechanics by using the transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}).
+Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}).
 
 
 \begin{DoxyTemplParams}{Template Parameters}
@@ -185,12 +197,43 @@ Assemble the system for a Newton iteration. The residual vector and Jacobian mat
 {\em Scalar} & The scalar type being used \\
 \hline
 \end{DoxyTemplParams}
-\mbox{\Hypertarget{classBaseSolver_a354b9ee602a939e0202a0989aaaf861d}\label{classBaseSolver_a354b9ee602a939e0202a0989aaaf861d}} 
+\mbox{\Hypertarget{classBaseSolver_a77ae5822767dcd03f7010e5400a76abc}\label{classBaseSolver_a77ae5822767dcd03f7010e5400a76abc}} 
+\index{BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}!compute\_piola\_kirchhoff@{compute\_piola\_kirchhoff}}
+\index{compute\_piola\_kirchhoff@{compute\_piola\_kirchhoff}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{compute\_piola\_kirchhoff()}{compute\_piola\_kirchhoff()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+void \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::compute\+\_\+piola\+\_\+kirchhoff (\begin{DoxyParamCaption}\item[{Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&}]{out\+\_\+tensor,  }\item[{const Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&}]{solution\+\_\+gradient\+\_\+quadrature,  }\item[{const unsigned}]{cell\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Assemble the Piola Kirchhoff tensor. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dim} & The problem dimension space \\
+\hline
+{\em Scalar} & The scalar type being used \\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em out\+\_\+tensor} & A reference to the output tensor \\
+\hline
+{\em solution\+\_\+gradient\+\_\+quadrature} & The current solution gradient at given quadrature node \\
+\hline
+{\em cell\+\_\+index} & The index of the current dealii cell \\
+\hline
+\end{DoxyParams}
+
+
+Reimplemented in \mbox{\hyperlink{classIdealizedLVFiber_a66c0537d2b4373b3dc214d52d1c55967}{Idealized\+L\+V\+Fiber$<$ dim, Scalar $>$}}.
+
+\mbox{\Hypertarget{classBaseSolver_aa3c81cd3a1cc3ed18cd65ab763279908}\label{classBaseSolver_aa3c81cd3a1cc3ed18cd65ab763279908}} 
 \index{BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}!is\_face\_at\_newmann\_boundary@{is\_face\_at\_newmann\_boundary}}
 \index{is\_face\_at\_newmann\_boundary@{is\_face\_at\_newmann\_boundary}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{is\_face\_at\_newmann\_boundary()}{is\_face\_at\_newmann\_boundary()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
-bool \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::is\+\_\+face\+\_\+at\+\_\+newmann\+\_\+boundary (\begin{DoxyParamCaption}\item[{const int}]{face }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+bool \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::is\+\_\+face\+\_\+at\+\_\+newmann\+\_\+boundary (\begin{DoxyParamCaption}\item[{const unsigned}]{face }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -209,7 +252,7 @@ The requested query
 \index{output@{output}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{output()}{output()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
-void \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::output}
+void \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::output\hspace{0.3cm}{\ttfamily [virtual]}}
 
 
 
@@ -250,7 +293,7 @@ Parse the parameter input.
 \index{solve\_newton@{solve\_newton}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{solve\_newton()}{solve\_newton()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
-void \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::solve\+\_\+newton}
+void \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::solve\+\_\+newton\hspace{0.3cm}{\ttfamily [virtual]}}
 
 
 
@@ -263,6 +306,10 @@ Solve the non linear problem using the Newton method.
 {\em Scalar} & The scalar type being used \\
 \hline
 \end{DoxyTemplParams}
+
+
+Reimplemented in \mbox{\hyperlink{classIdealizedLVFiber_ac18d227f0111234a05246626a8b30eae}{Idealized\+L\+V\+Fiber$<$ dim, Scalar $>$}}.
+
 \mbox{\Hypertarget{classBaseSolver_aee9eb50ca5ff8ce3d21ac6d758e8120b}\label{classBaseSolver_aee9eb50ca5ff8ce3d21ac6d758e8120b}} 
 \index{BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}!solve\_system@{solve\_system}}
 \index{solve\_system@{solve\_system}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
@@ -466,9 +513,16 @@ The system solution with ghost elements \mbox{\Hypertarget{classBaseSolver_a3bbe
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
 Trilinos\+Wrappers\+::\+M\+P\+I\+::\+Vector \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::solution\+\_\+owned\hspace{0.3cm}{\ttfamily [protected]}}
 
-The system solution with no ghost elements 
+The system solution with no ghost elements \mbox{\Hypertarget{classBaseSolver_acc31d403a04e930496c9f368f2999791}\label{classBaseSolver_acc31d403a04e930496c9f368f2999791}} 
+\index{BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}!triangulation\_type@{triangulation\_type}}
+\index{triangulation\_type@{triangulation\_type}!BaseSolver$<$ dim, Scalar $>$@{BaseSolver$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{triangulation\_type}{triangulation\_type}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+\mbox{\hyperlink{classBaseSolver_a0c8340b7709a04916a1a209f3d76d8cc}{Triangulation\+Type}} \mbox{\hyperlink{classBaseSolver}{Base\+Solver}}$<$ dim, Scalar $>$\+::triangulation\+\_\+type\hspace{0.3cm}{\ttfamily [protected]}}
+
+The mesh triangulation type 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\item 
-lib/transversely\+\_\+isotropic\+\_\+constructive\+\_\+law/\mbox{\hyperlink{BaseSolver_8cpp}{Base\+Solver.\+cpp}}\end{DoxyCompactItemize}
+lib/cardiac\+\_\+mechanics/\mbox{\hyperlink{BaseSolver_8hpp}{Base\+Solver.\+hpp}}\item 
+lib/cardiac\+\_\+mechanics/\mbox{\hyperlink{BaseSolver_8cpp}{Base\+Solver.\+cpp}}\end{DoxyCompactItemize}

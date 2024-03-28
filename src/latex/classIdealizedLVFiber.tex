@@ -1,0 +1,152 @@
+\hypertarget{classIdealizedLVFiber}{}\doxysection{Idealized\+L\+V\+Fiber$<$ dim, Scalar $>$ Class Template Reference}
+\label{classIdealizedLVFiber}\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+
+
+Class representing the an Idealized LV solver with fiber contraction (\href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}})  
+
+
+
+
+{\ttfamily \#include $<$Idealized\+L\+V\+Fiber.\+hpp$>$}
+
+
+
+Inheritance diagram for Idealized\+L\+V\+Fiber$<$ dim, Scalar $>$\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=229pt]{classIdealizedLVFiber__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Idealized\+L\+V\+Fiber$<$ dim, Scalar $>$\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classIdealizedLVFiber__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classIdealizedLVFiber_a85cb0a4c4cc3ef8bbeef61d577697bc9}{Idealized\+L\+V\+Fiber}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+, const std\+::string \&mesh\+\_\+file\+\_\+name\+\_\+, const std\+::string \&problem\+\_\+name\+\_\+)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classIdealizedLVFiber_a27dedb8c246d8450a3e4d0329ab8a5ae}\label{classIdealizedLVFiber_a27dedb8c246d8450a3e4d0329ab8a5ae}} 
+void \mbox{\hyperlink{classIdealizedLVFiber_a27dedb8c246d8450a3e4d0329ab8a5ae}{initialise\+\_\+boundaries\+\_\+tag}} () override
+\begin{DoxyCompactList}\small\item\em Initialise boundaries tag. Boundaries are problem specific hence we override the base virtual implementation. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classIdealizedLVFiber_a66c0537d2b4373b3dc214d52d1c55967}{compute\+\_\+piola\+\_\+kirchhoff}} (Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&out\+\_\+tensor, const Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&solution\+\_\+gradient\+\_\+quadrature, const unsigned cell\+\_\+index) override
+\item 
+void \mbox{\hyperlink{classIdealizedLVFiber_ac18d227f0111234a05246626a8b30eae}{solve\+\_\+newton}} () override
+\item 
+\mbox{\Hypertarget{classIdealizedLVFiber_a5017548a7336c635894da8b753caf9aa}\label{classIdealizedLVFiber_a5017548a7336c635894da8b753caf9aa}} 
+void {\bfseries setup} () override
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+dealii\+::\+Functions\+::\+Zero\+Function$<$ dim $>$ \mbox{\hyperlink{classIdealizedLVFiber_af04ef8687e1555bf7e11e3d3b0efff83}{zero\+\_\+function}}
+\item 
+std\+::map$<$ dealii\+::types\+::global\+\_\+dof\+\_\+index, Point$<$ dim $>$ $>$ \mbox{\hyperlink{classIdealizedLVFiber_a66639d49a5e07315648d637718dd70b4}{dofs\+\_\+support\+\_\+points}}
+\item 
+\mbox{\hyperlink{classPoisson}{Poisson}}$<$ dim, Scalar $>$ \mbox{\hyperlink{classIdealizedLVFiber_ac91c9de1f0f4e3e77f231b09016344bd}{poisson\+\_\+solver}}
+\item 
+Scalar \mbox{\hyperlink{classIdealizedLVFiber_a83b11f6dc59ce6ab9602801f7fa4efb4}{fiber\+\_\+pressure}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$int dim, typename Scalar$>$\newline
+class Idealized\+L\+V\+Fiber$<$ dim, Scalar $>$}
+
+Class representing the an Idealized LV solver with fiber contraction (\href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}}) 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classIdealizedLVFiber_a85cb0a4c4cc3ef8bbeef61d577697bc9}\label{classIdealizedLVFiber_a85cb0a4c4cc3ef8bbeef61d577697bc9}} 
+\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}!IdealizedLVFiber@{IdealizedLVFiber}}
+\index{IdealizedLVFiber@{IdealizedLVFiber}!IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{IdealizedLVFiber()}{IdealizedLVFiber()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+\mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameters\+\_\+file\+\_\+name\+\_\+,  }\item[{const std\+::string \&}]{mesh\+\_\+file\+\_\+name\+\_\+,  }\item[{const std\+::string \&}]{problem\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parameters\+\_\+file\+\_\+name\+\_\+} & The parameters file name \\
+\hline
+{\em mesh\+\_\+file\+\_\+name\+\_\+} & The mesh file name \\
+\hline
+{\em problem\+\_\+name\+\_\+} & The problem name \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classIdealizedLVFiber_a66c0537d2b4373b3dc214d52d1c55967}\label{classIdealizedLVFiber_a66c0537d2b4373b3dc214d52d1c55967}} 
+\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}!compute\_piola\_kirchhoff@{compute\_piola\_kirchhoff}}
+\index{compute\_piola\_kirchhoff@{compute\_piola\_kirchhoff}!IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{compute\_piola\_kirchhoff()}{compute\_piola\_kirchhoff()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+void \mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}}$<$ dim, Scalar $>$\+::compute\+\_\+piola\+\_\+kirchhoff (\begin{DoxyParamCaption}\item[{Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&}]{out\+\_\+tensor,  }\item[{const Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&}]{solution\+\_\+gradient\+\_\+quadrature,  }\item[{const unsigned}]{cell\+\_\+index }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classBaseSolver_a77ae5822767dcd03f7010e5400a76abc}{Base\+::compute\+\_\+piola\+\_\+kirchhoff()}} 
+\end{DoxySeeAlso}
+
+
+Reimplemented from \mbox{\hyperlink{classBaseSolver_a77ae5822767dcd03f7010e5400a76abc}{Base\+Solver$<$ dim, Scalar $>$}}.
+
+\mbox{\Hypertarget{classIdealizedLVFiber_ac18d227f0111234a05246626a8b30eae}\label{classIdealizedLVFiber_ac18d227f0111234a05246626a8b30eae}} 
+\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}!solve\_newton@{solve\_newton}}
+\index{solve\_newton@{solve\_newton}!IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{solve\_newton()}{solve\_newton()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+void \mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}}$<$ dim, Scalar $>$\+::solve\+\_\+newton (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [override]}, {\ttfamily [virtual]}}
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{classBaseSolver_a91e8223c7ebb58833c2dd3f3cd4d64db}{Base\+::solve\+\_\+newton()}} 
+\end{DoxySeeAlso}
+
+
+Reimplemented from \mbox{\hyperlink{classBaseSolver_a91e8223c7ebb58833c2dd3f3cd4d64db}{Base\+Solver$<$ dim, Scalar $>$}}.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classIdealizedLVFiber_a66639d49a5e07315648d637718dd70b4}\label{classIdealizedLVFiber_a66639d49a5e07315648d637718dd70b4}} 
+\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}!dofs\_support\_points@{dofs\_support\_points}}
+\index{dofs\_support\_points@{dofs\_support\_points}!IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{dofs\_support\_points}{dofs\_support\_points}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+std\+::map$<$dealii\+::types\+::global\+\_\+dof\+\_\+index, Point$<$dim$>$ $>$ \mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}}$<$ dim, Scalar $>$\+::dofs\+\_\+support\+\_\+points\hspace{0.3cm}{\ttfamily [protected]}}
+
+Dofs support points \mbox{\Hypertarget{classIdealizedLVFiber_a83b11f6dc59ce6ab9602801f7fa4efb4}\label{classIdealizedLVFiber_a83b11f6dc59ce6ab9602801f7fa4efb4}} 
+\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}!fiber\_pressure@{fiber\_pressure}}
+\index{fiber\_pressure@{fiber\_pressure}!IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{fiber\_pressure}{fiber\_pressure}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+Scalar \mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}}$<$ dim, Scalar $>$\+::fiber\+\_\+pressure\hspace{0.3cm}{\ttfamily [protected]}}
+
+The fiber pressure T\+\_\+a value (\href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}}) \mbox{\Hypertarget{classIdealizedLVFiber_ac91c9de1f0f4e3e77f231b09016344bd}\label{classIdealizedLVFiber_ac91c9de1f0f4e3e77f231b09016344bd}} 
+\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}!poisson\_solver@{poisson\_solver}}
+\index{poisson\_solver@{poisson\_solver}!IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{poisson\_solver}{poisson\_solver}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+\mbox{\hyperlink{classPoisson}{Poisson}}$<$dim, Scalar$>$ \mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}}$<$ dim, Scalar $>$\+::poisson\+\_\+solver\hspace{0.3cm}{\ttfamily [protected]}}
+
+Utility object to solve \mbox{\hyperlink{classPoisson}{Poisson}} problems \mbox{\Hypertarget{classIdealizedLVFiber_af04ef8687e1555bf7e11e3d3b0efff83}\label{classIdealizedLVFiber_af04ef8687e1555bf7e11e3d3b0efff83}} 
+\index{IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}!zero\_function@{zero\_function}}
+\index{zero\_function@{zero\_function}!IdealizedLVFiber$<$ dim, Scalar $>$@{IdealizedLVFiber$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{zero\_function}{zero\_function}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+dealii\+::\+Functions\+::\+Zero\+Function$<$dim$>$ \mbox{\hyperlink{classIdealizedLVFiber}{Idealized\+L\+V\+Fiber}}$<$ dim, Scalar $>$\+::zero\+\_\+function\hspace{0.3cm}{\ttfamily [protected]}}
+
+Utility zero function for Dirichilet boundary 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+tests/idealized\+\_\+\+L\+V\+\_\+fiber/\mbox{\hyperlink{IdealizedLVFiber_8hpp}{Idealized\+L\+V\+Fiber.\+hpp}}\end{DoxyCompactItemize}

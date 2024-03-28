@@ -2,8 +2,8 @@
 
 Add into blah blah....
 
-## Constructive law: transversely isotropic constitutive law
-This section covers the finite element solver for materials that follow the [transversely isotropic constitutive law](https://pubmed.ncbi.nlm.nih.gov/8550635/).
+## Constructive law: isotropic and transversely isotropic constitutive law
+This section covers the finite element solver for materials that follow the [isotropic/transversely isotropic constitutive law](https://pubmed.ncbi.nlm.nih.gov/8550635/).
 
 An abstract base solver class `BaseSolver` has been introduced as a base line starting point for each mesh test that we have run.
 This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
