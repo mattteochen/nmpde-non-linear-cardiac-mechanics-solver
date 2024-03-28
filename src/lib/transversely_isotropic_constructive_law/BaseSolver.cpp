@@ -4,9 +4,6 @@
  */
 
 #include <transversely_isotropic_constructive_law/BaseSolver.hpp>
-#include <transversely_isotropic_constructive_law/BoundariesUtility.hpp>
-#include <transversely_isotropic_constructive_law/LinearSolverUtility.hpp>
-#include <transversely_isotropic_constructive_law/NewtonSolverUtility.hpp>
 
 /**
  * @class BaseSolver
@@ -150,15 +147,52 @@ void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
   // Compute green Lagrange tensor
   const auto E = Physics::Elasticity::Kinematics::E(F);
-  // Compute exponent Q
-  ExponentQ<ADNumberType> exponent_q;
-  const auto exp_q = exponent_q.compute(E);
-  for (uint32_t i = 0; i < dim; ++i) {
-    for (uint32_t j = 0; j < dim; ++j) {
-      out_tensor[i][j] = Material::C * piola_kirchhoff_b_weights[{i, j}] *
-                         E[i][j] * std::exp(exp_q);
+#ifdef BUILD_TYPE_DEBUG
+  for (unsigned row=0; row<dim; row++) {
+    const auto& F_i = F[row];
+    const auto& E_i = E[row];
+    for (unsigned col=0; col<dim; col++) {
+      const double scalar_F = F_i[col].val();
+      const double scalar_E = E_i[col].val();
+      ASSERT(dealii::numbers::is_finite(scalar_F), "rank = " << mpi_rank << " F NaN: " << scalar_F << std::endl);
+      ASSERT(dealii::numbers::is_finite(scalar_E), "rank = " << mpi_rank << " E NaN: " << scalar_E << std::endl);
     }
   }
+#endif
+  // Compute exponent Q
+  ExponentQ<ADNumberType> exponent_q;
+  const auto Q = exponent_q.compute(E);
+#ifdef BUILD_TYPE_DEBUG
+  ASSERT(dealii::numbers::is_finite(Q.val()), "rank = " << mpi_rank << " Q NaN: " << Q.val() << std::endl);
+#endif
+  for (uint32_t i = 0; i < dim; ++i) {
+    for (uint32_t j = 0; j < dim; ++j) {
+#ifdef BUILD_TYPE_DEBUG
+      const double exp_Q_val = Sacado::Fad::exp(Q).val();
+      std::string solution_gradient_quadrature_str = "";
+      if (!dealii::numbers::is_finite(exp_Q_val)) {
+        for (unsigned k=0; k<dim; ++k) {
+          const auto& solution_gradient_quadrature_k = solution_gradient_quadrature[k];
+          for (unsigned l=0; l<dim; ++l) {
+            solution_gradient_quadrature_str += std::to_string(solution_gradient_quadrature_k[l].val()) + " ";
+          }
+        }
+      }
+      ASSERT(dealii::numbers::is_finite(exp_Q_val), "e^Q not finite: " << exp_Q_val << " Q: " << Q.val() << " sol_grad_quad: " << solution_gradient_quadrature_str << std::endl);
+#endif
+      out_tensor[i][j] += Material::C * piola_kirchhoff_b_weights[{i, j}] *
+                         E[i][j] * Sacado::Fad::exp(Q);
+    }
+  }
+#ifdef BUILD_TYPE_DEBUG
+  for (unsigned row=0; row<dim; row++) {
+    const auto& PK_i = out_tensor[row];
+    for (unsigned col=0; col<dim; col++) {
+      const double scalar = PK_i[col].val();
+      ASSERT(dealii::numbers::is_finite(scalar), "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
+    }
+  }
+#endif
 }
 
 /**
@@ -190,16 +224,14 @@ void BaseSolver<dim, Scalar>::assemble_system() {
 
   jacobian_matrix = 0.0;
   residual_vector = 0.0;
+  unsigned int cell_index = 0;
 
   FEValuesExtractors::Vector displacement(0);
   
-  unsigned cell_index = 0;
-  // std::ofstream out_f("owned_cells_base_solver" + std::to_string(mpi_rank) + ".log");
   for (const auto &cell : dof_handler.active_cell_iterators()) {
-    if (!cell->is_locally_owned())
+    if (!cell->is_locally_owned()) {
       continue;
-    // else 
-    //   out_f << cell->subdomain_id() << std::endl;
+    }
 
     // Retrive the indipendent and dependent variables num
     // Setting them to dofs_per_cell as
@@ -314,8 +346,6 @@ void BaseSolver<dim, Scalar>::assemble_system() {
     //we only count local owned cells
     cell_index++;
   }
-  std::cout << "  Base cell index (processor " << mpi_rank << ") = " << cell_index << std::endl;
-  // out_f.close();
   // Share between MPI processes
   jacobian_matrix.compress(VectorOperation::add);
   residual_vector.compress(VectorOperation::add);

@@ -32,7 +32,7 @@ public:
               const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_), zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
     Base::pcout << "Problem pressure configuration" << std::endl;
-    Base::pcout << "  Value: " << Base::pressure.value() << std::endl;
+    Base::pcout << "  Value = " << Base::pressure.value() << std::endl;
     Base::pcout << "===============================================" << std::endl;
   }
   /**

@@ -3,8 +3,8 @@
  * @brief Header file defining the idealized lv solver class.
  */
 
-#ifndef IDEALIZED_LV_HPP
-#define IDEALIZED_LV_HPP
+#ifndef IDEALIZED_LV_FIBER_HPP
+#define IDEALIZED_LV_FIBER_HPP
 
 #include <Assert.hpp>
 #include <poisson/Poisson.hpp>
@@ -15,8 +15,10 @@
 #include <deal.II/lac/trilinos_solver.h>
 
 #include <cmath>
+#ifdef BUILD_TYPE_DEBUG
 #include <fstream>
 #include <string>
+#endif
 
 /**
  * @class IdealizedLVfiber
@@ -33,7 +35,7 @@ class IdealizedLVfiber : public BaseSolver<dim, Scalar> {
    * Sacado automatic differentiation type code from
    */
   static constexpr Differentiation::AD::NumberTypes ADTypeCode =
-      Differentiation::AD::NumberTypes::sacado_dfad_dfad;
+      Differentiation::AD::NumberTypes::sacado_dfad;
   /**
    * Alias for the AD helper
    */
@@ -56,7 +58,7 @@ public:
                    const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_),
         zero_function(dealii::Functions::ZeroFunction<dim>(dim)),
-        poisson_solver(mesh_file_name_, 1) {
+        poisson_solver(mesh_file_name_, Base::r) {
     Base::prm.enter_subsection("Pressure");
     { fiber_pressure = Base::prm.get_double("FiberValue"); }
     Base::prm.leave_subsection();
@@ -85,9 +87,8 @@ public:
    */
   void compute_piola_kirchhoff(
       Tensor<2, dim, ADNumberType> &out_tensor,
-      Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
+      const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
       const unsigned cell_index) override {
-    Base::compute_piola_kirchhoff(out_tensor, solution_gradient_quadrature, cell_index);
 
     auto norm = [](const auto& v) {
       auto sum = 0.0;
@@ -106,56 +107,60 @@ public:
     const auto& poisson_solution = poisson_solver.get_solution();
     const auto& poisson_dof_indices = poisson_solver.get_aggregate_dof_indices();
     //TODO: move const parameter insdie the config file
-    Tensor<1, dim> f;
+    Tensor<1, dim, ADNumberType> f;
     for (unsigned i=0; i<poisson_solver.fe->dofs_per_cell; ++i) {
       const auto global_index = poisson_dof_indices[cell_index][i];
       const auto& support_point = dofs_support_points[global_index];
 
-      //retrive the t value
+#ifdef BUILD_TYPE_DEBUG
       ASSERT(global_index >= 0 && global_index < poisson_solution.size(),
              "global_index out of bounds, global_index = "
                  << global_index << " poisson_solution size = "
                  << poisson_solution.size() << std::endl);
-      const double t = poisson_solution[global_index];
-      // Base::pcout << "t: " << t << std::endl;
+#endif
+      //retrive the t value
+      const Scalar t = poisson_solution[global_index];
       //compute fiber parameters
-      const double d_focal = 45.0;
-      const double nu_endo = 0.6;
-      const double nu_epi = 0.8;
-      const double endo_r_1 = d_focal * std::sinh(nu_endo);
-      const double endo_r_2 = d_focal * std::cosh(nu_endo);
-      const double epi_r_1 = d_focal * std::sinh(nu_epi);
-      const double epi_r_2 = d_focal * std::cosh(nu_epi);
-      const double endo_epi_r_1_delta = std::abs(endo_r_1 - epi_r_1);
-      const double endo_epi_r_2_delta = std::abs(endo_r_2 - epi_r_2);
-      const double r_s = endo_r_1 + endo_epi_r_1_delta * t;
-      const double r_e = endo_r_2 + endo_epi_r_2_delta * t;
-      const double u_deg = std::acos(support_point[2] / r_e) * (180.0 / M_PI);
-      const double u_rad = u_deg * (M_PI / 180.0);
-      const double v_deg1 = std::asin(support_point[1] / (r_s * std::sin(u_rad))) * (180.0 / M_PI);
-      const double v_deg2 = std::acos(support_point[0] / (r_s * std::sin(u_rad))) * (180.0 / M_PI);
-      const double v_rad1 = v_deg1 * (M_PI / 180.0);
-      const double v_rad2 = v_deg2 * (M_PI / 180.0);
-      const double alpha_deg = 90.0 - 180.0 * t;
-      const double alpha_rad = alpha_deg * (M_PI / 180.0);
+      //TODO: move them in the config file
+      const Scalar d_focal = 45.0;
+      const Scalar nu_endo = 0.6;
+      const Scalar nu_epi = 0.8;
+      const Scalar endo_r_1 = d_focal * std::sinh(nu_endo);
+      const Scalar endo_r_2 = d_focal * std::cosh(nu_endo);
+      const Scalar epi_r_1 = d_focal * std::sinh(nu_epi);
+      const Scalar epi_r_2 = d_focal * std::cosh(nu_epi);
+      const Scalar endo_epi_r_1_delta = std::abs(endo_r_1 - epi_r_1);
+      const Scalar endo_epi_r_2_delta = std::abs(endo_r_2 - epi_r_2);
+      const Scalar r_s = endo_r_1 + endo_epi_r_1_delta * t;
+      const Scalar r_e = endo_r_2 + endo_epi_r_2_delta * t;
+      const Scalar u_deg = std::acos(support_point[2] / r_e) * (180.0 / M_PI);
+      const Scalar u_rad = u_deg * (M_PI / 180.0);
+      const Scalar v_deg1 = std::asin(support_point[1] / (r_s * std::sin(u_rad))) * (180.0 / M_PI);
+      const Scalar v_deg2 = std::acos(support_point[0] / (r_s * std::sin(u_rad))) * (180.0 / M_PI);
+      const Scalar v_rad1 = v_deg1 * (M_PI / 180.0);
+      const Scalar v_rad2 = v_deg2 * (M_PI / 180.0);
+      const Scalar alpha_deg = 90.0 - 180.0 * t;
+      const Scalar alpha_rad = alpha_deg * (M_PI / 180.0);
 
       if ((std::isnan(v_rad1) && std::isnan(v_rad2)) || std::isnan(u_rad)) {
+#ifdef BUILD_TYPE_DEBUG
         std::cout << "ERR: rank: " << Base::mpi_rank
                   << " failed point with global index = " << global_index << ": "
                   << support_point[0] << " " << support_point[1] << " "
                   << support_point[2] << std::endl;
+#endif
         continue;
       }
       //angle v can be recovered by using 2 equations (https://pubmed.ncbi.nlm.nih.gov/26807042/)
-      const double v_rad = std::isnan(v_rad1) ? v_rad2 : v_rad1;
+      const Scalar v_rad = std::isnan(v_rad1) ? v_rad2 : v_rad1;
 
       //declare partial derivative vectors (handmade derivative)
-      std::vector<double> dx_du = {
+      std::vector<Scalar> dx_du = {
         r_s * std::cos(u_rad) * std::cos(v_rad),
         r_s * std::cos(u_rad) * std::sin(v_rad),
         -r_e * std::sin(u_rad)
       };
-      std::vector<double> dx_dv = {
+      std::vector<Scalar> dx_dv = {
         -1.0 * r_s * std::sin(u_rad) * std::sin(v_rad),
         r_s * std::sin(u_rad) * std::cos(v_rad),
         0
@@ -167,18 +172,9 @@ public:
         f[i] += dx_du[i] * std::sin(alpha_rad) + dx_dv[i] * std::cos(alpha_rad);
       } 
     }
-    const auto ff = fiber_pressure * dealii::outer_product(f, f);
-    out_tensor += ff;
+    out_tensor += (fiber_pressure * dealii::outer_product(f, f));
+    Base::compute_piola_kirchhoff(out_tensor, solution_gradient_quadrature, cell_index);
   }
-  /**
-   * @see Base::solve_system()
-   */
-  // void solve_system() override {
-  //   dealii::SolverControl sc(static_cast<int>(Base::jacobian_matrix.m() * 1.0), 1e-6);
-  //   dealii::TrilinosWrappers::SolverDirect solver(sc);
-  //   solver.initialize(Base::jacobian_matrix);
-  //   solver.solve(Base::delta_owned, Base::residual_vector);
-  // }
   /**
    * @see Base::solve_newton()
    */
@@ -187,16 +183,6 @@ public:
                 << std::endl;
     poisson_solver.assemble();
     poisson_solver.solve();
-    const auto& sol = poisson_solver.get_solution();
-    std::ofstream f("t_distances_" + std::to_string(Base::mpi_rank) + ".log");
-    std::set<decltype(sol[0])> s;
-    for (auto n : sol) {
-      s.insert(n);
-    }
-    for (auto n : s) {
-      f << n << std::endl;
-    }
-    f.close();
     Base::solve_newton();
   }
 
@@ -217,12 +203,14 @@ public:
         break;
       };
     }
-    std::cout << "  rank = " << Base::mpi_rank << " dof support points size (based on poisson dofs) = " << dofs_support_points.size() << std::endl;
-    std::ofstream f("dofs_support_points" + std::to_string(Base::mpi_rank) + ".log");
+#ifdef BUILD_TYPE_DEBUG
+    std::cout << "  rank = " << Base::mpi_rank << " dof support points count (based on poisson dofs) = " << dofs_support_points.size() << std::endl;
+    std::ofstream out_f("dofs_support_points" + std::to_string(Base::mpi_rank) + ".log");
     for (auto& [k, v] : dofs_support_points) {
-      f << v[0] << " " << v[1] << " " << v[2] << std::endl;
+      out_f << v[0] << " " << v[1] << " " << v[2] << std::endl;
     }
-    f.close();
+    out_f.close();
+#endif
   }
 
 protected:
@@ -244,4 +232,4 @@ protected:
   Scalar fiber_pressure;
 };
 
-#endif // IDEALIZED_LV_HPP
+#endif // IDEALIZED_LV_FIBER_HPP
