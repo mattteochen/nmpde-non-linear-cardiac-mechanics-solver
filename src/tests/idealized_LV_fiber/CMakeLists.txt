@@ -8,5 +8,5 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/
 )
 
-add_executable(main main.cpp ../../lib/cardiac_mechanics/BaseSolver.cpp ../../lib/poisson/Poisson.cpp)
+add_executable(main main.cpp ../../lib/cardiac_mechanics/BaseSolverGuccione.cpp ../../lib/poisson/Poisson.cpp)
 deal_ii_setup_target(main)

@@ -6,7 +6,7 @@
 #ifndef IDEALIZED_LV_HPP
 #define IDEALIZED_LV_HPP
 
-#include <cardiac_mechanics/BaseSolver.hpp>
+#include <cardiac_mechanics/BaseSolverGuccione.hpp>
 
 /**
  * @class IdealizedLV
@@ -14,11 +14,11 @@
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
-class IdealizedLV : public BaseSolver<dim, Scalar> {
+class IdealizedLV : public BaseSolverGuccione<dim, Scalar> {
   /**
    * Alias for base class
    */
-  using Base = BaseSolver<dim, Scalar>;
+  using Base = BaseSolverGuccione<dim, Scalar>;
 
 public:
   /**

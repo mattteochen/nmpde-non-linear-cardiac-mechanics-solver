@@ -1,11 +1,11 @@
 /**
- * @file BaseSolver.hpp
+ * @file BaseSolverNewHook.hpp
  * @brief Header file defining the abstract base solver class for materials
- * having the isotropic or transversely isotropic constructive law.
+ * having the New Hook constructive law.
  */
 
-#ifndef BASESOLVER_HPP
-#define BASESOLVER_HPP
+#ifndef BASESOLVERNEWHOOK_HPP
+#define BASESOLVERNEWHOOK_HPP
 
 #include <cardiac_mechanics/BoundariesUtility.hpp>
 #include <cardiac_mechanics/LinearSolverUtility.hpp>
@@ -56,14 +56,13 @@
 using namespace dealii;
 
 /**
- * @class BaseSolver
+ * @class BaseSolverNewHook
  * @brief Abstract class representing a base solver for non linear cardiac
- * mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et
- * al. (https://pubmed.ncbi.nlm.nih.gov/8550635/).
+ * mechanics by using the New Hook constitutive law.
  * @tparam dim The problem dimension
  * @tparam Scalar The scalar type for the problem, by default a double
  */
-template <int dim, typename Scalar = double> class BaseSolver {
+template <int dim, typename Scalar = double> class BaseSolverNewHook {
   /**
    * Alias for the base preconditioner pointer
    */
@@ -240,7 +239,7 @@ public:
    * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
-  BaseSolver(const std::string &parameters_file_name_,
+  BaseSolverNewHook(const std::string &parameters_file_name_,
              const std::string &mesh_file_name_,
              const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
@@ -264,7 +263,7 @@ public:
   /**
    * @brief Virtual destructor for abstract class
    */
-  virtual ~BaseSolver() {}
+  virtual ~BaseSolverNewHook() {}
 
   virtual void setup();
 
@@ -395,27 +394,27 @@ protected:
 };
 
 /**
- * @brief Define static member of BaseSolver<dim, Scalar>::Material::b_f.
+ * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::b_f.
  * Needed for linking.
  */
 template <int dim, typename Scalar>
-Scalar BaseSolver<dim, Scalar>::Material::b_f;
+Scalar BaseSolverNewHook<dim, Scalar>::Material::b_f;
 /**
- * @brief Define static member of BaseSolver<dim, Scalar>::Material::b_t
+ * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::b_t
  * Needed for linking.
  */
 template <int dim, typename Scalar>
-Scalar BaseSolver<dim, Scalar>::Material::b_t;
+Scalar BaseSolverNewHook<dim, Scalar>::Material::b_t;
 /**
- * @brief Define static member of BaseSolver<dim, Scalar>::Material::b_fs
+ * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::b_fs
  * Needed for linking.
  */
 template <int dim, typename Scalar>
-Scalar BaseSolver<dim, Scalar>::Material::b_fs;
+Scalar BaseSolverNewHook<dim, Scalar>::Material::b_fs;
 /**
- * @brief Define static member of BaseSolver<dim, Scalar>::Material::C
+ * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::C
  * Needed for linking.
  */
-template <int dim, typename Scalar> Scalar BaseSolver<dim, Scalar>::Material::C;
+template <int dim, typename Scalar> Scalar BaseSolverNewHook<dim, Scalar>::Material::C;
 
-#endif // BASESOLVER_HPP
+#endif // BASESOLVERNEWHOOK_HPP

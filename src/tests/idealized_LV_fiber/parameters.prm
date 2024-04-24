@@ -36,7 +36,7 @@ subsection Material
   set b_fs                       = 4.0
 
   # C value
-  set C                          = 2000.0
+  set C                          = 10000.0
 end
 
 subsection Boundaries

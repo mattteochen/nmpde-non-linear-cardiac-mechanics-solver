@@ -3,7 +3,12 @@
  * @brief Implementation file for the base solver class.
  */
 
+#include "Assert.hpp"
 #include <cardiac_mechanics/BaseSolver.hpp>
+#include <cmath>
+#include <deal.II/base/symmetric_tensor.h>
+#include <deal.II/base/tensor.h>
+#include <fstream>
 
 /**
  * @class BaseSolver
@@ -142,47 +147,28 @@ void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
     const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
     const unsigned /*cell_index*/) {
   // Compute deformation gradient tensor
-  const auto F =
+  const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
-  // Compute green Lagrange tensor
-  const auto E = Physics::Elasticity::Kinematics::E(F);
-#ifdef BUILD_TYPE_DEBUG
-  for (unsigned row=0; row<dim; row++) {
-    const auto& F_i = F[row];
-    const auto& E_i = E[row];
-    for (unsigned col=0; col<dim; col++) {
-      const double scalar_F = F_i[col].val();
-      const double scalar_E = E_i[col].val();
-      ASSERT(dealii::numbers::is_finite(scalar_F), "rank = " << mpi_rank << " F NaN: " << scalar_F << std::endl);
-      ASSERT(dealii::numbers::is_finite(scalar_E), "rank = " << mpi_rank << " E NaN: " << scalar_E << std::endl);
-    }
+  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
+  const ADNumberType F_det = dealii::determinant(F);
+  ASSERT(F_det > ADNumberType(0.0), "Negative F determinant");
+  Tensor<2, dim, ADNumberType> I;
+  for (uint32_t i = 0; i < dim; ++i) {
+    I[i][i] = ADNumberType(1.0);
   }
-#endif
-  // Compute exponent Q
-  ExponentQ<ADNumberType> exponent_q;
-  const auto Q = exponent_q.compute(E);
-#ifdef BUILD_TYPE_DEBUG
-  ASSERT(dealii::numbers::is_finite(Q.val()), "rank = " << mpi_rank << " Q NaN: " << Q.val() << std::endl);
-#endif
+
+  std::ofstream det_f_out;
+  det_f_out.open("det_f_out.log", std::ios::app);
+
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
-#ifdef BUILD_TYPE_DEBUG
-      const double exp_Q_val = Sacado::Fad::exp(Q).val();
-      std::string solution_gradient_quadrature_str = "";
-      if (!dealii::numbers::is_finite(exp_Q_val)) {
-        for (unsigned k=0; k<dim; ++k) {
-          const auto& solution_gradient_quadrature_k = solution_gradient_quadrature[k];
-          for (unsigned l=0; l<dim; ++l) {
-            solution_gradient_quadrature_str += std::to_string(solution_gradient_quadrature_k[l].val()) + " ";
-          }
-        }
+      if (F_det < 0.0) {
+        det_f_out << F_det << std::endl;
       }
-      ASSERT(dealii::numbers::is_finite(exp_Q_val), "e^Q not finite: " << exp_Q_val << " Q: " << Q.val() << " sol_grad_quad: " << solution_gradient_quadrature_str << std::endl);
-#endif
-      out_tensor[i][j] += Material::C * piola_kirchhoff_b_weights[{i, j}] *
-                         E[i][j] * Sacado::Fad::exp(Q);
+      out_tensor[i][j] = (ADNumberType(Material::b_f) * (I[i][j] - F_inverse[i][j])) + (ADNumberType(Material::b_t) * Sacado::Fad::log(F_det) * F_inverse[i][j]);
     }
   }
+  det_f_out.close();
 #ifdef BUILD_TYPE_DEBUG
   for (unsigned row=0; row<dim; row++) {
     const auto& PK_i = out_tensor[row];
