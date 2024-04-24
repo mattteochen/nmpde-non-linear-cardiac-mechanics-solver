@@ -101,31 +101,21 @@ public:
    */
   struct Material {
     /**
-     * b_f coefficient
+     * mu coefficient
      */
-    static Scalar b_f;
+    static Scalar mu;
     /**
-     * b_t coefficient
+     * lambda coefficient
      */
-    static Scalar b_t;
-    /**
-     * b_fs coefficient
-     */
-    static Scalar b_fs;
-    /**
-     * C coefficient
-     */
-    static Scalar C;
+    static Scalar lambda;
 
     /**
      * Retrive a std::string representing the current configuration
      * @return The configuration string
      */
     static std::string show() {
-      return "  b_f: " + std::to_string(Material::b_f) + "\n" +
-             "  b_t : " + std::to_string(b_t) + "\n" +
-             "  b_fs: " + std::to_string(b_fs) + "\n" +
-             "  C: " + std::to_string(C) + "\n";
+      return "  mu: " + std::to_string(mu) + "\n" +
+             "  lambda: " + std::to_string(lambda) + "\n";
     }
   };
   /**
@@ -173,54 +163,6 @@ public:
     Scalar pressure = static_cast<Scalar>(0.0);
   };
   /**
-   * @brief Class representing the exponent Q.
-   * This parameter is used by the construction of the strain energy function:
-   * https://pubmed.ncbi.nlm.nih.gov/26807042/
-   * @tparam NumberType The exponent scalar type
-   */
-  template <typename NumberType> class ExponentQ : Function<dim> {
-  protected:
-    /**
-     * The values of the exponent
-     */
-    NumberType q = NumberType(0.0);
-    /**
-     * NumberType representation of Material::b_f coefficient
-     */
-    const NumberType b_f = NumberType(Material::b_f);
-    /**
-     * NumberType representation of Material::b_t coefficient
-     */
-    const NumberType b_t = NumberType(Material::b_t);
-    /**
-     * NumberType representation of Material::b_fs coefficient
-     */
-    const NumberType b_fs = NumberType(Material::b_fs);
-
-  public:
-    /**
-     * @brief Retrieve the Q value
-     * @return The exponent q
-     */
-    NumberType get_q() const { return q; }
-    /**
-     * @brief Evaluate the Q exponent at a given green Lagrange strain tensor
-     * @tparam TensorType The specialised dealii:Tensor type representing the
-     * green Lagrange strain tensor
-     * @param gst A green Lagrange strain tensor
-     * @return The exponent q
-     */
-    template <typename TensorType> NumberType compute(TensorType const &gst) {
-      return q = b_f * gst[0][0] * gst[0][0] +
-                 b_t *
-                     (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
-                      gst[1][2] * gst[1][2] + gst[2][1] * gst[2][1]) +
-                 b_fs *
-                     (gst[0][1] * gst[0][1] + gst[1][0] * gst[1][0] +
-                      gst[0][2] * gst[0][2] + gst[2][0] * gst[2][0]);
-    }
-  };
-  /**
    * @brief Initialise boundaries tag. This must be implemented by the derived
    * class
    */
@@ -248,17 +190,6 @@ public:
         mesh(MPI_COMM_WORLD), problem_name(problem_name_) {
     // Initalized the parameter handler
     parse_parameters(parameters_file_name_);
-
-    // Set the Piola Kirchhoff b_x values
-    piola_kirchhoff_b_weights[{0, 0}] = Material::b_f;
-    piola_kirchhoff_b_weights[{1, 1}] = Material::b_t;
-    piola_kirchhoff_b_weights[{2, 2}] = Material::b_t;
-    piola_kirchhoff_b_weights[{1, 2}] = Material::b_t;
-    piola_kirchhoff_b_weights[{2, 1}] = Material::b_t;
-    piola_kirchhoff_b_weights[{0, 2}] = Material::b_fs;
-    piola_kirchhoff_b_weights[{2, 0}] = Material::b_fs;
-    piola_kirchhoff_b_weights[{0, 1}] = Material::b_fs;
-    piola_kirchhoff_b_weights[{1, 0}] = Material::b_fs;
   }
   /**
    * @brief Virtual destructor for abstract class
@@ -307,10 +238,6 @@ protected:
    */
   std::map<types::boundary_id, const Function<dim> *>
       dirichlet_boundary_functions;
-  /**
-   * The b_ij coefficients for the Piola Kiochhoff tensor
-   */
-  std::map<std::pair<int, int>, double> piola_kirchhoff_b_weights;
   /**
    * The input mesh file name
    */
@@ -394,27 +321,16 @@ protected:
 };
 
 /**
- * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::b_f.
+ * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::mu.
  * Needed for linking.
  */
 template <int dim, typename Scalar>
-Scalar BaseSolverNewHook<dim, Scalar>::Material::b_f;
+Scalar BaseSolverNewHook<dim, Scalar>::Material::mu;
 /**
- * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::b_t
+ * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::lambda
  * Needed for linking.
  */
 template <int dim, typename Scalar>
-Scalar BaseSolverNewHook<dim, Scalar>::Material::b_t;
-/**
- * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::b_fs
- * Needed for linking.
- */
-template <int dim, typename Scalar>
-Scalar BaseSolverNewHook<dim, Scalar>::Material::b_fs;
-/**
- * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::C
- * Needed for linking.
- */
-template <int dim, typename Scalar> Scalar BaseSolverNewHook<dim, Scalar>::Material::C;
+Scalar BaseSolverNewHook<dim, Scalar>::Material::lambda;
 
 #endif // BASESOLVERNEWHOOK_HPP

@@ -1,9 +1,9 @@
-#include <IdealizedLVFiber.hpp>
+#include <IdealizedLV.hpp>
 
 int main(int argc, char *argv[]) {
   dealii::Utilities::MPI::MPI_InitFinalize mpi_init(argc, argv);
   std::string mesh_file_name =
-      "../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh";
+      "../../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh";
   std::string parameter_file_name = "../parameters.prm";
   const std::string problem_name = "idealized_lv";
 
@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     parameter_file_name = argv[2];
   }
 
-  IdealizedLVFiber<3, double> problem(parameter_file_name, mesh_file_name,
+  IdealizedLV<3, double> problem(parameter_file_name, mesh_file_name,
                                  problem_name);
   problem.initialise_boundaries_tag();
   problem.setup();

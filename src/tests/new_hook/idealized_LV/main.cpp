@@ -3,7 +3,7 @@
 int main(int argc, char *argv[]) {
   dealii::Utilities::MPI::MPI_InitFinalize mpi_init(argc, argv);
   std::string mesh_file_name =
-      "../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh";
+      "../../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh";
   std::string parameter_file_name = "../parameters.prm";
   const std::string problem_name = "idealized_lv";
 

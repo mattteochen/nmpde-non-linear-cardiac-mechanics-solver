@@ -1,23 +1,24 @@
 /**
- * @file BaseSolver.cpp
+ * @file BaseSolverNewHook.cpp
  * @brief Implementation file for the base solver class.
  */
 
 #include "Assert.hpp"
-#include <cardiac_mechanics/BaseSolver.hpp>
+#include <cardiac_mechanics/BaseSolverNewHook.hpp>
 #include <cmath>
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
 #include <fstream>
 
 /**
- * @class BaseSolver
+ * @class BaseSolverNewHook
  * @brief Setup the problem by loading the mesh, creating the finite element
  * and initialising the linear system.
  * @tparam dim The problem dimension space
  * @tparam Scalar The scalar type being used
  */
-template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
+template <int dim, typename Scalar>
+void BaseSolverNewHook<dim, Scalar>::setup() {
   // Create the mesh.
   {
     pcout << "Initializing the mesh" << std::endl;
@@ -57,20 +58,20 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
     // To construct a vector-valued finite element space, we use the FESystem
     // class. It is still derived from FiniteElement.
     switch (triangulation_type) {
-      case TriangulationType::T: {
-        pcout << "  Using triangulation: T" << std::endl;
-        fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
-        quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
-        quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
-        break;
-      };
-      case TriangulationType::Q: {
-        pcout << "  Using triangulation: Q" << std::endl;
-        fe = std::make_unique<FESystem<dim>>(FE_Q<dim>(r), dim);
-        quadrature = std::make_unique<QGauss<dim>>(r + 1);
-        quadrature_face = std::make_unique<QGauss<dim - 1>>(r + 1);
-        break;
-      };
+    case TriangulationType::T: {
+      pcout << "  Using triangulation: T" << std::endl;
+      fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
+      quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
+      quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
+      break;
+    };
+    case TriangulationType::Q: {
+      pcout << "  Using triangulation: Q" << std::endl;
+      fe = std::make_unique<FESystem<dim>>(FE_Q<dim>(r), dim);
+      quadrature = std::make_unique<QGauss<dim>>(r + 1);
+      quadrature_face = std::make_unique<QGauss<dim - 1>>(r + 1);
+      break;
+    };
     };
 
     pcout << "  Degree                     = " << fe->degree << std::endl;
@@ -138,11 +139,12 @@ template <int dim, typename Scalar> void BaseSolver<dim, Scalar>::setup() {
  * @tparam dim The problem dimension space
  * @tparam Scalar The scalar type being used
  * @param out_tensor A reference to the output tensor
- * @param solution_gradient_quadrature The current solution gradient at given quadrature node
+ * @param solution_gradient_quadrature The current solution gradient at given
+ * quadrature node
  * @param cell_index The index of the current dealii cell
  */
 template <int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
+void BaseSolverNewHook<dim, Scalar>::compute_piola_kirchhoff(
     Tensor<2, dim, ADNumberType> &out_tensor,
     const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
     const unsigned /*cell_index*/) {
@@ -151,30 +153,29 @@ void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
   const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
   const ADNumberType F_det = dealii::determinant(F);
+  // #ifdef BUILD_TYPE_DEBUG
   ASSERT(F_det > ADNumberType(0.0), "Negative F determinant");
+  // #endif
   Tensor<2, dim, ADNumberType> I;
   for (uint32_t i = 0; i < dim; ++i) {
     I[i][i] = ADNumberType(1.0);
   }
 
-  std::ofstream det_f_out;
-  det_f_out.open("det_f_out.log", std::ios::app);
-
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
-      if (F_det < 0.0) {
-        det_f_out << F_det << std::endl;
-      }
-      out_tensor[i][j] = (ADNumberType(Material::b_f) * (I[i][j] - F_inverse[i][j])) + (ADNumberType(Material::b_t) * Sacado::Fad::log(F_det) * F_inverse[i][j]);
+      out_tensor[i][j] =
+          ((ADNumberType(Material::mu) * (I[i][j] - F_inverse[i][j]))) +
+          (ADNumberType(Material::lambda) * Sacado::Fad::log(F_det) *
+           F_inverse[i][j]);
     }
   }
-  det_f_out.close();
 #ifdef BUILD_TYPE_DEBUG
-  for (unsigned row=0; row<dim; row++) {
-    const auto& PK_i = out_tensor[row];
-    for (unsigned col=0; col<dim; col++) {
+  for (unsigned row = 0; row < dim; row++) {
+    const auto &PK_i = out_tensor[row];
+    for (unsigned col = 0; col < dim; col++) {
       const double scalar = PK_i[col].val();
-      ASSERT(dealii::numbers::is_finite(scalar), "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
+      ASSERT(dealii::numbers::is_finite(scalar),
+             "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
     }
   }
 #endif
@@ -188,7 +189,7 @@ void BaseSolver<dim, Scalar>::compute_piola_kirchhoff(
  * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::assemble_system() {
+void BaseSolverNewHook<dim, Scalar>::assemble_system() {
   const unsigned int dofs_per_cell = fe->dofs_per_cell;
   const unsigned int n_q = quadrature->size();
   const unsigned int n_face_q = quadrature_face->size();
@@ -212,7 +213,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
   unsigned int cell_index = 0;
 
   FEValuesExtractors::Vector displacement(0);
-  
+
   for (const auto &cell : dof_handler.active_cell_iterators()) {
     if (!cell->is_locally_owned()) {
       continue;
@@ -267,7 +268,8 @@ void BaseSolver<dim, Scalar>::assemble_system() {
       for (unsigned int q = 0; q < n_q; ++q) {
         // compute the piola kirchhoff tensor
         Tensor<2, dim, ADNumberType> piola_kirchhoff;
-        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q], cell_index);
+        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q],
+                                cell_index);
 
         // Compute the integration weight
         const auto quadrature_integration_w = fe_values.JxW(q);
@@ -328,7 +330,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
       jacobian_matrix.add(dof_indices, cell_matrix);
       residual_vector.add(dof_indices, cell_rhs);
     }
-    //we only count local owned cells
+    // we only count local owned cells
     cell_index++;
   }
   // Share between MPI processes
@@ -340,7 +342,8 @@ void BaseSolver<dim, Scalar>::assemble_system() {
     std::map<types::global_dof_index, double> boundary_values;
     VectorTools::interpolate_boundary_values(
         dof_handler, dirichlet_boundary_functions, boundary_values);
-    //setting the flag to false as for https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
+    // setting the flag to false as for
+    // https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
     MatrixTools::apply_boundary_values(boundary_values, jacobian_matrix,
                                        delta_owned, residual_vector, false);
   }
@@ -352,7 +355,7 @@ void BaseSolver<dim, Scalar>::assemble_system() {
  * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::solve_system() {
+void BaseSolverNewHook<dim, Scalar>::solve_system() {
   auto solver_control = linear_solver_utility.get_initialized_solver_control(
       jacobian_matrix.m(), residual_vector.l2_norm());
 
@@ -376,7 +379,7 @@ void BaseSolver<dim, Scalar>::solve_system() {
  * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::solve_newton() {
+void BaseSolverNewHook<dim, Scalar>::solve_newton() {
   pcout << "===============================================" << std::endl;
 
   unsigned int n_iter = 0;
@@ -441,7 +444,7 @@ void BaseSolver<dim, Scalar>::solve_newton() {
  * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::output() const {
+void BaseSolverNewHook<dim, Scalar>::output() const {
   DataOut<dim> data_out;
 
   // By passing these two additional arguments to add_data_vector, we specify
@@ -478,15 +481,13 @@ void BaseSolver<dim, Scalar>::output() const {
  * @param parameters_file_name_ The input configuration parameter file name
  */
 template <int dim, typename Scalar>
-void BaseSolver<dim, Scalar>::parse_parameters(
+void BaseSolverNewHook<dim, Scalar>::parse_parameters(
     const std::string &parameters_file_name_) {
   // Add the linear solver subsection
   prm.enter_subsection("TriangulationType");
   {
-    prm.declare_entry("Type", "T",
-                      Patterns::Selection("T|Q"),
+    prm.declare_entry("Type", "T", Patterns::Selection("T|Q"),
                       "Triangulation cell type");
-
   }
   prm.leave_subsection();
 
@@ -530,17 +531,11 @@ void BaseSolver<dim, Scalar>::parse_parameters(
   // Add the material properties subsection
   prm.enter_subsection("Material");
   {
-    prm.declare_entry("b_f", "0.0", Patterns::Double(0.0),
-                      "b_f coefficient of the strain energy tensor (kPa)");
+    prm.declare_entry("mu", "1.0", Patterns::Double(1.0),
+                      "mu coefficient of the New Hook material");
 
-    prm.declare_entry("b_t", "0.0", Patterns::Double(0.0),
-                      "b_t coefficient of the strain energy tensor (kPa)");
-
-    prm.declare_entry("b_fs", "0.0", Patterns::Double(0.0),
-                      "b_fs coefficient of the strain energy tensor (kPa)");
-
-    prm.declare_entry("C", "0.0", Patterns::Double(0.0),
-                      "C coefficient of the strain energy tensor (kPa)");
+    prm.declare_entry("lambda", "1.0", Patterns::Double(1.0),
+                      "lambda coefficient of the New Hook material");
   }
   prm.leave_subsection();
 
@@ -572,7 +567,8 @@ void BaseSolver<dim, Scalar>::parse_parameters(
   // Parse the triangulation type
   prm.enter_subsection("TriangulationType");
   {
-    triangulation_type = prm.get("Type") == "T" ? TriangulationType::T : TriangulationType::Q;
+    triangulation_type =
+        prm.get("Type") == "T" ? TriangulationType::T : TriangulationType::Q;
   }
   prm.leave_subsection();
 
@@ -612,10 +608,8 @@ void BaseSolver<dim, Scalar>::parse_parameters(
 
   // Parse material subsection to the configuration struct
   prm.enter_subsection("Material");
-  Material::b_f = prm.get_double("b_f");
-  Material::b_t = prm.get_double("b_t");
-  Material::b_fs = prm.get_double("b_fs");
-  Material::C = prm.get_double("C");
+  Material::mu = prm.get_double("mu");
+  Material::lambda = prm.get_double("lambda");
   prm.leave_subsection();
   pcout << "Material configuration:" << std::endl;
   pcout << Material::show();
@@ -639,4 +633,4 @@ void BaseSolver<dim, Scalar>::parse_parameters(
 }
 
 // Explicit template initializations
-template class BaseSolver<3, double>;
+template class BaseSolverNewHook<3, double>;

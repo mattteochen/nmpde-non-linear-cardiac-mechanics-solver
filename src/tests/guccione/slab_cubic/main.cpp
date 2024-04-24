@@ -5,7 +5,7 @@ int main(int argc, char *argv[]) {
 
   const std::string problem_name = "slab_cubic";
   std::string mesh_file_name =
-      "../../../../lifex_fiber_generation_examples/mesh/slab_cubic.msh";
+      "../../../../../lifex_fiber_generation_examples/mesh/slab_cubic.msh";
   std::string parameter_file_name = "../parameters.prm";
   if (argc > 1) {
     mesh_file_name = argv[1];
