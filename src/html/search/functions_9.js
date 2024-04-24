@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['parse_5fparameters_173',['parse_parameters',['../classBaseSolver.html#a01a93460f997b586b4e983c050f9cec0',1,'BaseSolver']]],
-  ['poisson_174',['Poisson',['../classPoisson.html#af1656984576051292eaf6d31a794b2e5',1,'Poisson']]]
+  ['parse_5fparameters_165',['parse_parameters',['../classBaseSolverGuccione.html#a274f45304c161fb693c23e6fc46bb4f8',1,'BaseSolverGuccione::parse_parameters()'],['../classBaseSolverNewHook.html#a7c4c7ba84edfa0152ae0375110f46c2e',1,'BaseSolverNewHook::parse_parameters()']]],
+  ['poisson_166',['Poisson',['../classPoisson.html#af1656984576051292eaf6d31a794b2e5',1,'Poisson']]]
 ];

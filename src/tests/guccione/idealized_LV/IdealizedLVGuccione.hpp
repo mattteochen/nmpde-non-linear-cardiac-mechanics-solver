@@ -1,24 +1,24 @@
 /**
- * @file IdealizedLV.hpp
+ * @file IdealizedLVGuccione.hpp
  * @brief Header file defining the idealized lv solver class.
  */
 
-#ifndef IDEALIZED_LV_NEW_HOOK_HPP
-#define IDEALIZED_LV_NEW_HOOK_HPP
+#ifndef IDEALIZED_LV_GUCCIONE_HPP
+#define IDEALIZED_LV_GUCCIONE_HPP
 
-#include <cardiac_mechanics/BaseSolverNewHook.hpp>
+#include <cardiac_mechanics/BaseSolverGuccione.hpp>
 
 /**
- * @class IdealizedLV
+ * @class IdealizedLVGuccione
  * @brief Class representing the an Idealized LV solver
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
-class IdealizedLV : public BaseSolverNewHook<dim, Scalar> {
+class IdealizedLVGuccione : public BaseSolverGuccione<dim, Scalar> {
   /**
    * Alias for base class
    */
-  using Base = BaseSolverNewHook<dim, Scalar>;
+  using Base = BaseSolverGuccione<dim, Scalar>;
 
 public:
   /**
@@ -27,13 +27,15 @@ public:
    * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
-  IdealizedLV(const std::string &parameters_file_name_,
-              const std::string &mesh_file_name_,
-              const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_), zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
+  IdealizedLVGuccione(const std::string &parameters_file_name_,
+                      const std::string &mesh_file_name_,
+                      const std::string &problem_name_)
+      : Base(parameters_file_name_, mesh_file_name_, problem_name_),
+        zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
     Base::pcout << "Problem boundary pressure configuration" << std::endl;
     Base::pcout << "  Value = " << Base::pressure.value() << " Pa" << std::endl;
-    Base::pcout << "===============================================" << std::endl;
+    Base::pcout << "==============================================="
+                << std::endl;
   }
   /**
    * @brief Initialise boundaries tag. Boundaries are problem specific hence we
@@ -58,4 +60,4 @@ protected:
   dealii::Functions::ZeroFunction<dim> zero_function;
 };
 
-#endif // IDEALIZED_LV_NEW_HOOK_HPP
+#endif // IDEALIZED_LV_GUCCIONE_HPP

@@ -7,11 +7,11 @@
 #ifndef BASESOLVERNEWHOOK_HPP
 #define BASESOLVERNEWHOOK_HPP
 
+#include <Assert.hpp>
+#include <Reporter.hpp>
 #include <cardiac_mechanics/BoundariesUtility.hpp>
 #include <cardiac_mechanics/LinearSolverUtility.hpp>
 #include <cardiac_mechanics/NewtonSolverUtility.hpp>
-#include <Assert.hpp>
-#include <Reporter.hpp>
 
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/parameter_handler.h>
@@ -22,8 +22,8 @@
 #include <deal.II/distributed/fully_distributed_tria.h>
 #include <deal.II/dofs/dof_handler.h>
 #include <deal.II/dofs/dof_tools.h>
-#include <deal.II/fe/fe_simplex_p.h>
 #include <deal.II/fe/fe_q.h>
+#include <deal.II/fe/fe_simplex_p.h>
 #include <deal.II/fe/fe_system.h>
 #include <deal.II/fe/fe_values.h>
 #include <deal.II/grid/grid_in.h>
@@ -40,9 +40,9 @@
 // These must be included below the AD headers so that
 // their math functions are available for use in the
 // definition of tensors and kinematic quantities
+#include <Sacado.hpp>
 #include <deal.II/physics/elasticity/kinematics.h>
 #include <deal.II/physics/elasticity/standard_tensors.h>
-#include <Sacado.hpp>
 
 #include <chrono>
 #include <cmath>
@@ -86,18 +86,15 @@ template <int dim, typename Scalar = double> class BaseSolverNewHook {
    * Alias for the AD number type
    */
   using ADNumberType = typename ADHelper::ad_type;
+
 public:
   /**
    * @brief: Triangulation geometry
    */
-  enum class TriangulationType {
-    T,
-    Q
-  };
+  enum class TriangulationType { T, Q };
 
   /**
-   * @brief Material related parameters. Reference papaer:
-   * https://pubmed.ncbi.nlm.nih.gov/26807042/
+   * @brief Material related parameters.
    */
   struct Material {
     /**
@@ -143,9 +140,7 @@ public:
      * @brief Retrieve the pressure value
      * @return The configured pressure value
      */
-    Scalar value() const {
-      return pressure;
-    }
+    Scalar value() const { return pressure; }
     /**
      * @brief Evaluate the pressure at a given point
      * @param p The evaluation point
@@ -182,8 +177,8 @@ public:
    * @param problem_name_ The problem name
    */
   BaseSolverNewHook(const std::string &parameters_file_name_,
-             const std::string &mesh_file_name_,
-             const std::string &problem_name_)
+                    const std::string &mesh_file_name_,
+                    const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
         pcout(std::cout, mpi_rank == 0), mesh_file_name(mesh_file_name_),
@@ -327,8 +322,8 @@ protected:
 template <int dim, typename Scalar>
 Scalar BaseSolverNewHook<dim, Scalar>::Material::mu;
 /**
- * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::lambda
- * Needed for linking.
+ * @brief Define static member of BaseSolverNewHook<dim,
+ * Scalar>::Material::lambda Needed for linking.
  */
 template <int dim, typename Scalar>
 Scalar BaseSolverNewHook<dim, Scalar>::Material::lambda;

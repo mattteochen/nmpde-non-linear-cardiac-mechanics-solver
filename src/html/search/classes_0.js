@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['basesolver_117',['BaseSolver',['../classBaseSolver.html',1,'']]],
-  ['boundariesutility_118',['BoundariesUtility',['../classBoundariesUtility.html',1,'']]]
+  ['basesolverguccione_113',['BaseSolverGuccione',['../classBaseSolverGuccione.html',1,'']]],
+  ['basesolvernewhook_114',['BaseSolverNewHook',['../classBaseSolverNewHook.html',1,'']]],
+  ['boundariesutility_115',['BoundariesUtility',['../classBoundariesUtility.html',1,'']]]
 ];

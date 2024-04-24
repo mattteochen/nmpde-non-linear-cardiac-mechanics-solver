@@ -1,20 +1,20 @@
 /**
- * @file IdealizedLV.hpp
- * @brief Header file defining the idealized lv solver class.
+ * @file SlabCubicGuccione.hpp
+ * @brief Header file defining the slab cubic solver class.
  */
 
-#ifndef IDEALIZED_LV_HPP
-#define IDEALIZED_LV_HPP
+#ifndef SLAB_CUBIC_GUCCIONE_HPP
+#define SLAB_CUBIC_GUCCIONE_HPP
 
 #include <cardiac_mechanics/BaseSolverGuccione.hpp>
 
 /**
- * @class IdealizedLV
- * @brief Class representing the an Idealized LV solver
+ * @class SlabCubicGuccione
+ * @brief Class representing the Slab Cubic solver
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
-class IdealizedLV : public BaseSolverGuccione<dim, Scalar> {
+class SlabCubicGuccione : public BaseSolverGuccione<dim, Scalar> {
   /**
    * Alias for base class
    */
@@ -27,13 +27,14 @@ public:
    * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
-  IdealizedLV(const std::string &parameters_file_name_,
-              const std::string &mesh_file_name_,
-              const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_), zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
+  SlabCubicGuccione(const std::string &parameters_file_name_,
+                    const std::string &mesh_file_name_,
+                    const std::string &problem_name_)
+      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {
     Base::pcout << "Problem boundary pressure configuration" << std::endl;
-    Base::pcout << "  Value = " << Base::pressure.value() << " Pa" << std::endl;
-    Base::pcout << "===============================================" << std::endl;
+    Base::pcout << "  Value: " << Base::pressure.value() << " Pa" << std::endl;
+    Base::pcout << "==============================================="
+                << std::endl;
   }
   /**
    * @brief Initialise boundaries tag. Boundaries are problem specific hence we
@@ -58,4 +59,4 @@ protected:
   dealii::Functions::ZeroFunction<dim> zero_function;
 };
 
-#endif // IDEALIZED_LV_HPP
+#endif // SLAB_CUBIC_GUCCIONE_HPP
