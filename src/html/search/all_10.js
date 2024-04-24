@@ -1,19 +1,17 @@
 var searchData=
 [
-  ['show_94',['show',['../structBaseSolver_1_1Material.html#a73bba729e54d8bcec3b2da7f2ce54dea',1,'BaseSolver::Material']]],
-  ['slabcubic_95',['SlabCubic',['../classSlabCubic.html',1,'SlabCubic&lt; dim, Scalar &gt;'],['../classSlabCubic.html#ad102b0c2d1ab2f99be9c7093c011af07',1,'SlabCubic::SlabCubic()']]],
-  ['slabcubic_2ehpp_96',['SlabCubic.hpp',['../SlabCubic_8hpp.html',1,'']]],
-  ['solution_97',['solution',['../classBaseSolver.html#a41d902ebf553a7ac67de4e10cfa756ee',1,'BaseSolver::solution()'],['../classPoisson.html#aeaac724e19074992837aa4acb6a7d902',1,'Poisson::solution()']]],
-  ['solution_5fghost_98',['solution_ghost',['../classPoisson.html#a45612a523838b51eb62b82f32869d394',1,'Poisson']]],
-  ['solution_5fowned_99',['solution_owned',['../classBaseSolver.html#a3bbe1fed6869a7e6a60acb3aead72e57',1,'BaseSolver']]],
-  ['solve_100',['solve',['../classLinearSolverUtility.html#a9d5954ab6ffa664301828b65dbcd682f',1,'LinearSolverUtility::solve()'],['../classPoisson.html#ae052a5f3edfa0694aceb97aef00dc514',1,'Poisson::solve()']]],
-  ['solve_5fnewton_101',['solve_newton',['../classBaseSolver.html#a91e8223c7ebb58833c2dd3f3cd4d64db',1,'BaseSolver::solve_newton()'],['../classIdealizedLVFiber.html#ac18d227f0111234a05246626a8b30eae',1,'IdealizedLVFiber::solve_newton()']]],
-  ['solve_5fsystem_102',['solve_system',['../classBaseSolver.html#aee9eb50ca5ff8ce3d21ac6d758e8120b',1,'BaseSolver']]],
-  ['solver_5ftype_5fmatcher_103',['solver_type_matcher',['../classLinearSolverUtility.html#aac982ca9747d3afedea4b9cec5481e84',1,'LinearSolverUtility']]],
-  ['solver_5ftype_5fmatcher_5frev_104',['solver_type_matcher_rev',['../classLinearSolverUtility.html#af3522ba35688c6214241cebc891fcf95',1,'LinearSolverUtility']]],
-  ['solvertype_105',['SolverType',['../classLinearSolverUtility.html#ada37cd28e18fafc5cb189317df5118ae',1,'LinearSolverUtility']]],
-  ['sor_106',['SOR',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe',1,'LinearSolverUtility']]],
-  ['ssor_107',['SSOR',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169',1,'LinearSolverUtility']]],
-  ['system_5fmatrix_108',['system_matrix',['../classPoisson.html#ab4362aba28d8e2a0de330d0817fccb24',1,'Poisson']]],
-  ['system_5frhs_109',['system_rhs',['../classPoisson.html#ab80cdd5b0eb6f9baf19fda71e3893d04',1,'Poisson']]]
+  ['show_92',['show',['../structBaseSolverGuccione_1_1Material.html#ab969ac1f072848454e3993851ac6e12a',1,'BaseSolverGuccione::Material::show()'],['../structBaseSolverNewHook_1_1Material.html#a67f246acc5529213e937e2da34661563',1,'BaseSolverNewHook::Material::show()']]],
+  ['solution_93',['solution',['../classBaseSolverGuccione.html#a698e09f8d41a826180dfebd8717fba51',1,'BaseSolverGuccione::solution()'],['../classBaseSolverNewHook.html#a7d756a5df09b17b9abea1cf35bf05ca7',1,'BaseSolverNewHook::solution()'],['../classPoisson.html#aeaac724e19074992837aa4acb6a7d902',1,'Poisson::solution()']]],
+  ['solution_5fghost_94',['solution_ghost',['../classPoisson.html#a45612a523838b51eb62b82f32869d394',1,'Poisson']]],
+  ['solution_5fowned_95',['solution_owned',['../classBaseSolverGuccione.html#aeb6f2fe67116321fdf2fd982fd59d197',1,'BaseSolverGuccione::solution_owned()'],['../classBaseSolverNewHook.html#a394be1e373184d42a8b76f9377b0a72f',1,'BaseSolverNewHook::solution_owned()']]],
+  ['solve_96',['solve',['../classLinearSolverUtility.html#a9d5954ab6ffa664301828b65dbcd682f',1,'LinearSolverUtility::solve()'],['../classPoisson.html#ae052a5f3edfa0694aceb97aef00dc514',1,'Poisson::solve()']]],
+  ['solve_5fnewton_97',['solve_newton',['../classBaseSolverGuccione.html#a0f84e4ca659b00432b1558fd6d85c9b5',1,'BaseSolverGuccione::solve_newton()'],['../classBaseSolverNewHook.html#a8a0495fb85337aaa84d5a802637507d4',1,'BaseSolverNewHook::solve_newton()']]],
+  ['solve_5fsystem_98',['solve_system',['../classBaseSolverGuccione.html#a4af99ebe84506b73a25d74523de8abac',1,'BaseSolverGuccione::solve_system()'],['../classBaseSolverNewHook.html#ae2e34cbd0431a55c29ba1bcacefb2a7d',1,'BaseSolverNewHook::solve_system()']]],
+  ['solver_5ftype_5fmatcher_99',['solver_type_matcher',['../classLinearSolverUtility.html#aac982ca9747d3afedea4b9cec5481e84',1,'LinearSolverUtility']]],
+  ['solver_5ftype_5fmatcher_5frev_100',['solver_type_matcher_rev',['../classLinearSolverUtility.html#af3522ba35688c6214241cebc891fcf95',1,'LinearSolverUtility']]],
+  ['solvertype_101',['SolverType',['../classLinearSolverUtility.html#ada37cd28e18fafc5cb189317df5118ae',1,'LinearSolverUtility']]],
+  ['sor_102',['SOR',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe',1,'LinearSolverUtility']]],
+  ['ssor_103',['SSOR',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169',1,'LinearSolverUtility']]],
+  ['system_5fmatrix_104',['system_matrix',['../classPoisson.html#ab4362aba28d8e2a0de330d0817fccb24',1,'Poisson']]],
+  ['system_5frhs_105',['system_rhs',['../classPoisson.html#ab80cdd5b0eb6f9baf19fda71e3893d04',1,'Poisson']]]
 ];

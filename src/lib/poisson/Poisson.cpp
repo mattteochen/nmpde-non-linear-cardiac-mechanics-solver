@@ -3,8 +3,8 @@
  * @brief Implementation file for the Poisson class.
  */
 
-#include <poisson/Poisson.hpp>
 #include <fstream>
+#include <poisson/Poisson.hpp>
 
 /**
  * @class Poisson
@@ -50,13 +50,11 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::setup() {
     // initializing linear algebra classes.
     locally_owned_dofs = dof_handler.locally_owned_dofs();
   }
-  
+
   pcout << "Poisson solver" << std::endl;
   pcout << "  Degree                     = " << fe->degree << std::endl;
-  pcout << "  DoFs per cell              = " << fe->dofs_per_cell
-        << std::endl;
-  pcout << "  Quadrature points per cell = " << quadrature->size()
-        << std::endl;
+  pcout << "  DoFs per cell              = " << fe->dofs_per_cell << std::endl;
+  pcout << "  Quadrature points per cell = " << quadrature->size() << std::endl;
   pcout << "  Number of DoFs = " << dof_handler.n_dofs() << std::endl;
   pcout << "===============================================" << std::endl;
 
@@ -135,8 +133,10 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::assemble() {
     system_rhs.add(dof_indices, cell_rhs);
   }
   pcout << "Poisson assemble" << std::endl;
-  std::cout << "  Poisson aggregate dof indices cache size (processor: " << mpi_rank << ") = " << aggregate_dof_indices.size() << std::endl;
-  std::cout << "  Poisson cell_counter (processor: " << mpi_rank << ") = " << cell_counter << std::endl;
+  std::cout << "  Poisson aggregate dof indices cache size (processor: "
+            << mpi_rank << ") = " << aggregate_dof_indices.size() << std::endl;
+  std::cout << "  Poisson cell_counter (processor: " << mpi_rank
+            << ") = " << cell_counter << std::endl;
 
   system_matrix.compress(VectorOperation::add);
   system_rhs.compress(VectorOperation::add);
@@ -146,7 +146,8 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::assemble() {
     std::map<types::global_dof_index, double> boundary_values;
     VectorTools::interpolate_boundary_values(
         dof_handler, dirichlet_boundary_functions, boundary_values);
-    //setting the flag to false as for https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
+    // setting the flag to false as for
+    // https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
     MatrixTools::apply_boundary_values(boundary_values, system_matrix, solution,
                                        system_rhs, false);
   }

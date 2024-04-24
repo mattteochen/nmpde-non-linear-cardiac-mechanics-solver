@@ -1,0 +1,8 @@
+<map id="BaseSolverNewHook&lt; dim, Scalar &gt;" name="BaseSolverNewHook&lt; dim, Scalar &gt;">
+<area shape="rect" id="node1" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="616,90,785,131"/>
+<area shape="rect" id="node2" href="$classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="237,5,372,32"/>
+<area shape="rect" id="node3" href="$classNewtonSolverUtility.html" title=" " alt="" coords="228,57,381,98"/>
+<area shape="rect" id="node4" href="$classLinearSolverUtility.html" title=" " alt="" coords="233,122,376,163"/>
+<area shape="rect" id="node5" href="$classBaseSolverNewHook_1_1ConstantPressureFunction.html" title="Class representing the applied pressure component." alt="" coords="187,188,423,244"/>
+<area shape="rect" id="node6" title=" " alt="" coords="5,203,137,229"/>
+</map>

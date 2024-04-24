@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['delta_5fowned_190',['delta_owned',['../classBaseSolver.html#abc28c3e1f3748769548d9662aa746c21',1,'BaseSolver']]],
-  ['dirichlet_5fboundaries_191',['dirichlet_boundaries',['../classBoundariesUtility.html#aac31790baf16435a82db6b7b748e0cb8',1,'BoundariesUtility']]],
-  ['dirichlet_5fboundary_5ffunctions_192',['dirichlet_boundary_functions',['../classBaseSolver.html#add973afcdc2c7ba1a1deb22adf6c4519',1,'BaseSolver::dirichlet_boundary_functions()'],['../classPoisson.html#a39c76978174d1e06d506d74eaee12ab1',1,'Poisson::dirichlet_boundary_functions()']]],
-  ['dof_5fhandler_193',['dof_handler',['../classBaseSolver.html#a3d446af61f10485f6a7e33391ece74f7',1,'BaseSolver::dof_handler()'],['../classPoisson.html#a95ee14fd830d18f8f4708a6be020a595',1,'Poisson::dof_handler()']]],
-  ['dofs_5fsupport_5fpoints_194',['dofs_support_points',['../classIdealizedLVFiber.html#a66639d49a5e07315648d637718dd70b4',1,'IdealizedLVFiber']]]
+  ['delta_5fowned_182',['delta_owned',['../classBaseSolverGuccione.html#a7d49320ac4d329a1642f6d53d65a4643',1,'BaseSolverGuccione::delta_owned()'],['../classBaseSolverNewHook.html#a79c949d61016c9afc8b8e9cfd4ab5d87',1,'BaseSolverNewHook::delta_owned()']]],
+  ['dirichlet_5fboundaries_183',['dirichlet_boundaries',['../classBoundariesUtility.html#aac31790baf16435a82db6b7b748e0cb8',1,'BoundariesUtility']]],
+  ['dirichlet_5fboundary_5ffunctions_184',['dirichlet_boundary_functions',['../classBaseSolverGuccione.html#ab8b50b3080a6f3a9fc4e32c40cca11f2',1,'BaseSolverGuccione::dirichlet_boundary_functions()'],['../classBaseSolverNewHook.html#ae1663a36196c95cc81957a4c2febd0b0',1,'BaseSolverNewHook::dirichlet_boundary_functions()'],['../classPoisson.html#a39c76978174d1e06d506d74eaee12ab1',1,'Poisson::dirichlet_boundary_functions()']]],
+  ['dof_5fhandler_185',['dof_handler',['../classBaseSolverGuccione.html#ad4c0bc31735f90740fbad20c666d8194',1,'BaseSolverGuccione::dof_handler()'],['../classBaseSolverNewHook.html#afda882ee86413aad0c0ed91e6b78e2c3',1,'BaseSolverNewHook::dof_handler()'],['../classPoisson.html#a95ee14fd830d18f8f4708a6be020a595',1,'Poisson::dof_handler()']]]
 ];
