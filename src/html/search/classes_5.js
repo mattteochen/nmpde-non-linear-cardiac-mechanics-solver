@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['linearsolverutility_124',['LinearSolverUtility',['../classLinearSolverUtility.html',1,'']]],
-  ['linearsolverutility_3c_20double_20_3e_125',['LinearSolverUtility&lt; double &gt;',['../classLinearSolverUtility.html',1,'']]]
+  ['material_121',['Material',['../structBaseSolverNewHook_1_1Material.html',1,'BaseSolverNewHook&lt; dim, Scalar &gt;::Material'],['../structBaseSolverGuccione_1_1Material.html',1,'BaseSolverGuccione&lt; dim, Scalar &gt;::Material']]]
 ];

@@ -7,11 +7,11 @@
 #ifndef BASESOLVERGUCCIONE_HPP
 #define BASESOLVERGUCCIONE_HPP
 
+#include <Assert.hpp>
+#include <Reporter.hpp>
 #include <cardiac_mechanics/BoundariesUtility.hpp>
 #include <cardiac_mechanics/LinearSolverUtility.hpp>
 #include <cardiac_mechanics/NewtonSolverUtility.hpp>
-#include <Assert.hpp>
-#include <Reporter.hpp>
 
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/parameter_handler.h>
@@ -22,8 +22,8 @@
 #include <deal.II/distributed/fully_distributed_tria.h>
 #include <deal.II/dofs/dof_handler.h>
 #include <deal.II/dofs/dof_tools.h>
-#include <deal.II/fe/fe_simplex_p.h>
 #include <deal.II/fe/fe_q.h>
+#include <deal.II/fe/fe_simplex_p.h>
 #include <deal.II/fe/fe_system.h>
 #include <deal.II/fe/fe_values.h>
 #include <deal.II/grid/grid_in.h>
@@ -40,9 +40,9 @@
 // These must be included below the AD headers so that
 // their math functions are available for use in the
 // definition of tensors and kinematic quantities
+#include <Sacado.hpp>
 #include <deal.II/physics/elasticity/kinematics.h>
 #include <deal.II/physics/elasticity/standard_tensors.h>
-#include <Sacado.hpp>
 
 #include <chrono>
 #include <cmath>
@@ -58,8 +58,8 @@ using namespace dealii;
 /**
  * @class BaseSolverGuccione
  * @brief Abstract class representing a base solver for non linear cardiac
- * mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et
- * al. (https://pubmed.ncbi.nlm.nih.gov/8550635/).
+ * mechanics by using the isotropic or transversely isotropic constitutive law
+ * by Guccione et al. (https://pubmed.ncbi.nlm.nih.gov/8550635/).
  * @tparam dim The problem dimension
  * @tparam Scalar The scalar type for the problem, by default a double
  */
@@ -87,14 +87,12 @@ template <int dim, typename Scalar = double> class BaseSolverGuccione {
    * Alias for the AD number type
    */
   using ADNumberType = typename ADHelper::ad_type;
+
 public:
   /**
    * @brief: Triangulation geometry
    */
-  enum class TriangulationType {
-    T,
-    Q
-  };
+  enum class TriangulationType { T, Q };
 
   /**
    * @brief Material related parameters. Reference papaer:
@@ -154,9 +152,7 @@ public:
      * @brief Retrieve the pressure value
      * @return The configured pressure value
      */
-    Scalar value() const {
-      return pressure;
-    }
+    Scalar value() const { return pressure; }
     /**
      * @brief Evaluate the pressure at a given point
      * @param p The evaluation point
@@ -213,12 +209,10 @@ public:
      */
     template <typename TensorType> NumberType compute(TensorType const &gst) {
       return q = b_f * gst[0][0] * gst[0][0] +
-                 b_t *
-                     (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
-                      gst[1][2] * gst[1][2] + gst[2][1] * gst[2][1]) +
-                 b_fs *
-                     (gst[0][1] * gst[0][1] + gst[1][0] * gst[1][0] +
-                      gst[0][2] * gst[0][2] + gst[2][0] * gst[2][0]);
+                 b_t * (gst[1][1] * gst[1][1] + gst[2][2] * gst[2][2] +
+                        gst[1][2] * gst[1][2] + gst[2][1] * gst[2][1]) +
+                 b_fs * (gst[0][1] * gst[0][1] + gst[1][0] * gst[1][0] +
+                         gst[0][2] * gst[0][2] + gst[2][0] * gst[2][0]);
     }
   };
   /**
@@ -241,8 +235,8 @@ public:
    * @param problem_name_ The problem name
    */
   BaseSolverGuccione(const std::string &parameters_file_name_,
-             const std::string &mesh_file_name_,
-             const std::string &problem_name_)
+                     const std::string &mesh_file_name_,
+                     const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
         pcout(std::cout, mpi_rank == 0), mesh_file_name(mesh_file_name_),
@@ -395,8 +389,8 @@ protected:
 };
 
 /**
- * @brief Define static member of BaseSolverGuccione<dim, Scalar>::Material::b_f.
- * Needed for linking.
+ * @brief Define static member of BaseSolverGuccione<dim,
+ * Scalar>::Material::b_f. Needed for linking.
  */
 template <int dim, typename Scalar>
 Scalar BaseSolverGuccione<dim, Scalar>::Material::b_f;
@@ -407,8 +401,8 @@ Scalar BaseSolverGuccione<dim, Scalar>::Material::b_f;
 template <int dim, typename Scalar>
 Scalar BaseSolverGuccione<dim, Scalar>::Material::b_t;
 /**
- * @brief Define static member of BaseSolverGuccione<dim, Scalar>::Material::b_fs
- * Needed for linking.
+ * @brief Define static member of BaseSolverGuccione<dim,
+ * Scalar>::Material::b_fs Needed for linking.
  */
 template <int dim, typename Scalar>
 Scalar BaseSolverGuccione<dim, Scalar>::Material::b_fs;
@@ -416,6 +410,7 @@ Scalar BaseSolverGuccione<dim, Scalar>::Material::b_fs;
  * @brief Define static member of BaseSolverGuccione<dim, Scalar>::Material::C
  * Needed for linking.
  */
-template <int dim, typename Scalar> Scalar BaseSolverGuccione<dim, Scalar>::Material::C;
+template <int dim, typename Scalar>
+Scalar BaseSolverGuccione<dim, Scalar>::Material::C;
 
 #endif // BASESOLVERGUCCIONE_HPP

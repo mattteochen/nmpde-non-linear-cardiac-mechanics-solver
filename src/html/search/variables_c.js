@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['r_223',['r',['../classBaseSolver.html#a15d87994a19fb601174284419bc4864a',1,'BaseSolver::r()'],['../classPoisson.html#a97df049d591c9dab29117412decbb0b7',1,'Poisson::r()']]],
-  ['residual_5fvector_224',['residual_vector',['../classBaseSolver.html#a9aa4be11aa9ad50199a19e2ae2ee9e90',1,'BaseSolver']]]
+  ['r_214',['r',['../classBaseSolverGuccione.html#a7c38401259e108bfed03334988460779',1,'BaseSolverGuccione::r()'],['../classBaseSolverNewHook.html#ac9625eca4cf06a8f26f17e7bdae1a219',1,'BaseSolverNewHook::r()'],['../classPoisson.html#a97df049d591c9dab29117412decbb0b7',1,'Poisson::r()']]],
+  ['residual_5fvector_215',['residual_vector',['../classBaseSolverGuccione.html#a52dd329753d14599f43eac98ed9afdc8',1,'BaseSolverGuccione::residual_vector()'],['../classBaseSolverNewHook.html#a2d6d2b4ee829a777a4a488f869dc7125',1,'BaseSolverNewHook::residual_vector()']]]
 ];

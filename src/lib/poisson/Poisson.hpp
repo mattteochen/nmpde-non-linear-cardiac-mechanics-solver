@@ -88,7 +88,8 @@ public:
 
   const TrilinosWrappers::MPI::Vector &get_solution() const;
 
-  const std::vector<std::vector<types::global_dof_index>>& get_aggregate_dof_indices() const;
+  const std::vector<std::vector<types::global_dof_index>> &
+  get_aggregate_dof_indices() const;
 
   /**
    * The input mesh file name

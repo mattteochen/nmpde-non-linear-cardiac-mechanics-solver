@@ -1,8 +1,7 @@
 <map id="lib/cardiac_mechanics/LinearSolverUtility.hpp" name="lib/cardiac_mechanics/LinearSolverUtility.hpp">
-<area shape="rect" id="node1" title="Header file defining the LinearSolverUtility class for configuring linear solvers." alt="" coords="323,5,497,47"/>
-<area shape="rect" id="node2" href="$BaseSolver_8hpp.html" title="Header file defining the abstract base solver class for materials having the isotropic or transversel..." alt="" coords="327,95,493,136"/>
-<area shape="rect" id="node3" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,184,172,225"/>
-<area shape="rect" id="node4" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="196,191,419,218"/>
-<area shape="rect" id="node5" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="443,184,582,225"/>
-<area shape="rect" id="node6" href="$IdealizedLVFiber_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="606,184,801,225"/>
+<area shape="rect" id="node1" title="Header file defining the LinearSolverUtility class for configuring linear solvers." alt="" coords="119,5,292,47"/>
+<area shape="rect" id="node2" href="$BaseSolverGuccione_8hpp.html" title="Header file defining the abstract base solver class for materials having the isotropic or transversel..." alt="" coords="5,95,192,136"/>
+<area shape="rect" id="node4" href="$BaseSolverNewHook_8hpp.html" title="Header file defining the abstract base solver class for materials having the New Hook constructive la..." alt="" coords="217,95,407,136"/>
+<area shape="rect" id="node3" href="$BaseSolverGuccione_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,184,192,225"/>
+<area shape="rect" id="node5" href="$BaseSolverNewHook_8cpp.html" title="Implementation file for the base solver class." alt="" coords="217,184,407,225"/>
 </map>

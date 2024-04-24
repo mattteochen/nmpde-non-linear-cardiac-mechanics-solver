@@ -1,15 +1,15 @@
 /**
- * @file IdealizedLVFiber.hpp
+ * @file IdealizedLVFiberGuccione.hpp
  * @brief Header file defining the idealized lv solver class.
  */
 
-#ifndef IDEALIZED_LV_FIBER_HPP
-#define IDEALIZED_LV_FIBER_HPP
+#ifndef IDEALIZED_LV_FIBER_GUCCIONE_HPP
+#define IDEALIZED_LV_FIBER_GUCCIONE_HPP
 
 #include <Assert.hpp>
+#include <cardiac_mechanics/BaseSolverGuccione.hpp>
 #include <deal.II/base/numbers.h>
 #include <poisson/Poisson.hpp>
-#include <cardiac_mechanics/BaseSolverGuccione.hpp>
 
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/fe/mapping_fe.h>
@@ -22,12 +22,12 @@
 #endif
 
 /**
- * @class IdealizedLVFiber
+ * @class IdealizedLVFiberGuccione
  * @brief Class representing the an Idealized LV solver with fiber contraction
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
-class IdealizedLVFiber : public BaseSolverGuccione<dim, Scalar> {
+class IdealizedLVFiberGuccione : public BaseSolverGuccione<dim, Scalar> {
   /**
    * Alias for base class
    */
@@ -54,9 +54,9 @@ public:
    * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
-  IdealizedLVFiber(const std::string &parameters_file_name_,
-                   const std::string &mesh_file_name_,
-                   const std::string &problem_name_)
+  IdealizedLVFiberGuccione(const std::string &parameters_file_name_,
+                           const std::string &mesh_file_name_,
+                           const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_),
         zero_function(dealii::Functions::ZeroFunction<dim>(dim)),
         poisson_solver(mesh_file_name_, Base::r) {
@@ -64,9 +64,12 @@ public:
     { fiber_pressure = Base::prm.get_double("FiberValue"); }
     Base::prm.leave_subsection();
     Base::pcout << "Problem pressure configuration" << std::endl;
-    Base::pcout << "  Boundary pressure value: " << Base::pressure.value() << " Pa" << std::endl;
-    Base::pcout << "  Fiber pressure value: " << fiber_pressure << " Pa" << std::endl;
-    Base::pcout << "===============================================" << std::endl;
+    Base::pcout << "  Boundary pressure value: " << Base::pressure.value()
+                << " Pa" << std::endl;
+    Base::pcout << "  Fiber pressure value: " << fiber_pressure << " Pa"
+                << std::endl;
+    Base::pcout << "==============================================="
+                << std::endl;
   }
   /**
    * @brief Initialise boundaries tag. Boundaries are problem specific hence we
@@ -91,27 +94,28 @@ public:
       const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
       const unsigned cell_index) override {
 
-    auto norm = [](const auto& v) {
+    auto norm = [](const auto &v) {
       auto sum = 0.0;
-      for (auto& n : v) {
-        sum += n*n;
+      for (auto &n : v) {
+        sum += n * n;
       }
       return static_cast<decltype(v[0])>(std::sqrt(sum));
     };
 
-    auto normalize = [](auto& v, const auto norm) {
-      for (auto& n : v) {
+    auto normalize = [](auto &v, const auto norm) {
+      for (auto &n : v) {
         n /= norm;
-      } 
+      }
     };
 
-    const auto& poisson_solution = poisson_solver.get_solution();
-    const auto& poisson_dof_indices = poisson_solver.get_aggregate_dof_indices();
+    const auto &poisson_solution = poisson_solver.get_solution();
+    const auto &poisson_dof_indices =
+        poisson_solver.get_aggregate_dof_indices();
     Tensor<1, dim, ADNumberType> f;
 
-    for (unsigned i=0; i<poisson_solver.fe->dofs_per_cell; ++i) {
+    for (unsigned i = 0; i < poisson_solver.fe->dofs_per_cell; ++i) {
       const auto global_index = poisson_dof_indices[cell_index][i];
-      const auto& support_point = dofs_support_points[global_index];
+      const auto &support_point = dofs_support_points[global_index];
 
 #ifdef BUILD_TYPE_DEBUG
       ASSERT(global_index >= 0 && global_index < poisson_solution.size(),
@@ -119,10 +123,10 @@ public:
                  << global_index << " poisson_solution size = "
                  << poisson_solution.size() << std::endl);
 #endif
-      //retrive the t value
+      // retrive the t value
       const Scalar t = poisson_solution[global_index];
-      //compute fiber parameters
-      //TODO: move them in the config file
+      // compute fiber parameters
+      // TODO: move them in the config file
       const Scalar d_focal = 45.0;
       const Scalar nu_endo = 0.6;
       const Scalar nu_epi = 0.8;
@@ -135,45 +139,49 @@ public:
       const Scalar r_s = endo_r_1 + endo_epi_r_1_delta * t;
       const Scalar r_e = endo_r_2 + endo_epi_r_2_delta * t;
       const Scalar u_rad = std::acos(support_point[2] / r_e);
-      const Scalar v_rad1 = std::asin(support_point[1] / (r_s * std::sin(u_rad)));
-      const Scalar v_rad2 = std::acos(support_point[0] / (r_s * std::sin(u_rad)));
+      const Scalar v_rad1 =
+          std::asin(support_point[1] / (r_s * std::sin(u_rad)));
+      const Scalar v_rad2 =
+          std::acos(support_point[0] / (r_s * std::sin(u_rad)));
       const Scalar alpha_deg = 90.0 - 180.0 * t;
       const Scalar alpha_rad = alpha_deg * (M_PI / 180.0);
-        
-      //sometimes when the argument of the std::asin or std::acos is ~1/~-1 we have detected numerical imprecisions that will lead to NaN.
-      //We are skipping those Dofs contributions (from tests we have detected only one point over ~74k total Dofs (with r = 1))
+
+      // sometimes when the argument of the std::asin or std::acos is ~1/~-1 we
+      // have detected numerical imprecisions that will lead to NaN. We are
+      // skipping those Dofs contributions (from tests we have detected only one
+      // point over ~74k total Dofs (with r = 1))
       if ((std::isnan(v_rad1) && std::isnan(v_rad2)) || std::isnan(u_rad)) {
 #ifdef BUILD_TYPE_DEBUG
         std::cout << "ERR: rank: " << Base::mpi_rank
-                  << " failed point with global index = " << global_index << ": "
-                  << support_point[0] << " " << support_point[1] << " "
+                  << " failed point with global index = " << global_index
+                  << ": " << support_point[0] << " " << support_point[1] << " "
                   << support_point[2] << std::endl;
 #endif
         continue;
       }
-      //angle v can be recovered by using 2 equations (https://pubmed.ncbi.nlm.nih.gov/26807042/)
+      // angle v can be recovered by using 2 equations
+      // (https://pubmed.ncbi.nlm.nih.gov/26807042/)
       const Scalar v_rad = std::isnan(v_rad1) ? v_rad2 : v_rad1;
 
-      //declare partial derivative vectors (handmade derivative)
-      std::vector<Scalar> dx_du = {
-        r_s * std::cos(u_rad) * std::cos(v_rad),
-        r_s * std::cos(u_rad) * std::sin(v_rad),
-        -r_e * std::sin(u_rad)
-      };
-      std::vector<Scalar> dx_dv = {
-        -1.0 * r_s * std::sin(u_rad) * std::sin(v_rad),
-        r_s * std::sin(u_rad) * std::cos(v_rad),
-        0
-      };
+      // declare partial derivative vectors (handmade derivative)
+      std::vector<Scalar> dx_du = {r_s * std::cos(u_rad) * std::cos(v_rad),
+                                   r_s * std::cos(u_rad) * std::sin(v_rad),
+                                   -r_e * std::sin(u_rad)};
+      std::vector<Scalar> dx_dv = {-1.0 * r_s * std::sin(u_rad) *
+                                       std::sin(v_rad),
+                                   r_s * std::sin(u_rad) * std::cos(v_rad), 0};
       normalize(dx_du, norm(dx_du));
       normalize(dx_dv, norm(dx_dv));
-      //compute vector f
-      for (unsigned i=0; i<dim; ++i) {
-        f[i] += ADNumberType(dx_du[i]) * Sacado::Fad::sin(ADNumberType(alpha_rad)) + ADNumberType(dx_dv[i]) * Sacado::Fad::cos(ADNumberType(alpha_rad));
-      } 
+      // compute vector f
+      for (unsigned i = 0; i < dim; ++i) {
+        f[i] +=
+            ADNumberType(dx_du[i]) * Sacado::Fad::sin(ADNumberType(alpha_rad)) +
+            ADNumberType(dx_dv[i]) * Sacado::Fad::cos(ADNumberType(alpha_rad));
+      }
     }
     out_tensor += (ADNumberType(fiber_pressure) * dealii::outer_product(f, f));
-    Base::compute_piola_kirchhoff(out_tensor, solution_gradient_quadrature, cell_index);
+    Base::compute_piola_kirchhoff(out_tensor, solution_gradient_quadrature,
+                                  cell_index);
   }
   /**
    * @see Base::solve_newton()
@@ -190,23 +198,28 @@ public:
     poisson_solver.setup();
     Base::setup();
     switch (Base::triangulation_type) {
-      case Base::TriangulationType::T: {
-        FE_SimplexP<dim> fe_linear(Base::r);
-        MappingFE mapping(fe_linear);
-        DoFTools::map_dofs_to_support_points(mapping, poisson_solver.dof_handler, dofs_support_points);
-        break;
-      };
-      case Base::TriangulationType::Q: {
-        FE_Q<dim> fe_linear(Base::r);
-        MappingFE mapping(fe_linear);
-        DoFTools::map_dofs_to_support_points(mapping, poisson_solver.dof_handler, dofs_support_points);
-        break;
-      };
+    case Base::TriangulationType::T: {
+      FE_SimplexP<dim> fe_linear(Base::r);
+      MappingFE mapping(fe_linear);
+      DoFTools::map_dofs_to_support_points(mapping, poisson_solver.dof_handler,
+                                           dofs_support_points);
+      break;
+    };
+    case Base::TriangulationType::Q: {
+      FE_Q<dim> fe_linear(Base::r);
+      MappingFE mapping(fe_linear);
+      DoFTools::map_dofs_to_support_points(mapping, poisson_solver.dof_handler,
+                                           dofs_support_points);
+      break;
+    };
     }
 #ifdef BUILD_TYPE_DEBUG
-    std::cout << "  rank = " << Base::mpi_rank << " dof support points count (based on poisson dofs) = " << dofs_support_points.size() << std::endl;
-    std::ofstream out_f("dofs_support_points" + std::to_string(Base::mpi_rank) + ".log");
-    for (auto& [k, v] : dofs_support_points) {
+    std::cout << "  rank = " << Base::mpi_rank
+              << " dof support points count (based on poisson dofs) = "
+              << dofs_support_points.size() << std::endl;
+    std::ofstream out_f("dofs_support_points" + std::to_string(Base::mpi_rank) +
+                        ".log");
+    for (auto &[k, v] : dofs_support_points) {
       out_f << v[0] << " " << v[1] << " " << v[2] << std::endl;
     }
     out_f.close();
@@ -232,4 +245,4 @@ protected:
   Scalar fiber_pressure;
 };
 
-#endif // IDEALIZED_LV_FIBER_HPP
+#endif // IDEALIZED_LV_FIBER_GUCCIONE_HPP
