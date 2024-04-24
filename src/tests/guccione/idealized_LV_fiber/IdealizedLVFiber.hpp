@@ -134,12 +134,9 @@ public:
       const Scalar endo_epi_r_2_delta = std::abs(endo_r_2 - epi_r_2);
       const Scalar r_s = endo_r_1 + endo_epi_r_1_delta * t;
       const Scalar r_e = endo_r_2 + endo_epi_r_2_delta * t;
-      const Scalar u_deg = std::acos(support_point[2] / r_e) * (180.0 / M_PI);
-      const Scalar u_rad = u_deg * (M_PI / 180.0);
-      const Scalar v_deg1 = std::asin(support_point[1] / (r_s * std::sin(u_rad))) * (180.0 / M_PI);
-      const Scalar v_deg2 = std::acos(support_point[0] / (r_s * std::sin(u_rad))) * (180.0 / M_PI);
-      const Scalar v_rad1 = v_deg1 * (M_PI / 180.0);
-      const Scalar v_rad2 = v_deg2 * (M_PI / 180.0);
+      const Scalar u_rad = std::acos(support_point[2] / r_e);
+      const Scalar v_rad1 = std::asin(support_point[1] / (r_s * std::sin(u_rad)));
+      const Scalar v_rad2 = std::acos(support_point[0] / (r_s * std::sin(u_rad)));
       const Scalar alpha_deg = 90.0 - 180.0 * t;
       const Scalar alpha_rad = alpha_deg * (M_PI / 180.0);
         
@@ -172,12 +169,10 @@ public:
       normalize(dx_dv, norm(dx_dv));
       //compute vector f
       for (unsigned i=0; i<dim; ++i) {
-        f[i] += dx_du[i] * std::sin(alpha_rad) + dx_dv[i] * std::cos(alpha_rad);
-        ASSERT(dealii::numbers::is_finite(f[i].val()), "\n\nf[i] is not finite\n");
-        // f[i] += ADNumberType(dx_du[i]) * Sacado::Fad::sin(ADNumberType(alpha_rad)) + ADNumberType(dx_dv[i]) * Sacado::Fad::cos(ADNumberType(alpha_rad));
+        f[i] += ADNumberType(dx_du[i]) * Sacado::Fad::sin(ADNumberType(alpha_rad)) + ADNumberType(dx_dv[i]) * Sacado::Fad::cos(ADNumberType(alpha_rad));
       } 
     }
-    out_tensor += (fiber_pressure * dealii::outer_product(f, f));
+    out_tensor += (ADNumberType(fiber_pressure) * dealii::outer_product(f, f));
     Base::compute_piola_kirchhoff(out_tensor, solution_gradient_quadrature, cell_index);
   }
   /**

@@ -19,7 +19,8 @@
  * @tparam dim The problem dimension space
  * @tparam Scalar The scalar type being used
  */
-template <int dim, typename Scalar> void BaseSolverGuccione<dim, Scalar>::setup() {
+template <int dim, typename Scalar>
+void BaseSolverGuccione<dim, Scalar>::setup() {
   // Create the mesh.
   {
     pcout << "Initializing the mesh" << std::endl;
@@ -59,20 +60,20 @@ template <int dim, typename Scalar> void BaseSolverGuccione<dim, Scalar>::setup(
     // To construct a vector-valued finite element space, we use the FESystem
     // class. It is still derived from FiniteElement.
     switch (triangulation_type) {
-      case TriangulationType::T: {
-        pcout << "  Using triangulation: T" << std::endl;
-        fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
-        quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
-        quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
-        break;
-      };
-      case TriangulationType::Q: {
-        pcout << "  Using triangulation: Q" << std::endl;
-        fe = std::make_unique<FESystem<dim>>(FE_Q<dim>(r), dim);
-        quadrature = std::make_unique<QGauss<dim>>(r + 1);
-        quadrature_face = std::make_unique<QGauss<dim - 1>>(r + 1);
-        break;
-      };
+    case TriangulationType::T: {
+      pcout << "  Using triangulation: T" << std::endl;
+      fe = std::make_unique<FESystem<dim>>(FE_SimplexP<dim>(r), dim);
+      quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);
+      quadrature_face = std::make_unique<QGaussSimplex<dim - 1>>(r + 1);
+      break;
+    };
+    case TriangulationType::Q: {
+      pcout << "  Using triangulation: Q" << std::endl;
+      fe = std::make_unique<FESystem<dim>>(FE_Q<dim>(r), dim);
+      quadrature = std::make_unique<QGauss<dim>>(r + 1);
+      quadrature_face = std::make_unique<QGauss<dim - 1>>(r + 1);
+      break;
+    };
     };
 
     pcout << "  Degree                     = " << fe->degree << std::endl;
@@ -140,7 +141,8 @@ template <int dim, typename Scalar> void BaseSolverGuccione<dim, Scalar>::setup(
  * @tparam dim The problem dimension space
  * @tparam Scalar The scalar type being used
  * @param out_tensor A reference to the output tensor
- * @param solution_gradient_quadrature The current solution gradient at given quadrature node
+ * @param solution_gradient_quadrature The current solution gradient at given
+ * quadrature node
  * @param cell_index The index of the current dealii cell
  */
 template <int dim, typename Scalar>
@@ -149,23 +151,21 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
     const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
     const unsigned /*cell_index*/) {
   // // Compute deformation gradient tensor
-  // const Tensor<2, dim, ADNumberType> F =
-  //     Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
-  // // Compute green Lagrange tensor
-  // const Tensor<2, dim, ADNumberType> E = Physics::Elasticity::Kinematics::E(F);
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
   // Compute green Lagrange tensor
   const Tensor<2, dim, ADNumberType> E = Physics::Elasticity::Kinematics::E(F);
 #ifdef BUILD_TYPE_DEBUG
-  for (unsigned row=0; row<dim; row++) {
-    const auto& F_i = F[row];
-    const auto& E_i = E[row];
-    for (unsigned col=0; col<dim; col++) {
+  for (unsigned row = 0; row < dim; row++) {
+    const auto &F_i = F[row];
+    const auto &E_i = E[row];
+    for (unsigned col = 0; col < dim; col++) {
       const double scalar_F = F_i[col].val();
       const double scalar_E = E_i[col].val();
-      ASSERT(dealii::numbers::is_finite(scalar_F), "rank = " << mpi_rank << " F NaN: " << scalar_F << std::endl);
-      ASSERT(dealii::numbers::is_finite(scalar_E), "rank = " << mpi_rank << " E NaN: " << scalar_E << std::endl);
+      ASSERT(dealii::numbers::is_finite(scalar_F),
+             "rank = " << mpi_rank << " F NaN: " << scalar_F << std::endl);
+      ASSERT(dealii::numbers::is_finite(scalar_E),
+             "rank = " << mpi_rank << " E NaN: " << scalar_E << std::endl);
     }
   }
 #endif
@@ -173,7 +173,8 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   ExponentQ<ADNumberType> exponent_q;
   const ADNumberType Q = exponent_q.compute(E);
 #ifdef BUILD_TYPE_DEBUG
-  ASSERT(dealii::numbers::is_finite(Q.val()), "rank = " << mpi_rank << " Q NaN: " << Q.val() << std::endl);
+  ASSERT(dealii::numbers::is_finite(Q.val()),
+         "rank = " << mpi_rank << " Q NaN: " << Q.val() << std::endl);
 #endif
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
@@ -181,25 +182,32 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
       const double exp_Q_val = Sacado::Fad::exp(Q).val();
       std::string solution_gradient_quadrature_str = "";
       if (!dealii::numbers::is_finite(exp_Q_val)) {
-        for (unsigned k=0; k<dim; ++k) {
-          const auto& solution_gradient_quadrature_k = solution_gradient_quadrature[k];
-          for (unsigned l=0; l<dim; ++l) {
-            solution_gradient_quadrature_str += std::to_string(solution_gradient_quadrature_k[l].val()) + " ";
+        for (unsigned k = 0; k < dim; ++k) {
+          const auto &solution_gradient_quadrature_k =
+              solution_gradient_quadrature[k];
+          for (unsigned l = 0; l < dim; ++l) {
+            solution_gradient_quadrature_str +=
+                std::to_string(solution_gradient_quadrature_k[l].val()) + " ";
           }
         }
       }
-      ASSERT(dealii::numbers::is_finite(exp_Q_val), "e^Q not finite: " << exp_Q_val << " Q: " << Q.val() << " sol_grad_quad: " << solution_gradient_quadrature_str << std::endl);
+      ASSERT(dealii::numbers::is_finite(exp_Q_val),
+             "e^Q not finite: "
+                 << exp_Q_val << " Q: " << Q.val() << " sol_grad_quad: "
+                 << solution_gradient_quadrature_str << std::endl);
 #endif
-      out_tensor[i][j] += ADNumberType(Material::C) * ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
-                         E[i][j] * Sacado::Fad::exp(Q);
+      out_tensor[i][j] += ADNumberType(Material::C) *
+                          ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
+                          E[i][j] * Sacado::Fad::exp(Q);
     }
   }
 #ifdef BUILD_TYPE_DEBUG
-  for (unsigned row=0; row<dim; row++) {
-    const auto& PK_i = out_tensor[row];
-    for (unsigned col=0; col<dim; col++) {
+  for (unsigned row = 0; row < dim; row++) {
+    const auto &PK_i = out_tensor[row];
+    for (unsigned col = 0; col < dim; col++) {
       const double scalar = PK_i[col].val();
-      ASSERT(dealii::numbers::is_finite(scalar), "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
+      ASSERT(dealii::numbers::is_finite(scalar),
+             "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
     }
   }
 #endif
@@ -237,7 +245,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
   unsigned int cell_index = 0;
 
   FEValuesExtractors::Vector displacement(0);
-  
+
   for (const auto &cell : dof_handler.active_cell_iterators()) {
     if (!cell->is_locally_owned()) {
       continue;
@@ -292,7 +300,8 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
       for (unsigned int q = 0; q < n_q; ++q) {
         // compute the piola kirchhoff tensor
         Tensor<2, dim, ADNumberType> piola_kirchhoff;
-        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q], cell_index);
+        compute_piola_kirchhoff(piola_kirchhoff, solution_gradient_loc[q],
+                                cell_index);
 
         // Compute the integration weight
         const auto quadrature_integration_w = fe_values.JxW(q);
@@ -353,7 +362,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
       jacobian_matrix.add(dof_indices, cell_matrix);
       residual_vector.add(dof_indices, cell_rhs);
     }
-    //we only count local owned cells
+    // we only count local owned cells
     cell_index++;
   }
   // Share between MPI processes
@@ -365,7 +374,8 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
     std::map<types::global_dof_index, double> boundary_values;
     VectorTools::interpolate_boundary_values(
         dof_handler, dirichlet_boundary_functions, boundary_values);
-    //setting the flag to false as for https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
+    // setting the flag to false as for
+    // https://www.dealii.org/current/doxygen/deal.II/namespaceMatrixTools.html#a967ecdb0d0efe1549be8e3f6b9bbf123
     MatrixTools::apply_boundary_values(boundary_values, jacobian_matrix,
                                        delta_owned, residual_vector, false);
   }
@@ -508,10 +518,8 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
   // Add the linear solver subsection
   prm.enter_subsection("TriangulationType");
   {
-    prm.declare_entry("Type", "T",
-                      Patterns::Selection("T|Q"),
+    prm.declare_entry("Type", "T", Patterns::Selection("T|Q"),
                       "Triangulation cell type");
-
   }
   prm.leave_subsection();
 
@@ -597,7 +605,8 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
   // Parse the triangulation type
   prm.enter_subsection("TriangulationType");
   {
-    triangulation_type = prm.get("Type") == "T" ? TriangulationType::T : TriangulationType::Q;
+    triangulation_type =
+        prm.get("Type") == "T" ? TriangulationType::T : TriangulationType::Q;
   }
   prm.leave_subsection();
 
