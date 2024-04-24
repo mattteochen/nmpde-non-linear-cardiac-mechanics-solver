@@ -7,8 +7,9 @@
 #define IDEALIZED_LV_FIBER_HPP
 
 #include <Assert.hpp>
+#include <deal.II/base/numbers.h>
 #include <poisson/Poisson.hpp>
-#include <cardiac_mechanics/BaseSolver.hpp>
+#include <cardiac_mechanics/BaseSolverGuccione.hpp>
 
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/fe/mapping_fe.h>
@@ -26,11 +27,11 @@
  * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
-class IdealizedLVFiber : public BaseSolver<dim, Scalar> {
+class IdealizedLVFiber : public BaseSolverGuccione<dim, Scalar> {
   /**
    * Alias for base class
    */
-  using Base = BaseSolver<dim, Scalar>;
+  using Base = BaseSolverGuccione<dim, Scalar>;
   /**
    * Sacado automatic differentiation type code from
    */
@@ -172,6 +173,8 @@ public:
       //compute vector f
       for (unsigned i=0; i<dim; ++i) {
         f[i] += dx_du[i] * std::sin(alpha_rad) + dx_dv[i] * std::cos(alpha_rad);
+        ASSERT(dealii::numbers::is_finite(f[i].val()), "\n\nf[i] is not finite\n");
+        // f[i] += ADNumberType(dx_du[i]) * Sacado::Fad::sin(ADNumberType(alpha_rad)) + ADNumberType(dx_dv[i]) * Sacado::Fad::cos(ADNumberType(alpha_rad));
       } 
     }
     out_tensor += (fiber_pressure * dealii::outer_product(f, f));
