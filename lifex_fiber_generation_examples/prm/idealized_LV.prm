@@ -1,0 +1,70 @@
+# Listing of Parameters
+# ---------------------
+subsection Fiber generation
+  subsection Mesh and space discretization
+    # Specify the input mesh: Hex | Tet.
+    set Element type          = Tet
+
+    # Degree of the FE space.
+    set FE space degree       = 1
+
+    # Specify the geometry mesh type: Slab | Left ventricle | Left ventricle complete | Left atrium
+    set Geometry type         = Left ventricle
+
+    subsection File
+      # Mesh file.
+      set Filename       = mesh/idealized_LV.msh
+
+      # Mesh scaling factor: 1e-3 => from [mm] to [m].
+      set Scaling factor = 1e-3
+    end
+  end
+
+  subsection Left ventricle
+    # Boundary tags of Ventricle base.
+    set Tags base      = 50
+
+    # Boundary tags of epicardium.
+    set Tags epi       = 10
+
+    # Boundary tags of endocardium.
+    set Tags endo      = 20
+
+    # Left ventricle Algorithm type: Bayer-Trayanova, Rossi-Lassila.
+    # Available options are: BT | RL.
+    set Algorithm type = BT # RL
+
+    # Alpha left epicardium [°][-].
+    set alpha epi      = -60
+
+    # Alpha left endocardium [°][+].
+    set alpha endo     = 60
+
+    # Beta left epicardium [°][+].
+    set beta epi       = 20
+
+    # Beta left endocardium [°][-].
+    set beta endo      = -20
+
+
+    subsection RL
+      # Coordinates for Normal to Ventricle base.
+      set Normal to base = 0 0 -1
+    end
+
+    subsection BT
+      # Coordinates for Ventricle Apex.
+      set Apex = 0 0 0.0601846
+    end
+
+  end
+
+  subsection Output
+    # Enable/disable output.
+    set Enable output = true
+
+    # Output file.
+    set Filename      = fibers_idealized_LV
+  end
+
+end
