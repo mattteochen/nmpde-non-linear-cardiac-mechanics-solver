@@ -156,17 +156,13 @@ void BaseSolverNewHook<dim, Scalar>::compute_piola_kirchhoff(
   // #ifdef BUILD_TYPE_DEBUG
   ASSERT(F_det > ADNumberType(0.0), "Negative F determinant");
   // #endif
-  Tensor<2, dim, ADNumberType> I;
-  for (uint32_t i = 0; i < dim; ++i) {
-    I[i][i] = ADNumberType(1.0);
-  }
 
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
       out_tensor[i][j] =
-          ((ADNumberType(Material::mu) * (I[i][j] - F_inverse[i][j]))) +
-          (ADNumberType(Material::lambda) * Sacado::Fad::log(F_det) *
-           F_inverse[i][j]);
+          (ADNumberType(Material::mu) * (F[i][j] - F_inverse[j][i])) +
+          (ADNumberType(Material::lambda) * (F_det - 1) * F_det *
+           F_inverse[j][i]);
     }
   }
 #ifdef BUILD_TYPE_DEBUG
