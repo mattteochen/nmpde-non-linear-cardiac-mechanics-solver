@@ -6,10 +6,10 @@ subsection LinearSolver
   set Residual                  = 1e-6
 
   # Linear solver iterations multiplier (to be multiplied to matrix size)
-  set MaxIteration              = 10.0
+  set MaxIteration              = 1.0
 
   # Preconditioner type
-  set PreconditionerType        = IDENTITY
+  set PreconditionerType        = SSOR
 end
 
 subsection PolynomialDegree
@@ -26,28 +26,31 @@ subsection NewtonMethod
 end
 
 subsection Material
-  # b_f value of the strain energy tensor
+  # b_f value
   set b_f                       = 8.0
 
-  # b_t value of the strain energy tensor
+  # b_t value
   set b_t                       = 2.0
 
-  # b_fs value of the strain energy tensor
+  # b_fs value
   set b_fs                       = 4.0
 
-  # C value of the strain energy tensor
-  set C                          = 2000.0
+  # C value
+  set C                          = 10000.0
 end
 
 subsection Boundaries
   # Dirichlet boundaries tags
-  set Dirichlet                  = 40
+  set Dirichlet                  = 50
 
   # Newmann boundaries tags
-  set Newmann                    = 60
+  set Newmann                    = 20
 end
 
 subsection Pressure
-  # External pressure value
-  set Value                      = 4.0
+  # Boundary pressure value
+  set Value                      = 150.0
+
+  # Fiber value
+  set FiberValue                 = 600.0
 end
