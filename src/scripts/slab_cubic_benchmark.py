@@ -6,14 +6,15 @@ def list_files_with_extension(directory, extension):
     files = glob.glob(search_pattern)
     return files
 
+material_law = "new_hook"
 problem_name = "slab_cubic" 
 #modify this based on your machine
-process_num = 12
-directory_path = f'../tests/{problem_name}/test_parameters/'
+process_num = 14
+directory_path = f'../tests/{material_law}/{problem_name}/test_parameters/'
 extension = 'prm'
 parameters_files = list_files_with_extension(directory_path, extension)
-build_dir = f"../tests/{problem_name}/build/"
-mesh_file_name = f'../../../../lifex_fiber_generation_examples/mesh/{problem_name}.msh'
+build_dir = f"../tests/{material_law}/{problem_name}/build/"
+mesh_file_name = f'../../../../../lifex_fiber_generation_examples/mesh/{problem_name}.msh'
 executable = "main"
 
 print("Compiling...")
@@ -31,7 +32,7 @@ if (os.system(f'cd {build_dir} && cmake .. && make -j {process_num}') != 0):
 else:
     print("Found the following parameters test:")
     for i, f in enumerate(parameters_files):
-        f = f.replace(f'tests/{problem_name}/', '')
+        f = f.replace(f'tests/{material_law}/{problem_name}/', '')
         print(f)
         parameters_files[i] = f
     print('')

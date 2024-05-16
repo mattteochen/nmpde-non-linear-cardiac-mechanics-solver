@@ -7,14 +7,14 @@ def list_files_with_extension(directory, extension):
     return files
 
 material_law = "guccione"
-problem_name = "idealized_LV" 
+problem_name = "idealized_LV_fiber" 
 #modify this based on your machine
 process_num = 14
 directory_path = f'../tests/{material_law}/{problem_name}/test_parameters/'
 extension = 'prm'
 parameters_files = list_files_with_extension(directory_path, extension)
 build_dir = f"../tests/{material_law}/{problem_name}/build/"
-mesh_file_name = f'../../../../../lifex_fiber_generation_examples/mesh/{problem_name}.msh'
+mesh_file_name = f'../../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh'
 executable = "main"
 
 print("Compiling...")
