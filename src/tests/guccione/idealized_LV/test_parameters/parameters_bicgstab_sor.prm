@@ -26,16 +26,16 @@ subsection NewtonMethod
 end
 
 subsection Material
-  # b_f value of the strain energy tensor
+  # b_f material value
   set b_f                       = 1.0
 
-  # b_t value of the strain energy tensor
+  # b_t material value
   set b_t                       = 1.0
 
-  # b_fs value of the strain energy tensor
+  # b_fs material value
   set b_fs                       = 1.0
 
-  # C value of the strain energy tensor
+  # C material value
   set C                          = 10000.0
 end
 
