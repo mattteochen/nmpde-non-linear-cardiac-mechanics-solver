@@ -544,7 +544,7 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
   // Add the polynomial degree subsection
   prm.enter_subsection("PolynomialDegree");
   {
-    prm.declare_entry("Degree", "1", Patterns::Integer(1, 2),
+    prm.declare_entry("Degree", "1", Patterns::Integer(1, 3),
                       "Degree of the polynomial for finite elements");
   }
   prm.leave_subsection();
