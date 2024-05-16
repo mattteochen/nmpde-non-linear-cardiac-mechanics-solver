@@ -27,10 +27,10 @@ end
 
 subsection Material
   # mu value of the New Hook material
-  set mu                       = 10000.0
+  set mu                       = 0.4225e6
 
   # lambda value of the New Hook material
-  set lambda                    = 100000.0
+  set lambda                    = 633750.0
 end
 
 subsection Boundaries
@@ -43,6 +43,6 @@ end
 
 subsection Pressure
   # Boundary pressure value (Pascal)
-  set Value                      = 1000.0
+  set Value                      = 10000.0
   
 end
