@@ -532,7 +532,7 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
     prm.declare_entry("Residual", "1e-6", Patterns::Double(1e-10, 1e-3),
                       "Linear solver tolerance");
 
-    prm.declare_entry("MaxIteration", "1.0", Patterns::Double(1.0),
+    prm.declare_entry("MaxIteration", "1.0", Patterns::Double(0.0),
                       "Linear solver max iterations multiplier");
 
     prm.declare_entry("PreconditionerType", "ILU",
