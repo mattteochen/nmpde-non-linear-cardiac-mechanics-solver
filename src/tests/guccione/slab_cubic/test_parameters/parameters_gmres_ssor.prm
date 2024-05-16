@@ -14,7 +14,7 @@ end
 
 subsection PolynomialDegree
   # Degree of the polynomial for finite elements
-  set Degree                    = 1
+  set Degree                    = 2
 end
 
 subsection NewtonMethod
@@ -49,5 +49,5 @@ end
 
 subsection Pressure
   # External pressure value
-  set Value                      = 4.0
+  set Value                      = 100.0
 end

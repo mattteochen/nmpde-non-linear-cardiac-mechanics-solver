@@ -26,28 +26,22 @@ subsection NewtonMethod
 end
 
 subsection Material
-  # b_f value of the strain energy tensor
-  set b_f                       = 1.0
+  # mu value of the New Hook material
+  set mu                        = 60000
 
-  # b_t value of the strain energy tensor
-  set b_t                       = 1.0
-
-  # b_fs value of the strain energy tensor
-  set b_fs                       = 1.0
-
-  # C value of the strain energy tensor
-  set C                          = 10000.0
+  # lambda value of the New Hook material
+  set lambda                    = 70000
 end
 
 subsection Boundaries
   # Dirichlet boundaries tags
-  set Dirichlet                  = 50
+  set Dirichlet                 = 50
 
   # Newmann boundaries tags
-  set Newmann                    = 20
+  set Newmann                   = 20
 end
 
 subsection Pressure
-  # External pressure value
-  set Value                      = 2000.0
+  # Boundary pressure value
+  set Value                     = 15000.0
 end

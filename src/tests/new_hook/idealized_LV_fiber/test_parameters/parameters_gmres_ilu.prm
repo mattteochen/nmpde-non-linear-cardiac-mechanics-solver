@@ -1,15 +1,15 @@
 subsection LinearSolver
   # Type of solver used to solve the linear system
-  set SolverType                = BiCGSTAB
+  set SolverType                = GMRES
 
   # Linear solver residual (scaled by residual norm)
   set Residual                  = 1e-6
 
   # Linear solver iterations multiplier (to be multiplied to matrix size)
-  set MaxIteration              = 10.0
+  set MaxIteration              = 1.0
 
   # Preconditioner type
-  set PreconditionerType        = IDENTITY
+  set PreconditionerType        = ILU
 end
 
 subsection PolynomialDegree
@@ -26,16 +26,16 @@ subsection NewtonMethod
 end
 
 subsection Material
-  # b_f value of the strain energy tensor
-  set b_f                       = 1.0
+  # b_f value
+  set b_f                       = 8.0
 
-  # b_t value of the strain energy tensor
-  set b_t                       = 1.0
+  # b_t value
+  set b_t                       = 2.0
 
-  # b_fs value of the strain energy tensor
-  set b_fs                       = 1.0
+  # b_fs value
+  set b_fs                       = 4.0
 
-  # C value of the strain energy tensor
+  # C value
   set C                          = 10000.0
 end
 
@@ -48,6 +48,9 @@ subsection Boundaries
 end
 
 subsection Pressure
-  # External pressure value
-  set Value                      = 4.0
+  # Boundary pressure value
+  set Value                      = 150.0
+
+  # Fiber value
+  set FiberValue                 = 600.0
 end
