@@ -232,7 +232,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
 
   FEFaceValues<dim> fe_values_boundary(
       *fe, *quadrature_face,
-      update_values | update_quadrature_points | update_JxW_values |
+      update_values | update_quadrature_points | update_gradients | update_JxW_values |
           update_normal_vectors);
 
   FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
@@ -324,12 +324,17 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
                   cell->face(face_number)->boundary_id())) {
             fe_values_boundary.reinit(cell, face_number);
 
+            std::vector<Tensor<2, dim, ADNumberType>> solution_gradient_loc_newmann(
+                n_face_q, Tensor<2, dim, ADNumberType>());
+            fe_values_boundary[displacement].get_function_gradients_from_local_dof_values(
+                dof_values_ad, solution_gradient_loc_newmann);
+
             // Loop over face quadrature points
             for (unsigned int q = 0; q < n_face_q; ++q) {
               // Compute deformation gradient tensor
               // TODO: maybe cache this (is 3x3 for now)
               const auto F =
-                  Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
+                  Physics::Elasticity::Kinematics::F(solution_gradient_loc_newmann[q]);
               // Compute determinant of F
               const auto det_F = determinant(F);
               // Compute (F^T)^{-1}
