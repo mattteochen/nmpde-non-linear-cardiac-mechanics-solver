@@ -3,11 +3,11 @@
  * @brief Implementation file for the base solver class.
  */
 
-#include "Assert.hpp"
 #include <cardiac_mechanics/BaseSolverNewHook.hpp>
-#include <cmath>
+
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
+
 #include <fstream>
 
 /**
@@ -151,11 +151,11 @@ void BaseSolverNewHook<dim, Scalar>::compute_piola_kirchhoff(
   // Compute deformation gradient tensor
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
-  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
   const ADNumberType F_det = dealii::determinant(F);
-  // #ifdef BUILD_TYPE_DEBUG
-  ASSERT(F_det > ADNumberType(0.0), "Negative F determinant");
-  // #endif
+// #ifdef BUILD_TYPE_DEBUG
+  Assert(F_det > ADNumberType(0.0), ExcMessage("Negative F determinant"));
+// #endif
+  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
 
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
@@ -170,8 +170,8 @@ void BaseSolverNewHook<dim, Scalar>::compute_piola_kirchhoff(
     const auto &PK_i = out_tensor[row];
     for (unsigned col = 0; col < dim; col++) {
       const double scalar = PK_i[col].val();
-      ASSERT(dealii::numbers::is_finite(scalar),
-             "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
+      Assert(dealii::numbers::is_finite(scalar),
+             ExcMessage("rank = " + std::to_string(mpi_rank) + " PK NaN: " + std::to_string(scalar) + "\n"));
     }
   }
 #endif

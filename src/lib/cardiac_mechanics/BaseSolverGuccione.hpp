@@ -7,12 +7,12 @@
 #ifndef BASESOLVERGUCCIONE_HPP
 #define BASESOLVERGUCCIONE_HPP
 
-#include <Assert.hpp>
 #include <Reporter.hpp>
 #include <cardiac_mechanics/BoundariesUtility.hpp>
 #include <cardiac_mechanics/LinearSolverUtility.hpp>
 #include <cardiac_mechanics/NewtonSolverUtility.hpp>
 
+#include <deal.II/base/exceptions.h>
 #include <deal.II/base/conditional_ostream.h>
 #include <deal.II/base/parameter_handler.h>
 #include <deal.II/base/point.h>
