@@ -3,13 +3,11 @@
  * @brief Implementation file for the base solver class.
  */
 
-#include <Assert.hpp>
 #include <cardiac_mechanics/BaseSolverGuccione.hpp>
 
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
 
-#include <cmath>
 #include <fstream>
 
 /**
@@ -162,10 +160,10 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
     for (unsigned col = 0; col < dim; col++) {
       const double scalar_F = F_i[col].val();
       const double scalar_E = E_i[col].val();
-      ASSERT(dealii::numbers::is_finite(scalar_F),
-             "rank = " << mpi_rank << " F NaN: " << scalar_F << std::endl);
-      ASSERT(dealii::numbers::is_finite(scalar_E),
-             "rank = " << mpi_rank << " E NaN: " << scalar_E << std::endl);
+      Assert(dealii::numbers::is_finite(scalar_F),
+             ExcMessage("rank = " + std::to_string(mpi_rank) + " F NaN: " + std::to_string(scalar_F) + "\n"));
+      Assert(dealii::numbers::is_finite(scalar_E),
+             ExcMessage("rank = " + std::to_string(mpi_rank) + " E NaN: " + std::to_string(scalar_E) + "\n"));
     }
   }
 #endif
@@ -173,8 +171,8 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   ExponentQ<ADNumberType> exponent_q;
   const ADNumberType Q = exponent_q.compute(E);
 #ifdef BUILD_TYPE_DEBUG
-  ASSERT(dealii::numbers::is_finite(Q.val()),
-         "rank = " << mpi_rank << " Q NaN: " << Q.val() << std::endl);
+  Assert(dealii::numbers::is_finite(Q.val()),
+         ExcMessage("rank = " + std::to_string(mpi_rank) + " Q NaN: " + std::to_string(Q.val()) + "\n"));
 #endif
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
@@ -191,10 +189,10 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
           }
         }
       }
-      ASSERT(dealii::numbers::is_finite(exp_Q_val),
-             "e^Q not finite: "
-                 << exp_Q_val << " Q: " << Q.val() << " sol_grad_quad: "
-                 << solution_gradient_quadrature_str << std::endl);
+      Assert(dealii::numbers::is_finite(exp_Q_val),
+             ExcMessage("e^Q not finite: "
+                 + std::to_string(exp_Q_val) + " Q: " + std::to_string(Q.val()) + " sol_grad_quad: "
+                 + solution_gradient_quadrature_str + "\n"));
 #endif
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
@@ -206,8 +204,8 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
     const auto &PK_i = out_tensor[row];
     for (unsigned col = 0; col < dim; col++) {
       const double scalar = PK_i[col].val();
-      ASSERT(dealii::numbers::is_finite(scalar),
-             "rank = " << mpi_rank << " PK NaN: " << scalar << std::endl);
+      Assert(dealii::numbers::is_finite(scalar),
+             ExcMessage("rank = " + std::to_string(mpi_rank) + " PK NaN: " + std::to_string(scalar) + "\n"));
     }
   }
 #endif

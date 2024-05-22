@@ -6,11 +6,10 @@
 #ifndef IDEALIZED_LV_FIBER_GUCCIONE_HPP
 #define IDEALIZED_LV_FIBER_GUCCIONE_HPP
 
-#include <Assert.hpp>
 #include <cardiac_mechanics/BaseSolverGuccione.hpp>
-#include <deal.II/base/numbers.h>
 #include <poisson/Poisson.hpp>
 
+#include <deal.II/base/numbers.h>
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/fe/mapping_fe.h>
 #include <deal.II/lac/trilinos_solver.h>
@@ -118,10 +117,10 @@ public:
       const auto &support_point = dofs_support_points[global_index];
 
 #ifdef BUILD_TYPE_DEBUG
-      ASSERT(global_index >= 0 && global_index < poisson_solution.size(),
-             "global_index out of bounds, global_index = "
-                 << global_index << " poisson_solution size = "
-                 << poisson_solution.size() << std::endl);
+      Assert(global_index >= 0 && global_index < poisson_solution.size(),
+             ExcMessage("global_index out of bounds, global_index = "
+                 + std::to_string(global_index) + " poisson_solution size = "
+                 + std::to_string(poisson_solution.size()) + "\n"));
 #endif
       // retrive the t value
       const Scalar t = poisson_solution[global_index];
