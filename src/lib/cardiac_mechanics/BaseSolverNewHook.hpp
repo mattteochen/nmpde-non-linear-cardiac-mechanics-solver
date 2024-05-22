@@ -81,7 +81,7 @@ template <int dim, typename Scalar = double> class BaseSolverNewHook {
    * Alias for the AD helper
    */
   using ADHelper =
-      Differentiation::AD::ResidualLinearization<ADTypeCode, double>;
+      Differentiation::AD::ResidualLinearization<ADTypeCode, Scalar>;
   /**
    * Alias for the AD number type
    */
