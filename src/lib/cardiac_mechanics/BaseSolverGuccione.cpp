@@ -150,7 +150,7 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
     Tensor<2, dim, ADNumberType> &out_tensor,
     const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
     const unsigned /*cell_index*/) {
-  // // Compute deformation gradient tensor
+  // Compute deformation gradient tensor
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
   // Compute green Lagrange tensor
