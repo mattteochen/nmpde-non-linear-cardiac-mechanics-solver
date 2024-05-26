@@ -161,9 +161,11 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
       const double scalar_F = F_i[col].val();
       const double scalar_E = E_i[col].val();
       Assert(dealii::numbers::is_finite(scalar_F),
-             ExcMessage("rank = " + std::to_string(mpi_rank) + " F NaN: " + std::to_string(scalar_F) + "\n"));
+             ExcMessage("rank = " + std::to_string(mpi_rank) +
+                        " F NaN: " + std::to_string(scalar_F) + "\n"));
       Assert(dealii::numbers::is_finite(scalar_E),
-             ExcMessage("rank = " + std::to_string(mpi_rank) + " E NaN: " + std::to_string(scalar_E) + "\n"));
+             ExcMessage("rank = " + std::to_string(mpi_rank) +
+                        " E NaN: " + std::to_string(scalar_E) + "\n"));
     }
   }
 #endif
@@ -172,7 +174,8 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   const ADNumberType Q = exponent_q.compute(E);
 #ifdef BUILD_TYPE_DEBUG
   Assert(dealii::numbers::is_finite(Q.val()),
-         ExcMessage("rank = " + std::to_string(mpi_rank) + " Q NaN: " + std::to_string(Q.val()) + "\n"));
+         ExcMessage("rank = " + std::to_string(mpi_rank) +
+                    " Q NaN: " + std::to_string(Q.val()) + "\n"));
 #endif
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
@@ -190,9 +193,9 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
         }
       }
       Assert(dealii::numbers::is_finite(exp_Q_val),
-             ExcMessage("e^Q not finite: "
-                 + std::to_string(exp_Q_val) + " Q: " + std::to_string(Q.val()) + " sol_grad_quad: "
-                 + solution_gradient_quadrature_str + "\n"));
+             ExcMessage("e^Q not finite: " + std::to_string(exp_Q_val) +
+                        " Q: " + std::to_string(Q.val()) + " sol_grad_quad: " +
+                        solution_gradient_quadrature_str + "\n"));
 #endif
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
@@ -205,7 +208,8 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
     for (unsigned col = 0; col < dim; col++) {
       const double scalar = PK_i[col].val();
       Assert(dealii::numbers::is_finite(scalar),
-             ExcMessage("rank = " + std::to_string(mpi_rank) + " PK NaN: " + std::to_string(scalar) + "\n"));
+             ExcMessage("rank = " + std::to_string(mpi_rank) +
+                        " PK NaN: " + std::to_string(scalar) + "\n"));
     }
   }
 #endif
@@ -230,8 +234,8 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
 
   FEFaceValues<dim> fe_values_boundary(
       *fe, *quadrature_face,
-      update_values | update_quadrature_points | update_gradients | update_JxW_values |
-          update_normal_vectors);
+      update_values | update_quadrature_points | update_gradients |
+          update_JxW_values | update_normal_vectors);
 
   FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
   Vector<double> cell_rhs(dofs_per_cell);
@@ -322,17 +326,19 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
                   cell->face(face_number)->boundary_id())) {
             fe_values_boundary.reinit(cell, face_number);
 
-            std::vector<Tensor<2, dim, ADNumberType>> solution_gradient_loc_newmann(
-                n_face_q, Tensor<2, dim, ADNumberType>());
-            fe_values_boundary[displacement].get_function_gradients_from_local_dof_values(
-                dof_values_ad, solution_gradient_loc_newmann);
+            std::vector<Tensor<2, dim, ADNumberType>>
+                solution_gradient_loc_newmann(n_face_q,
+                                              Tensor<2, dim, ADNumberType>());
+            fe_values_boundary[displacement]
+                .get_function_gradients_from_local_dof_values(
+                    dof_values_ad, solution_gradient_loc_newmann);
 
             // Loop over face quadrature points
             for (unsigned int q = 0; q < n_face_q; ++q) {
               // Compute deformation gradient tensor
               // TODO: maybe cache this (is 3x3 for now)
-              const auto F =
-                  Physics::Elasticity::Kinematics::F(solution_gradient_loc_newmann[q]);
+              const auto F = Physics::Elasticity::Kinematics::F(
+                  solution_gradient_loc_newmann[q]);
               // Compute determinant of F
               const auto det_F = determinant(F);
               // Compute (F^T)^{-1}

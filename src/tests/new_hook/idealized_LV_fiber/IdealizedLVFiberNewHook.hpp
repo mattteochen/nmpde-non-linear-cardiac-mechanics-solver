@@ -54,8 +54,8 @@ public:
    * @param problem_name_ The problem name
    */
   IdealizedLVFiberNewHook(const std::string &parameters_file_name_,
-                           const std::string &mesh_file_name_,
-                           const std::string &problem_name_)
+                          const std::string &mesh_file_name_,
+                          const std::string &problem_name_)
       : Base(parameters_file_name_, mesh_file_name_, problem_name_),
         zero_function(dealii::Functions::ZeroFunction<dim>(dim)),
         poisson_solver(mesh_file_name_, Base::r) {
@@ -118,9 +118,10 @@ public:
 
 #ifdef BUILD_TYPE_DEBUG
       Assert(global_index >= 0 && global_index < poisson_solution.size(),
-             ExcMessage("global_index out of bounds, global_index = "
-                 + std::to_string(global_index) + " poisson_solution size = "
-                 + std::to_string(poisson_solution.size()) + "\n"));
+             ExcMessage("global_index out of bounds, global_index = " +
+                        std::to_string(global_index) +
+                        " poisson_solution size = " +
+                        std::to_string(poisson_solution.size()) + "\n"));
 #endif
       // retrive the t value
       const Scalar t = poisson_solution[global_index];

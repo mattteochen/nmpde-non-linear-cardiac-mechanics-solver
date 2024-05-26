@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
   }
 
   IdealizedLVFiberNewHook<3, double> problem(parameter_file_name,
-                                              mesh_file_name, problem_name);
+                                             mesh_file_name, problem_name);
   problem.initialise_boundaries_tag();
   problem.setup();
   problem.solve_newton();

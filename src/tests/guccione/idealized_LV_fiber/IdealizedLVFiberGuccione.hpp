@@ -118,9 +118,10 @@ public:
 
 #ifdef BUILD_TYPE_DEBUG
       Assert(global_index >= 0 && global_index < poisson_solution.size(),
-             ExcMessage("global_index out of bounds, global_index = "
-                 + std::to_string(global_index) + " poisson_solution size = "
-                 + std::to_string(poisson_solution.size()) + "\n"));
+             ExcMessage("global_index out of bounds, global_index = " +
+                        std::to_string(global_index) +
+                        " poisson_solution size = " +
+                        std::to_string(poisson_solution.size()) + "\n"));
 #endif
       // retrive the t value
       const Scalar t = poisson_solution[global_index];

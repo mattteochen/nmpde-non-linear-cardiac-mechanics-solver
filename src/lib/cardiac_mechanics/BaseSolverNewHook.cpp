@@ -152,9 +152,9 @@ void BaseSolverNewHook<dim, Scalar>::compute_piola_kirchhoff(
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
   const ADNumberType F_det = dealii::determinant(F);
-// #ifdef BUILD_TYPE_DEBUG
+  // #ifdef BUILD_TYPE_DEBUG
   Assert(F_det > ADNumberType(0.0), ExcMessage("Negative F determinant"));
-// #endif
+  // #endif
   const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
 
   for (uint32_t i = 0; i < dim; ++i) {
@@ -171,7 +171,8 @@ void BaseSolverNewHook<dim, Scalar>::compute_piola_kirchhoff(
     for (unsigned col = 0; col < dim; col++) {
       const double scalar = PK_i[col].val();
       Assert(dealii::numbers::is_finite(scalar),
-             ExcMessage("rank = " + std::to_string(mpi_rank) + " PK NaN: " + std::to_string(scalar) + "\n"));
+             ExcMessage("rank = " + std::to_string(mpi_rank) +
+                        " PK NaN: " + std::to_string(scalar) + "\n"));
     }
   }
 #endif
