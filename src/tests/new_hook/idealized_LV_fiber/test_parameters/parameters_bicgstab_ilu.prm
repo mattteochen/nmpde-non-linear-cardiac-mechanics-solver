@@ -26,17 +26,11 @@ subsection NewtonMethod
 end
 
 subsection Material
-  # b_f value
-  set b_f                       = 8.0
+  # mu value of the New Hook material
+  set mu                        = 60000
 
-  # b_t value
-  set b_t                       = 2.0
-
-  # b_fs value
-  set b_fs                       = 4.0
-
-  # C value
-  set C                          = 10000.0
+  # lambda value of the New Hook material
+  set lambda                    = 70000
 end
 
 subsection Boundaries
