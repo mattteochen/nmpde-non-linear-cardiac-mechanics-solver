@@ -1,11 +1,17 @@
 # Non-linear cardiac mechanics
+The problem entails solving the partial differential equation concerning the contraction of
+the left ventricle when a force acts on the internal surface of the ventricle, known as the
+Endocardium. We model the acting forces as pressure without considering
+how the force is generated. Our modeling strategy follows a bottom-up approach: initially,
+we employ a simplified geometry and basic mathematical model, making assumptions about
+material properties. Subsequently, we refine the model by incorporating a more intricate
+formulation that accounts for the material properties. This testing methodology is inspired
+by the approach outlined [here](https://pubmed.ncbi.nlm.nih.gov/26807042/).
 
-Add into blah blah....
+## Constructive law: Guccione
+This section covers the finite element solver for materials that follow the [Guccione’s Law](https://pubmed.ncbi.nlm.nih.gov/8550635/).
 
-## Constructive law: isotropic and transversely isotropic constitutive law
-This section covers the finite element solver for materials that follow the [isotropic/transversely isotropic constitutive law](https://pubmed.ncbi.nlm.nih.gov/8550635/).
-
-An abstract base solver class `BaseSolver` has been introduced as a base line starting point for each mesh test that we have run.
+An abstract base solver class `BaseSolverGuccione` has been introduced as a base line starting point for each mesh test that we have run.
 This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
 
 The base class takes in account a pressure component that pushes on ***x*** boundaries, referred as Newmann boundaries.
@@ -13,16 +19,16 @@ If your problem does not follow this pattern, please ***override*** all the need
 
 Dirichlet boundaries condition values are assigned in the derived class.
 
-`BaseSolver`'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions:
+`BaseSolverGuccione`'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions:
 ```
 #ifndef DEMO_HPP
 #define DEMO_HPP
 
-#include <BaseSolver.hpp>
+#include <BaseSolverGuccione.hpp>
 
 template <int dim, typename Scalar>
-class Demo : public BaseSolver<dim, Scalar> {
-  using Base = BaseSolver<dim, Scalar>;
+class Demo : public BaseSolverGuccione<dim, Scalar> {
+  using Base = BaseSolverGuccione<dim, Scalar>;
 public:
   Demo(const std::string &parameters_file_name_,
             const std::string &mesh_file_name_,
@@ -48,11 +54,57 @@ public:
 #endif  // DEMO_HPP
 ```
 
-### Non Linear Solver
+## Constructive law: New Hook
+This section covers the finite element solver for materials that follow the New Hook law.
+
+An abstract base solver class `BaseSolverNewHook` has been introduced as a base line starting point for each mesh test that we have run.
+This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
+
+The base class takes in account a pressure component that pushes on ***x*** boundaries, referred as Newmann boundaries.
+If your problem does not follow this pattern, please ***override*** all the needed implementations (this might the `assemble` method).
+
+Dirichlet boundaries condition values are assigned in the derived class.
+
+`BaseSolverNewHook`'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions:
+```
+#ifndef DEMO_HPP
+#define DEMO_HPP
+
+#include <BaseSolverNewHook.hpp>
+
+template <int dim, typename Scalar>
+class Demo : public BaseSolverNewHook<dim, Scalar> {
+  using Base = BaseSolverNewHook<dim, Scalar>;
+public:
+  Demo(const std::string &parameters_file_name_,
+            const std::string &mesh_file_name_,
+            const std::string &problem_name_)
+      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}
+
+  void initialise_boundaries_tag() override {
+    //  Set Newmann boundary faces
+    for (auto &t : Base::boundaries_utility.get_newmann_boundaries_tags()) {
+      Base::newmann_boundary_faces.insert(t);
+    }
+
+    // Set Dirichlet boundary faces
+    for (auto &t : Base::boundaries_utility.get_dirichlet_boundaries_tags()) {
+      Base::dirichlet_boundary_functions[t] = &zero_function;
+    }
+  };
+
+ protected:
+  dealii::Functions::ZeroFunction<dim> zero_function;
+};
+
+#endif  // DEMO_HPP
+```
+
+## Non Linear Solver
 As the cardiac problem is non linear, we have employed the [Newton method](https://en.wikipedia.org/wiki/Newton%27s_method).
 The Jacobian matrix has been created by using `dealii` built-in [AD](https://www.dealii.org/current/doxygen/deal.II/group__auto__symb__diff.html) packages. 
 
-### Linear Solver
+## Linear Solver
 Currently the following ***iterative solvers*** are supported in order to solve a single Newton iteration:
 - [x] GMRES
 - [x] BiCGSTAB
@@ -62,12 +114,12 @@ Currently the following ***iterative solvers*** are supported in order to solve 
 - [x] SOR
 - [x] SSOR
 
-### Configuration file
+## Configuration file
 The single entry point for all run time and application specific parameters can be specified inside a configuration file called `your_config_name.prm`.
 
 Changes can be tested without recompilation if they can be modified through the configuration file.
 
-A mock configuration file:
+A mock configuration file for a Guccione constructive law problem:
 ```
 subsection LinearSolver
   # Type of solver used to solve the linear system
@@ -97,16 +149,16 @@ subsection NewtonMethod
 end
 
 subsection Material
-  # b_f value of the strain energy tensor
+  # b_f value of the material
   set b_f                       = 8.0
 
-  # b_t value of the strain energy tensor
+  # b_t value of the material
   set b_t                       = 2.0
 
-  # b_fs value of the strain energy tensor
+  # b_fs value of the material
   set b_fs                       = 4.0
 
-  # C value of the strain energy tensor
+  # C value of the material
   set C                          = 2000.0
 end
 
