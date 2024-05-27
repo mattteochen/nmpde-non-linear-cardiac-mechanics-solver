@@ -2,7 +2,7 @@
 \label{classPoisson}\index{Poisson$<$ dim, Scalar $>$@{Poisson$<$ dim, Scalar $>$}}
 
 
-Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  
+Class defining a solver for the \mbox{\hyperlink{classPoisson}{Poisson}} problem. Note this problem has only the diffusion part active with const value of 1.\+0.  
 
 
 
@@ -28,9 +28,8 @@ class \mbox{\hyperlink{classPoisson_1_1ForcingTerm}{Forcing\+Term}}
 \item 
 \mbox{\hyperlink{classPoisson_af1656984576051292eaf6d31a794b2e5}{Poisson}} (const std\+::string \&mesh\+\_\+file\+\_\+name\+\_\+, const unsigned int \&r\+\_\+)
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classPoisson_a5e945cd3ed415b1213c10c55d6acadaa}\label{classPoisson_a5e945cd3ed415b1213c10c55d6acadaa}} 
-void {\bfseries setup} ()
-\item 
+void \mbox{\hyperlink{classPoisson_a5e945cd3ed415b1213c10c55d6acadaa}{setup}} ()
+\begin{DoxyCompactList}\small\item\em Setup the problem by loading the mesh, creating the finite element and initialising the linear system. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classPoisson_a21b60fe27131d7089a0205d4f9eaa342}{assemble}} ()
 \begin{DoxyCompactList}\small\item\em Assemble the linear system. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classPoisson_ae052a5f3edfa0694aceb97aef00dc514}{solve}} ()
@@ -86,16 +85,10 @@ std\+::vector$<$ std\+::vector$<$ types\+::global\+\_\+dof\+\_\+index $>$ $>$ \m
 \subsubsection*{template$<$int dim, typename Scalar = double$>$\newline
 class Poisson$<$ dim, Scalar $>$}
 
-Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
-
-Class defining a solver for the \mbox{\hyperlink{classPoisson}{Poisson}} problem. Note this problem has only the diffusion part active with const value of 1.\+0.
+Class defining a solver for the \mbox{\hyperlink{classPoisson}{Poisson}} problem. Note this problem has only the diffusion part active with const value of 1.\+0. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em dim} & The problem dimension space \\
-\hline
-{\em Scalar} & The scalar type being used\\
-\hline
 {\em dim} & The problem dimension \\
 \hline
 {\em Scalar} & The scalar type for the problem, by default a double \\
@@ -171,6 +164,24 @@ const Trilinos\+Wrappers\+::\+M\+P\+I\+::\+Vector \& \mbox{\hyperlink{classPoiss
 
 
 Retrieve a reference to the solution. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dim} & The problem dimension space \\
+\hline
+{\em Scalar} & The scalar type being used \\
+\hline
+\end{DoxyTemplParams}
+\mbox{\Hypertarget{classPoisson_a5e945cd3ed415b1213c10c55d6acadaa}\label{classPoisson_a5e945cd3ed415b1213c10c55d6acadaa}} 
+\index{Poisson$<$ dim, Scalar $>$@{Poisson$<$ dim, Scalar $>$}!setup@{setup}}
+\index{setup@{setup}!Poisson$<$ dim, Scalar $>$@{Poisson$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+void \mbox{\hyperlink{classPoisson}{Poisson}}$<$ dim, Scalar $>$\+::setup}
+
+
+
+Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}

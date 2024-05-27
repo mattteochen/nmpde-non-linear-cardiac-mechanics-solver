@@ -24,22 +24,20 @@ public:
   /**
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
-   * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
   SlabCubicGuccione(const std::string &parameters_file_name_,
-                    const std::string &mesh_file_name_,
                     const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_),
+      : Base(problem_name_),
         zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
-    Base::pcout << "Problem boundary pressure configuration" << std::endl;
-    Base::pcout << "  Value: " << Base::pressure.value() << " Pa" << std::endl;
-    Base::pcout << "==============================================="
-                << std::endl;
+    initialize_param_handler(parameters_file_name_);
+    initialise_boundaries_tag();
+    initialize_pk_weights();
   }
+
+protected:
   /**
-   * @brief Initialise boundaries tag. Boundaries are problem specific hence we
-   * override the base virtual implementation.
+   * @see Base::initialise_boundaries_tag
    */
   void initialise_boundaries_tag() override {
     //  Set Newmann boundary faces
@@ -52,8 +50,34 @@ public:
       Base::dirichlet_boundary_functions[t] = &zero_function;
     }
   };
+  /**
+   * @see Base::initialize_param_handler
+   */
+  void initialize_param_handler(const std::string &file_) override {
+    Base::declare_parameters();
+    Base::parse_parameters(file_);
 
-protected:
+    Base::pcout << "Problem boundary pressure configuration" << std::endl;
+    Base::pcout << "  Value: " << Base::pressure.value() << " Pa" << std::endl;
+    Base::pcout << "==============================================="
+                << std::endl;
+  }
+  /**
+   * @see Base::initialize_pk_weights
+   */
+  void initialize_pk_weights() override {
+    // Set the Piola Kirchhoff b_x values
+    Base::piola_kirchhoff_b_weights[{0, 0}] = Base::Material::b_f;
+    Base::piola_kirchhoff_b_weights[{1, 1}] = Base::Material::b_t;
+    Base::piola_kirchhoff_b_weights[{2, 2}] = Base::Material::b_t;
+    Base::piola_kirchhoff_b_weights[{1, 2}] = Base::Material::b_t;
+    Base::piola_kirchhoff_b_weights[{2, 1}] = Base::Material::b_t;
+    Base::piola_kirchhoff_b_weights[{0, 2}] = Base::Material::b_fs;
+    Base::piola_kirchhoff_b_weights[{2, 0}] = Base::Material::b_fs;
+    Base::piola_kirchhoff_b_weights[{0, 1}] = Base::Material::b_fs;
+    Base::piola_kirchhoff_b_weights[{1, 0}] = Base::Material::b_fs;
+  }
+
   /**
    * Utility zero function for Dirichilet boundary
    */

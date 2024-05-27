@@ -19,40 +19,7 @@ If your problem does not follow this pattern, please ***override*** all the need
 
 Dirichlet boundaries condition values are assigned in the derived class.
 
-`BaseSolverGuccione`'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions:
-```
-#ifndef DEMO_HPP
-#define DEMO_HPP
-
-#include <BaseSolverGuccione.hpp>
-
-template <int dim, typename Scalar>
-class Demo : public BaseSolverGuccione<dim, Scalar> {
-  using Base = BaseSolverGuccione<dim, Scalar>;
-public:
-  Demo(const std::string &parameters_file_name_,
-            const std::string &mesh_file_name_,
-            const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}
-
-  void initialise_boundaries_tag() override {
-    //  Set Newmann boundary faces
-    for (auto &t : Base::boundaries_utility.get_newmann_boundaries_tags()) {
-      Base::newmann_boundary_faces.insert(t);
-    }
-
-    // Set Dirichlet boundary faces
-    for (auto &t : Base::boundaries_utility.get_dirichlet_boundaries_tags()) {
-      Base::dirichlet_boundary_functions[t] = &zero_function;
-    }
-  };
-
- protected:
-  dealii::Functions::ZeroFunction<dim> zero_function;
-};
-
-#endif  // DEMO_HPP
-```
+`BaseSolverGuccione`'s extension is a trivial task in order to create custom tests (e.g. `SlabCubicGuccione`).
 
 ## Constructive law: New Hook
 This section covers the finite element solver for materials that follow the New Hook law.
@@ -65,40 +32,7 @@ If your problem does not follow this pattern, please ***override*** all the need
 
 Dirichlet boundaries condition values are assigned in the derived class.
 
-`BaseSolverNewHook`'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions:
-```
-#ifndef DEMO_HPP
-#define DEMO_HPP
-
-#include <BaseSolverNewHook.hpp>
-
-template <int dim, typename Scalar>
-class Demo : public BaseSolverNewHook<dim, Scalar> {
-  using Base = BaseSolverNewHook<dim, Scalar>;
-public:
-  Demo(const std::string &parameters_file_name_,
-            const std::string &mesh_file_name_,
-            const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}
-
-  void initialise_boundaries_tag() override {
-    //  Set Newmann boundary faces
-    for (auto &t : Base::boundaries_utility.get_newmann_boundaries_tags()) {
-      Base::newmann_boundary_faces.insert(t);
-    }
-
-    // Set Dirichlet boundary faces
-    for (auto &t : Base::boundaries_utility.get_dirichlet_boundaries_tags()) {
-      Base::dirichlet_boundary_functions[t] = &zero_function;
-    }
-  };
-
- protected:
-  dealii::Functions::ZeroFunction<dim> zero_function;
-};
-
-#endif  // DEMO_HPP
-```
+`BaseSolverNewHook`'s extension is a trivial task in order to create custom tests (e.g. `SlabCubicNewHook`).
 
 ## Non Linear Solver
 As the cardiac problem is non linear, we have employed the [Newton method](https://en.wikipedia.org/wiki/Newton%27s_method).
@@ -173,6 +107,11 @@ end
 subsection Pressure
   # External pressure value
   set Value                      = 4.0
+end
+
+subsection Mesh
+  # Mesh file name
+  set File                      = ./mesh.msh
 end
 ```
 **Please be sure to add every subsection shown above as for missing sections, the program sets a default value that may lead to undefined results**.

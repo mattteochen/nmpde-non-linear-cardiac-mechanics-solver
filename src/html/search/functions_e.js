@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7ebasesolverguccione_174',['~BaseSolverGuccione',['../classBaseSolverGuccione.html#a7c833ab7de997194d17493b4c2e8a2b7',1,'BaseSolverGuccione']]],
-  ['_7ebasesolvernewhook_175',['~BaseSolverNewHook',['../classBaseSolverNewHook.html#a4d4ac5b35f9b8f5ee29bc4c13f98f2a4',1,'BaseSolverNewHook']]]
+  ['write_179',['write',['../classReporter.html#a9b412c1904f1e18a3839e963dfe19ee4',1,'Reporter']]]
 ];

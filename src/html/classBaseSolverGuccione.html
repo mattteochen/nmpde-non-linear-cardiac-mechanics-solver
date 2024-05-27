@@ -20,6 +20,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">NMPDE Project: Non-linear cardiac mechanics
    &#160;<span id="projectnumber">0.1</span>
@@ -74,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  
+<p>Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (<a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">https://pubmed.ncbi.nlm.nih.gov/8550635/</a>).  
  <a href="classBaseSolverGuccione.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="BaseSolverGuccione_8hpp_source.html">BaseSolverGuccione.hpp</a>&gt;</code></p>
@@ -83,7 +84,7 @@ Collaboration diagram for BaseSolverGuccione&lt; dim, Scalar &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBaseSolverGuccione__coll__graph.png" border="0" usemap="#BaseSolverGuccione_3_01dim_00_01Scalar_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="BaseSolverGuccione_3_01dim_00_01Scalar_01_4_coll__map" id="BaseSolverGuccione_3_01dim_00_01Scalar_01_4_coll__map">
-<area shape="rect" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="627,101,781,142"/>
+<area shape="rect" title="Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or ..." alt="" coords="627,101,781,142"/>
 <area shape="rect" href="classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="243,5,377,32"/>
 <area shape="rect" href="classBaseSolverGuccione_1_1ConstantPressureFunction.html" title="Class representing the applied pressure component." alt="" coords="187,56,433,112"/>
 <area shape="rect" title=" " alt="" coords="5,71,137,97"/>
@@ -114,22 +115,18 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acf84a9ce1cc89e12fea797cb59b232c7"><td class="memItemLeft" align="right" valign="top"><a id="acf84a9ce1cc89e12fea797cb59b232c7"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#acf84a9ce1cc89e12fea797cb59b232c7">initialise_boundaries_tag</a> ()=0</td></tr>
-<tr class="memdesc:acf84a9ce1cc89e12fea797cb59b232c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag. This must be implemented by the derived class. <br /></td></tr>
-<tr class="separator:acf84a9ce1cc89e12fea797cb59b232c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f5682ace5a6928f27ad4d05442808f4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a3f5682ace5a6928f27ad4d05442808f4">is_face_at_newmann_boundary</a> (const unsigned face)</td></tr>
 <tr class="memdesc:a3f5682ace5a6928f27ad4d05442808f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a given faces is at a Newmann boundary.  <a href="classBaseSolverGuccione.html#a3f5682ace5a6928f27ad4d05442808f4">More...</a><br /></td></tr>
 <tr class="separator:a3f5682ace5a6928f27ad4d05442808f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ebd848f987956fcfff023b7915c12c3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a9ebd848f987956fcfff023b7915c12c3">BaseSolverGuccione</a> (const std::string &amp;parameters_file_name_, const std::string &amp;mesh_file_name_, const std::string &amp;problem_name_)</td></tr>
-<tr class="memdesc:a9ebd848f987956fcfff023b7915c12c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classBaseSolverGuccione.html#a9ebd848f987956fcfff023b7915c12c3">More...</a><br /></td></tr>
-<tr class="separator:a9ebd848f987956fcfff023b7915c12c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73015dce2d100e32a9f84792672b94f6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a73015dce2d100e32a9f84792672b94f6">BaseSolverGuccione</a> (const std::string &amp;problem_name_)</td></tr>
+<tr class="memdesc:a73015dce2d100e32a9f84792672b94f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classBaseSolverGuccione.html#a73015dce2d100e32a9f84792672b94f6">More...</a><br /></td></tr>
+<tr class="separator:a73015dce2d100e32a9f84792672b94f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c833ab7de997194d17493b4c2e8a2b7"><td class="memItemLeft" align="right" valign="top"><a id="a7c833ab7de997194d17493b4c2e8a2b7"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a7c833ab7de997194d17493b4c2e8a2b7">~BaseSolverGuccione</a> ()</td></tr>
 <tr class="memdesc:a7c833ab7de997194d17493b4c2e8a2b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for abstract class. <br /></td></tr>
 <tr class="separator:a7c833ab7de997194d17493b4c2e8a2b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6020bb0c2dcd1cbea00e16982c35439"><td class="memItemLeft" align="right" valign="top"><a id="ae6020bb0c2dcd1cbea00e16982c35439"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()</td></tr>
+<tr class="memitem:ae6020bb0c2dcd1cbea00e16982c35439"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#ae6020bb0c2dcd1cbea00e16982c35439">setup</a> ()</td></tr>
+<tr class="memdesc:ae6020bb0c2dcd1cbea00e16982c35439"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  <a href="classBaseSolverGuccione.html#ae6020bb0c2dcd1cbea00e16982c35439">More...</a><br /></td></tr>
 <tr class="separator:ae6020bb0c2dcd1cbea00e16982c35439"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f84e4ca659b00432b1558fd6d85c9b5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a0f84e4ca659b00432b1558fd6d85c9b5">solve_newton</a> ()</td></tr>
 <tr class="memdesc:a0f84e4ca659b00432b1558fd6d85c9b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the non linear problem using the Newton method.  <a href="classBaseSolverGuccione.html#a0f84e4ca659b00432b1558fd6d85c9b5">More...</a><br /></td></tr>
@@ -140,6 +137,17 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:acf84a9ce1cc89e12fea797cb59b232c7"><td class="memItemLeft" align="right" valign="top"><a id="acf84a9ce1cc89e12fea797cb59b232c7"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#acf84a9ce1cc89e12fea797cb59b232c7">initialise_boundaries_tag</a> ()=0</td></tr>
+<tr class="memdesc:acf84a9ce1cc89e12fea797cb59b232c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag. This must be implemented by the derived class. <br /></td></tr>
+<tr class="separator:acf84a9ce1cc89e12fea797cb59b232c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fb9c00f9f8c2a43c45328f6b6a282e5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a0fb9c00f9f8c2a43c45328f6b6a282e5">initialize_param_handler</a> (const std::string &amp;file_)=0</td></tr>
+<tr class="memdesc:a0fb9c00f9f8c2a43c45328f6b6a282e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise parameters handler. This must be implemented by the derived class.  <a href="classBaseSolverGuccione.html#a0fb9c00f9f8c2a43c45328f6b6a282e5">More...</a><br /></td></tr>
+<tr class="separator:a0fb9c00f9f8c2a43c45328f6b6a282e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73395623273cfa2e55ca1cfa2991b6d0"><td class="memItemLeft" align="right" valign="top"><a id="a73395623273cfa2e55ca1cfa2991b6d0"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a73395623273cfa2e55ca1cfa2991b6d0">initialize_pk_weights</a> ()=0</td></tr>
+<tr class="memdesc:a73395623273cfa2e55ca1cfa2991b6d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise Piola Kirchhoff weights. There represent the material coefficient that have to be multiplied to the tensor pk[i][j]. This must be implemented by the derived class. <br /></td></tr>
+<tr class="separator:a73395623273cfa2e55ca1cfa2991b6d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5400a2a5ee845af80926c977a6cad51f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a5400a2a5ee845af80926c977a6cad51f">compute_piola_kirchhoff</a> (Tensor&lt; 2, dim, ADNumberType &gt; &amp;out_tensor, const Tensor&lt; 2, dim, ADNumberType &gt; &amp;solution_gradient_quadrature, const unsigned cell_index)</td></tr>
 <tr class="memdesc:a5400a2a5ee845af80926c977a6cad51f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the Piola Kirchhoff tensor.  <a href="classBaseSolverGuccione.html#a5400a2a5ee845af80926c977a6cad51f">More...</a><br /></td></tr>
 <tr class="separator:a5400a2a5ee845af80926c977a6cad51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,7 +157,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a4af99ebe84506b73a25d74523de8abac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a4af99ebe84506b73a25d74523de8abac">solve_system</a> ()</td></tr>
 <tr class="memdesc:a4af99ebe84506b73a25d74523de8abac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolverGuccione.html#a4af99ebe84506b73a25d74523de8abac">More...</a><br /></td></tr>
 <tr class="separator:a4af99ebe84506b73a25d74523de8abac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a274f45304c161fb693c23e6fc46bb4f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a274f45304c161fb693c23e6fc46bb4f8">parse_parameters</a> (const std::string &amp;parameters_file_name_)</td></tr>
+<tr class="memitem:a8b6a0067bb4c4e8f6f68f59953728715"><td class="memItemLeft" align="right" valign="top"><a id="a8b6a0067bb4c4e8f6f68f59953728715"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>declare_parameters</b> ()</td></tr>
+<tr class="separator:a8b6a0067bb4c4e8f6f68f59953728715"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a274f45304c161fb693c23e6fc46bb4f8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a274f45304c161fb693c23e6fc46bb4f8">parse_parameters</a> (const std::string &amp;parameters_file_name_)</td></tr>
 <tr class="memdesc:a274f45304c161fb693c23e6fc46bb4f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the parameter input.  <a href="classBaseSolverGuccione.html#a274f45304c161fb693c23e6fc46bb4f8">More...</a><br /></td></tr>
 <tr class="separator:a274f45304c161fb693c23e6fc46bb4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -169,8 +180,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:ab8b50b3080a6f3a9fc4e32c40cca11f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3cd896498fdea1a25f0a2a1ebed65db"><td class="memItemLeft" align="right" valign="top">std::map&lt; std::pair&lt; int, int &gt;, double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#ab3cd896498fdea1a25f0a2a1ebed65db">piola_kirchhoff_b_weights</a></td></tr>
 <tr class="separator:ab3cd896498fdea1a25f0a2a1ebed65db"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23d525238191257630c9e2a91c135462"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a23d525238191257630c9e2a91c135462">mesh_file_name</a></td></tr>
-<tr class="separator:a23d525238191257630c9e2a91c135462"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9549a3534cd69d0c60f37a8f4a05abb"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#ae9549a3534cd69d0c60f37a8f4a05abb">mesh_file_name</a></td></tr>
+<tr class="separator:ae9549a3534cd69d0c60f37a8f4a05abb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c38401259e108bfed03334988460779"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a7c38401259e108bfed03334988460779">r</a></td></tr>
 <tr class="separator:a7c38401259e108bfed03334988460779"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65a2c9ce3b588bd96f417b31bf59c9bc"><td class="memItemLeft" align="right" valign="top">parallel::fullydistributed::Triangulation&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a65a2c9ce3b588bd96f417b31bf59c9bc">mesh</a></td></tr>
@@ -214,20 +225,17 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;int dim, typename Scalar = double&gt;<br />
 class BaseSolverGuccione&lt; dim, Scalar &gt;</h3>
 
-<p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system. </p>
-<p>Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (<a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">https://pubmed.ncbi.nlm.nih.gov/8550635/</a>).</p>
+<p>Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (<a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">https://pubmed.ncbi.nlm.nih.gov/8550635/</a>). </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
-    <tr><td class="paramname">Scalar</td><td>The scalar type being used</td></tr>
     <tr><td class="paramname">dim</td><td>The problem dimension </td></tr>
     <tr><td class="paramname">Scalar</td><td>The scalar type for the problem, by default a double </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9ebd848f987956fcfff023b7915c12c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9ebd848f987956fcfff023b7915c12c3">&#9670;&nbsp;</a></span>BaseSolverGuccione()</h2>
+<a id="a73015dce2d100e32a9f84792672b94f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73015dce2d100e32a9f84792672b94f6">&#9670;&nbsp;</a></span>BaseSolverGuccione()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,24 +249,8 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
           <td class="memname"><a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a> </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>parameters_file_name_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>problem_name_</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>mesh_file_name_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>problem_name_</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -272,7 +264,6 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">parameters_file_name_</td><td>The parameters file name </td></tr>
-    <tr><td class="paramname">mesh_file_name_</td><td>The mesh file name </td></tr>
     <tr><td class="paramname">problem_name_</td><td>The problem name </td></tr>
   </table>
   </dd>
@@ -375,6 +366,42 @@ template&lt;int dim, typename Scalar &gt; </div>
 
 </div>
 </div>
+<a id="a0fb9c00f9f8c2a43c45328f6b6a282e5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fb9c00f9f8c2a43c45328f6b6a282e5">&#9670;&nbsp;</a></span>initialize_param_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a>&lt; dim, Scalar &gt;::initialize_param_handler </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>file_</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialise parameters handler. This must be implemented by the derived class. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_</td><td>The input parameters file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a3f5682ace5a6928f27ad4d05442808f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3f5682ace5a6928f27ad4d05442808f4">&#9670;&nbsp;</a></span>is_face_at_newmann_boundary()</h2>
 
@@ -466,7 +493,7 @@ template&lt;int dim, typename Scalar &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -482,6 +509,39 @@ template&lt;int dim, typename Scalar &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">parameters_file_name_</td><td>The input configuration parameter file name </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae6020bb0c2dcd1cbea00e16982c35439"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae6020bb0c2dcd1cbea00e16982c35439">&#9670;&nbsp;</a></span>setup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a>&lt; dim, Scalar &gt;::setup</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
   </table>
   </dd>
 </dl>
@@ -805,8 +865,8 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 
 </div>
 </div>
-<a id="a23d525238191257630c9e2a91c135462"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23d525238191257630c9e2a91c135462">&#9670;&nbsp;</a></span>mesh_file_name</h2>
+<a id="ae9549a3534cd69d0c60f37a8f4a05abb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9549a3534cd69d0c60f37a8f4a05abb">&#9670;&nbsp;</a></span>mesh_file_name</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -817,7 +877,7 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string&amp; <a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a>&lt; dim, Scalar &gt;::mesh_file_name</td>
+          <td class="memname">std::string <a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a>&lt; dim, Scalar &gt;::mesh_file_name</td>
         </tr>
       </table>
   </td>

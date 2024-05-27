@@ -20,6 +20,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">NMPDE Project: Non-linear cardiac mechanics
    &#160;<span id="projectnumber">0.1</span>
@@ -66,49 +67,26 @@ $(function() {
 <div class="title">Non-linear cardiac mechanics </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Add into blah blah....</p>
+<div class="textblock"><p>The problem entails solving the partial differential equation concerning the contraction of the left ventricle when a force acts on the internal surface of the ventricle, known as the Endocardium. We model the acting forces as pressure without considering how the force is generated. Our modeling strategy follows a bottom-up approach: initially, we employ a simplified geometry and basic mathematical model, making assumptions about material properties. Subsequently, we refine the model by incorporating a more intricate formulation that accounts for the material properties. This testing methodology is inspired by the approach outlined <a href="https://pubmed.ncbi.nlm.nih.gov/26807042/">here</a>.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Constructive law: isotropic and transversely isotropic constitutive law</h1>
-<p>This section covers the finite element solver for materials that follow the <a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">isotropic/transversely isotropic constitutive law</a>.</p>
-<p>An abstract base solver class <code>BaseSolver</code> has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.</p>
+Constructive law: Guccione</h1>
+<p>This section covers the finite element solver for materials that follow the <a href="https://pubmed.ncbi.nlm.nih.gov/8550635/">Guccione’s Law</a>.</p>
+<p>An abstract base solver class <code><a class="el" href="classBaseSolverGuccione.html" title="Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or ...">BaseSolverGuccione</a></code> has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.</p>
 <p>The base class takes in account a pressure component that pushes on <em><b>x</b></em> boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please <em><b>override</b></em> all the needed implementations (this might the <code>assemble</code> method).</p>
 <p>Dirichlet boundaries condition values are assigned in the derived class.</p>
-<p><code>BaseSolver</code>'s extension is a trivial task in order to create more customizations or just to test different meshes/boundaries conditions: </p><div class="fragment"><div class="line">#ifndef DEMO_HPP</div>
-<div class="line">#define DEMO_HPP</div>
-<div class="line"> </div>
-<div class="line">#include &lt;BaseSolver.hpp&gt;</div>
-<div class="line"> </div>
-<div class="line">template &lt;int dim, typename Scalar&gt;</div>
-<div class="line">class Demo : public BaseSolver&lt;dim, Scalar&gt; {</div>
-<div class="line">  using Base = BaseSolver&lt;dim, Scalar&gt;;</div>
-<div class="line">public:</div>
-<div class="line">  Demo(const std::string &amp;parameters_file_name_,</div>
-<div class="line">            const std::string &amp;mesh_file_name_,</div>
-<div class="line">            const std::string &amp;problem_name_)</div>
-<div class="line">      : Base(parameters_file_name_, mesh_file_name_, problem_name_) {}</div>
-<div class="line"> </div>
-<div class="line">  void initialise_boundaries_tag() override {</div>
-<div class="line">    //  Set Newmann boundary faces</div>
-<div class="line">    for (auto &amp;t : Base::boundaries_utility.get_newmann_boundaries_tags()) {</div>
-<div class="line">      Base::newmann_boundary_faces.insert(t);</div>
-<div class="line">    }</div>
-<div class="line"> </div>
-<div class="line">    // Set Dirichlet boundary faces</div>
-<div class="line">    for (auto &amp;t : Base::boundaries_utility.get_dirichlet_boundaries_tags()) {</div>
-<div class="line">      Base::dirichlet_boundary_functions[t] = &amp;zero_function;</div>
-<div class="line">    }</div>
-<div class="line">  };</div>
-<div class="line"> </div>
-<div class="line"> protected:</div>
-<div class="line">  dealii::Functions::ZeroFunction&lt;dim&gt; zero_function;</div>
-<div class="line">};</div>
-<div class="line"> </div>
-<div class="line">#endif  // DEMO_HPP</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md2"></a>
-Non Linear Solver</h2>
+<p><code><a class="el" href="classBaseSolverGuccione.html" title="Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or ...">BaseSolverGuccione</a></code>'s extension is a trivial task in order to create custom tests (e.g. <code>SlabCubicGuccione</code>).</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Constructive law: New Hook</h1>
+<p>This section covers the finite element solver for materials that follow the New Hook law.</p>
+<p>An abstract base solver class <code><a class="el" href="classBaseSolverNewHook.html" title="Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook cons...">BaseSolverNewHook</a></code> has been introduced as a base line starting point for each mesh test that we have run. This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.</p>
+<p>The base class takes in account a pressure component that pushes on <em><b>x</b></em> boundaries, referred as Newmann boundaries. If your problem does not follow this pattern, please <em><b>override</b></em> all the needed implementations (this might the <code>assemble</code> method).</p>
+<p>Dirichlet boundaries condition values are assigned in the derived class.</p>
+<p><code><a class="el" href="classBaseSolverNewHook.html" title="Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook cons...">BaseSolverNewHook</a></code>'s extension is a trivial task in order to create custom tests (e.g. <code>SlabCubicNewHook</code>).</p>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Non Linear Solver</h1>
 <p>As the cardiac problem is non linear, we have employed the <a href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton method</a>. The Jacobian matrix has been created by using <code>dealii</code> built-in <a href="https://www.dealii.org/current/doxygen/deal.II/group__auto__symb__diff.html">AD</a> packages.</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Linear Solver</h2>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Linear Solver</h1>
 <p>Currently the following <em><b>iterative solvers</b></em> are supported in order to solve a single Newton iteration:</p><ul>
 <li>[x] GMRES</li>
 <li>[x] BiCGSTAB</li>
@@ -118,11 +96,11 @@ Linear Solver</h2>
 <li>[x] SOR</li>
 <li>[x] SSOR</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md4"></a>
-Configuration file</h2>
+<h1><a class="anchor" id="autotoc_md5"></a>
+Configuration file</h1>
 <p>The single entry point for all run time and application specific parameters can be specified inside a configuration file called <code>your_config_name.prm</code>.</p>
 <p>Changes can be tested without recompilation if they can be modified through the configuration file.</p>
-<p>A mock configuration file: </p><div class="fragment"><div class="line">subsection LinearSolver</div>
+<p>A mock configuration file for a Guccione constructive law problem: </p><div class="fragment"><div class="line">subsection LinearSolver</div>
 <div class="line">  # Type of solver used to solve the linear system</div>
 <div class="line">  set SolverType                = BiCGSTAB</div>
 <div class="line"> </div>
@@ -150,16 +128,16 @@ Configuration file</h2>
 <div class="line">end</div>
 <div class="line"> </div>
 <div class="line">subsection Material</div>
-<div class="line">  # b_f value of the strain energy tensor</div>
+<div class="line">  # b_f value of the material</div>
 <div class="line">  set b_f                       = 8.0</div>
 <div class="line"> </div>
-<div class="line">  # b_t value of the strain energy tensor</div>
+<div class="line">  # b_t value of the material</div>
 <div class="line">  set b_t                       = 2.0</div>
 <div class="line"> </div>
-<div class="line">  # b_fs value of the strain energy tensor</div>
+<div class="line">  # b_fs value of the material</div>
 <div class="line">  set b_fs                       = 4.0</div>
 <div class="line"> </div>
-<div class="line">  # C value of the strain energy tensor</div>
+<div class="line">  # C value of the material</div>
 <div class="line">  set C                          = 2000.0</div>
 <div class="line">end</div>
 <div class="line"> </div>
@@ -175,8 +153,13 @@ Configuration file</h2>
 <div class="line">  # External pressure value</div>
 <div class="line">  set Value                      = 4.0</div>
 <div class="line">end</div>
+<div class="line"> </div>
+<div class="line">subsection Mesh</div>
+<div class="line">  # Mesh file name</div>
+<div class="line">  set File                      = ./mesh.msh</div>
+<div class="line">end</div>
 </div><!-- fragment --><p><b>Please be sure to add every subsection shown above as for missing sections, the program sets a default value that may lead to undefined results</b>.</p>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Enviroenment</h1>
 <p>This project is dependent on several c++ packages as:</p><ul>
 <li><a href="https://www.dealii.org/current/doxygen/deal.II/">dealii</a> &gt;= v9.0</li>
@@ -184,7 +167,7 @@ Enviroenment</h1>
 <li><a href="https://www.boost.org/">BOOST</a> &gt;= v1.76.0</li>
 </ul>
 <p>To ease the configuration, a scientific docker enviroenment can be found <a href="https://hub.docker.com/r/pcafrica/mk">here</a>.</p>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Compiling</h1>
 <p>The following commands are dedicated for enviroenment with <code>mk</code> modules installed.</p>
 <p>To build the executable, make sure you have loaded the needed modules with </p><div class="fragment"><div class="line">$ module load gcc-glibc dealii</div>
@@ -193,7 +176,7 @@ Compiling</h1>
 <div class="line">$ cmake ..</div>
 <div class="line">$ make</div>
 </div><!-- fragment --><p>The executable will be created into <code>build</code>, and can be executed through </p><div class="fragment"><div class="line">$ mpirun -n x executable_name</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
 Formatting</h1>
 <p>All the source files are formatted by using <code>clang-format</code> with <code>LLVM</code> coding style. </p><div class="fragment"><div class="line">clang-format -i -style=LLVM --sort-includes your_file</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->

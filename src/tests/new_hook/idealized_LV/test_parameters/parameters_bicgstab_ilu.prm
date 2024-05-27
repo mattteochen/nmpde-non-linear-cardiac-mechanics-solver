@@ -45,3 +45,8 @@ subsection Pressure
   # Boundary pressure value
   set Value                     = 15000.0
 end
+
+subsection Mesh
+  # Mesh file name
+  set File                      = ../../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh
+end

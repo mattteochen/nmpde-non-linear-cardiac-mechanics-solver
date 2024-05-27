@@ -46,3 +46,8 @@ subsection Pressure
   set Value                      = 10000.0
   
 end
+
+subsection Mesh
+  # Mesh file name
+  set File                      = ../../../../../lifex_fiber_generation_examples/mesh/slab_cubic.msh
+end

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['basesolverguccione_139',['BaseSolverGuccione',['../classBaseSolverGuccione.html#a9ebd848f987956fcfff023b7915c12c3',1,'BaseSolverGuccione']]],
-  ['basesolvernewhook_140',['BaseSolverNewHook',['../classBaseSolverNewHook.html#a5b4f304871299910f6aa62e769667558',1,'BaseSolverNewHook']]],
-  ['boundariesutility_141',['BoundariesUtility',['../classBoundariesUtility.html#a1b517f6eb61b504ec0d9bab2ef317691',1,'BoundariesUtility']]]
+  ['basesolverguccione_141',['BaseSolverGuccione',['../classBaseSolverGuccione.html#a73015dce2d100e32a9f84792672b94f6',1,'BaseSolverGuccione']]],
+  ['basesolvernewhook_142',['BaseSolverNewHook',['../classBaseSolverNewHook.html#a564cf60823e8a782b87cdc03d1dea4d0',1,'BaseSolverNewHook']]],
+  ['boundariesutility_143',['BoundariesUtility',['../classBoundariesUtility.html#a1b517f6eb61b504ec0d9bab2ef317691',1,'BoundariesUtility::BoundariesUtility()'],['../classBoundariesUtility.html#a8e184acc4d2c5c47004f61ffbd44056b',1,'BoundariesUtility::BoundariesUtility(const std::string &amp;dirichlet_boundaries_, const std::string &amp;newmann_boundaries_)']]]
 ];

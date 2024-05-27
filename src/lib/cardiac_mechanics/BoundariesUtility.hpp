@@ -22,7 +22,6 @@ public:
    */
   BoundariesUtility() {}
   /**
-   * @class BoundariesUtility
    * @brief Parameterized constructor.
    * @param dirichlet_boundaries_ A string containing Dirichlet boundary tags
    * separated by commas.

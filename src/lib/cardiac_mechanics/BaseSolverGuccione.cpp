@@ -11,7 +11,6 @@
 #include <fstream>
 
 /**
- * @class BaseSolverGuccione
  * @brief Setup the problem by loading the mesh, creating the finite element
  * and initialising the linear system.
  * @tparam dim The problem dimension space
@@ -515,15 +514,8 @@ void BaseSolverGuccione<dim, Scalar>::output() const {
   pcout << "===============================================" << std::endl;
 }
 
-/**
- * @brief Parse the parameter input
- * @tparam dim The problem dimension space
- * @tparam Scalar The scalar type being used
- * @param parameters_file_name_ The input configuration parameter file name
- */
 template <int dim, typename Scalar>
-void BaseSolverGuccione<dim, Scalar>::parse_parameters(
-    const std::string &parameters_file_name_) {
+void BaseSolverGuccione<dim, Scalar>::declare_parameters() {
   // Add the linear solver subsection
   prm.enter_subsection("TriangulationType");
   {
@@ -607,9 +599,22 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
   }
   prm.leave_subsection();
 
-  // Read input file
+  // Add the mesh subsection
+  prm.enter_subsection("Mesh");
+  { prm.declare_entry("File", "", Patterns::Anything(), "Mesh file name"); }
+  prm.leave_subsection();
+}
+
+/**
+ * @brief Parse the parameter input
+ * @tparam dim The problem dimension space
+ * @tparam Scalar The scalar type being used
+ * @param parameters_file_name_ The input configuration parameter file name
+ */
+template <int dim, typename Scalar>
+void BaseSolverGuccione<dim, Scalar>::parse_parameters(
+    const std::string &parameters_file_name_) {
   prm.parse_input(parameters_file_name_);
-  // prm.print_parameters(std::cout, ParameterHandler::OutputStyle::JSON);
 
   // Parse the triangulation type
   prm.enter_subsection("TriangulationType");
@@ -678,6 +683,11 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
   // Parse the pressure in the pressure function object
   prm.enter_subsection("Pressure");
   { pressure = ConstantPressureFunction(prm.get_double("Value")); }
+  prm.leave_subsection();
+
+  // Parse the mesh file
+  prm.enter_subsection("Mesh");
+  { mesh_file_name = prm.get("File"); }
   prm.leave_subsection();
 }
 

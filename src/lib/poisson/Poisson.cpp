@@ -7,7 +7,6 @@
 #include <poisson/Poisson.hpp>
 
 /**
- * @class Poisson
  * @brief Setup the problem by loading the mesh, creating the finite element
  * and initialising the linear system.
  * @tparam dim The problem dimension space
