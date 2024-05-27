@@ -2,7 +2,7 @@
 \label{classBaseSolverNewHook}\index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
 
 
-Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  
+Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook constitutive law.  
 
 
 
@@ -11,8 +11,7 @@ Setup the problem by loading the mesh, creating the finite element and initialis
 
 
 
-Collaboration diagram for Base\+Solver\+New\+Hook$<$ dim, Scalar $>$\+:
-\nopagebreak
+Collaboration diagram for Base\+Solver\+New\+Hook$<$ dim, Scalar $>$\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -25,7 +24,7 @@ Collaboration diagram for Base\+Solver\+New\+Hook$<$ dim, Scalar $>$\+:
 class \mbox{\hyperlink{classBaseSolverNewHook_1_1ConstantPressureFunction}{Constant\+Pressure\+Function}}
 \begin{DoxyCompactList}\small\item\em Class representing the applied pressure component. \end{DoxyCompactList}\item 
 struct \mbox{\hyperlink{structBaseSolverNewHook_1_1Material}{Material}}
-\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{structBaseSolverNewHook_1_1Material}{Material}} related parameters. Reference papaer\+: \href{https://pubmed.ncbi.nlm.nih.gov/26807042/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/26807042/}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{structBaseSolverNewHook_1_1Material}{Material}} related parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Types}
 \begin{DoxyCompactItemize}
 \item 
@@ -37,19 +36,15 @@ enum \mbox{\hyperlink{classBaseSolverNewHook_a7dfcc77c640bbf4c590af05b84a17240}{
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classBaseSolverNewHook_a77a16b19af7732f15f3630dfe385ca8a}\label{classBaseSolverNewHook_a77a16b19af7732f15f3630dfe385ca8a}} 
-virtual void \mbox{\hyperlink{classBaseSolverNewHook_a77a16b19af7732f15f3630dfe385ca8a}{initialise\+\_\+boundaries\+\_\+tag}} ()=0
-\begin{DoxyCompactList}\small\item\em Initialise boundaries tag. This must be implemented by the derived class. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{classBaseSolverNewHook_a5ef9459721d96d5b778669583511d7b1}{is\+\_\+face\+\_\+at\+\_\+newmann\+\_\+boundary}} (const unsigned face)
 \begin{DoxyCompactList}\small\item\em Determine if a given faces is at a Newmann boundary. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{classBaseSolverNewHook_a5b4f304871299910f6aa62e769667558}{Base\+Solver\+New\+Hook}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+, const std\+::string \&mesh\+\_\+file\+\_\+name\+\_\+, const std\+::string \&problem\+\_\+name\+\_\+)
+\mbox{\hyperlink{classBaseSolverNewHook_a564cf60823e8a782b87cdc03d1dea4d0}{Base\+Solver\+New\+Hook}} (const std\+::string \&problem\+\_\+name\+\_\+)
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classBaseSolverNewHook_a4d4ac5b35f9b8f5ee29bc4c13f98f2a4}\label{classBaseSolverNewHook_a4d4ac5b35f9b8f5ee29bc4c13f98f2a4}} 
 virtual \mbox{\hyperlink{classBaseSolverNewHook_a4d4ac5b35f9b8f5ee29bc4c13f98f2a4}{$\sim$\+Base\+Solver\+New\+Hook}} ()
 \begin{DoxyCompactList}\small\item\em Virtual destructor for abstract class. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classBaseSolverNewHook_a6289a722f20e971357c703fab6fc1846}\label{classBaseSolverNewHook_a6289a722f20e971357c703fab6fc1846}} 
-virtual void {\bfseries setup} ()
-\item 
+virtual void \mbox{\hyperlink{classBaseSolverNewHook_a6289a722f20e971357c703fab6fc1846}{setup}} ()
+\begin{DoxyCompactList}\small\item\em Setup the problem by loading the mesh, creating the finite element and initialising the linear system. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverNewHook_a8a0495fb85337aaa84d5a802637507d4}{solve\+\_\+newton}} ()
 \begin{DoxyCompactList}\small\item\em Solve the non linear problem using the Newton method. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverNewHook_a742dffe4dcf8fccdc9a14b00d00326fc}{output}} () const
@@ -57,13 +52,20 @@ virtual void \mbox{\hyperlink{classBaseSolverNewHook_a742dffe4dcf8fccdc9a14b00d0
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{classBaseSolverNewHook_a77a16b19af7732f15f3630dfe385ca8a}\label{classBaseSolverNewHook_a77a16b19af7732f15f3630dfe385ca8a}} 
+virtual void \mbox{\hyperlink{classBaseSolverNewHook_a77a16b19af7732f15f3630dfe385ca8a}{initialise\+\_\+boundaries\+\_\+tag}} ()=0
+\begin{DoxyCompactList}\small\item\em Initialise boundaries tag. This must be implemented by the derived class. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{classBaseSolverNewHook_a3349708c15594664ab0d5428905c93ae}{initialize\+\_\+param\+\_\+handler}} (const std\+::string \&file\+\_\+)=0
+\begin{DoxyCompactList}\small\item\em Initialise parameters handler. This must be implemented by the derived class. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverNewHook_a75e71b006dd21e6dc6c7673c15ae0645}{compute\+\_\+piola\+\_\+kirchhoff}} (Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&out\+\_\+tensor, const Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&solution\+\_\+gradient\+\_\+quadrature, const unsigned cell\+\_\+index)
 \begin{DoxyCompactList}\small\item\em Assemble the Piola Kirchhoff tensor. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverNewHook_a3494609f9ce919a055b04ec36ad68c56}{assemble\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado\+: \href{https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html}{\texttt{ https\+://www.\+dealii.\+org/current/doxygen/deal.\+I\+I/class\+Differentiation\+\_\+1\+\_\+1\+A\+D\+\_\+1\+\_\+1\+Residual\+Linearization.\+html}}. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverNewHook_ae2e34cbd0431a55c29ba1bcacefb2a7d}{solve\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Solve the linear system. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classBaseSolverNewHook_a7c4c7ba84edfa0152ae0375110f46c2e}{parse\+\_\+parameters}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+)
+virtual void \mbox{\hyperlink{classBaseSolverNewHook_ad029bff36a4dba68de2112b619176c33}{declare\+\_\+parameters}} ()
+\begin{DoxyCompactList}\small\item\em Declare the parameter handler structure. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{classBaseSolverNewHook_a7c4c7ba84edfa0152ae0375110f46c2e}{parse\+\_\+parameters}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+)
 \begin{DoxyCompactList}\small\item\em Parse the parameter input. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
@@ -80,7 +82,7 @@ std\+::set$<$ unsigned int $>$ \mbox{\hyperlink{classBaseSolverNewHook_aadd5b41f
 \item 
 std\+::map$<$ types\+::boundary\+\_\+id, const Function$<$ dim $>$ $\ast$ $>$ \mbox{\hyperlink{classBaseSolverNewHook_ae1663a36196c95cc81957a4c2febd0b0}{dirichlet\+\_\+boundary\+\_\+functions}}
 \item 
-const std\+::string \& \mbox{\hyperlink{classBaseSolverNewHook_afec751a8f7059c7b4b5136839565f49d}{mesh\+\_\+file\+\_\+name}}
+std\+::string \mbox{\hyperlink{classBaseSolverNewHook_a82bc87c07dcddb6af0e0bcf5e863b153}{mesh\+\_\+file\+\_\+name}}
 \item 
 unsigned int \mbox{\hyperlink{classBaseSolverNewHook_ac9625eca4cf06a8f26f17e7bdae1a219}{r}}
 \item 
@@ -126,16 +128,10 @@ Parameter\+Handler \mbox{\hyperlink{classBaseSolverNewHook_a0eca2c71a54469cada9e
 \subsubsection*{template$<$int dim, typename Scalar = double$>$\newline
 class Base\+Solver\+New\+Hook$<$ dim, Scalar $>$}
 
-Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
-
-Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook constitutive law.
+Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook constitutive law. 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em dim} & The problem dimension space \\
-\hline
-{\em Scalar} & The scalar type being used\\
-\hline
 {\em dim} & The problem dimension \\
 \hline
 {\em Scalar} & The scalar type for the problem, by default a double \\
@@ -144,12 +140,12 @@ Abstract class representing a base solver for non linear cardiac mechanics by us
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classBaseSolverNewHook_a5b4f304871299910f6aa62e769667558}\label{classBaseSolverNewHook_a5b4f304871299910f6aa62e769667558}} 
+\mbox{\Hypertarget{classBaseSolverNewHook_a564cf60823e8a782b87cdc03d1dea4d0}\label{classBaseSolverNewHook_a564cf60823e8a782b87cdc03d1dea4d0}} 
 \index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!BaseSolverNewHook@{BaseSolverNewHook}}
 \index{BaseSolverNewHook@{BaseSolverNewHook}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{BaseSolverNewHook()}{BaseSolverNewHook()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
-\mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameters\+\_\+file\+\_\+name\+\_\+,  }\item[{const std\+::string \&}]{mesh\+\_\+file\+\_\+name\+\_\+,  }\item[{const std\+::string \&}]{problem\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{problem\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -157,10 +153,6 @@ Constructor.
 
 
 \begin{DoxyParams}{Parameters}
-{\em parameters\+\_\+file\+\_\+name\+\_\+} & The parameters file name \\
-\hline
-{\em mesh\+\_\+file\+\_\+name\+\_\+} & The mesh file name \\
-\hline
 {\em problem\+\_\+name\+\_\+} & The problem name \\
 \hline
 \end{DoxyParams}
@@ -212,6 +204,40 @@ Assemble the Piola Kirchhoff tensor.
 {\em cell\+\_\+index} & The index of the current dealii cell \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classBaseSolverNewHook_ad029bff36a4dba68de2112b619176c33}\label{classBaseSolverNewHook_ad029bff36a4dba68de2112b619176c33}} 
+\index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!declare\_parameters@{declare\_parameters}}
+\index{declare\_parameters@{declare\_parameters}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{declare\_parameters()}{declare\_parameters()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+void \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::declare\+\_\+parameters\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Declare the parameter handler structure. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dim} & The problem dimension space \\
+\hline
+{\em Scalar} & The scalar type being used \\
+\hline
+\end{DoxyTemplParams}
+\mbox{\Hypertarget{classBaseSolverNewHook_a3349708c15594664ab0d5428905c93ae}\label{classBaseSolverNewHook_a3349708c15594664ab0d5428905c93ae}} 
+\index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!initialize\_param\_handler@{initialize\_param\_handler}}
+\index{initialize\_param\_handler@{initialize\_param\_handler}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{initialize\_param\_handler()}{initialize\_param\_handler()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+virtual void \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::initialize\+\_\+param\+\_\+handler (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Initialise parameters handler. This must be implemented by the derived class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+} & The input parameters file \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classBaseSolverNewHook_a5ef9459721d96d5b778669583511d7b1}\label{classBaseSolverNewHook_a5ef9459721d96d5b778669583511d7b1}} 
 \index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!is\_face\_at\_newmann\_boundary@{is\_face\_at\_newmann\_boundary}}
 \index{is\_face\_at\_newmann\_boundary@{is\_face\_at\_newmann\_boundary}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
@@ -254,7 +280,7 @@ Write the output.
 \index{parse\_parameters@{parse\_parameters}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{parse\_parameters()}{parse\_parameters()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
-void \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::parse\+\_\+parameters (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameters\+\_\+file\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+void \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::parse\+\_\+parameters (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameters\+\_\+file\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
 
 
 
@@ -272,6 +298,24 @@ Parse the parameter input.
 {\em parameters\+\_\+file\+\_\+name\+\_\+} & The input configuration parameter file name \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classBaseSolverNewHook_a6289a722f20e971357c703fab6fc1846}\label{classBaseSolverNewHook_a6289a722f20e971357c703fab6fc1846}} 
+\index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!setup@{setup}}
+\index{setup@{setup}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+void \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::setup\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dim} & The problem dimension space \\
+\hline
+{\em Scalar} & The scalar type being used \\
+\hline
+\end{DoxyTemplParams}
 \mbox{\Hypertarget{classBaseSolverNewHook_a8a0495fb85337aaa84d5a802637507d4}\label{classBaseSolverNewHook_a8a0495fb85337aaa84d5a802637507d4}} 
 \index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!solve\_newton@{solve\_newton}}
 \index{solve\_newton@{solve\_newton}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
@@ -381,12 +425,12 @@ The rank locally relevant dofs \mbox{\Hypertarget{classBaseSolverNewHook_af654bc
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
 parallel\+::fullydistributed\+::\+Triangulation$<$dim$>$ \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::mesh\hspace{0.3cm}{\ttfamily [protected]}}
 
-The distributed triangulation \mbox{\Hypertarget{classBaseSolverNewHook_afec751a8f7059c7b4b5136839565f49d}\label{classBaseSolverNewHook_afec751a8f7059c7b4b5136839565f49d}} 
+The distributed triangulation \mbox{\Hypertarget{classBaseSolverNewHook_a82bc87c07dcddb6af0e0bcf5e863b153}\label{classBaseSolverNewHook_a82bc87c07dcddb6af0e0bcf5e863b153}} 
 \index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!mesh\_file\_name@{mesh\_file\_name}}
 \index{mesh\_file\_name@{mesh\_file\_name}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{mesh\_file\_name}{mesh\_file\_name}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
-const std\+::string\& \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::mesh\+\_\+file\+\_\+name\hspace{0.3cm}{\ttfamily [protected]}}
+std\+::string \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::mesh\+\_\+file\+\_\+name\hspace{0.3cm}{\ttfamily [protected]}}
 
 The input mesh file name \mbox{\Hypertarget{classBaseSolverNewHook_a46aa116303ca38c77a94576d645a5b0e}\label{classBaseSolverNewHook_a46aa116303ca38c77a94576d645a5b0e}} 
 \index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!mpi\_rank@{mpi\_rank}}

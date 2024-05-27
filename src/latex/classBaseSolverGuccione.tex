@@ -2,7 +2,7 @@
 \label{classBaseSolverGuccione}\index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
 
 
-Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  
+Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}).  
 
 
 
@@ -11,8 +11,7 @@ Setup the problem by loading the mesh, creating the finite element and initialis
 
 
 
-Collaboration diagram for Base\+Solver\+Guccione$<$ dim, Scalar $>$\+:
-\nopagebreak
+Collaboration diagram for Base\+Solver\+Guccione$<$ dim, Scalar $>$\+:\nopagebreak
 \begin{figure}[H]
 \begin{center}
 \leavevmode
@@ -39,19 +38,15 @@ enum \mbox{\hyperlink{classBaseSolverGuccione_ad1d5e1ef78c31be6741b79a50f846765}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}\label{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}} 
-virtual void \mbox{\hyperlink{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}{initialise\+\_\+boundaries\+\_\+tag}} ()=0
-\begin{DoxyCompactList}\small\item\em Initialise boundaries tag. This must be implemented by the derived class. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{classBaseSolverGuccione_a3f5682ace5a6928f27ad4d05442808f4}{is\+\_\+face\+\_\+at\+\_\+newmann\+\_\+boundary}} (const unsigned face)
 \begin{DoxyCompactList}\small\item\em Determine if a given faces is at a Newmann boundary. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{classBaseSolverGuccione_a9ebd848f987956fcfff023b7915c12c3}{Base\+Solver\+Guccione}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+, const std\+::string \&mesh\+\_\+file\+\_\+name\+\_\+, const std\+::string \&problem\+\_\+name\+\_\+)
+\mbox{\hyperlink{classBaseSolverGuccione_a73015dce2d100e32a9f84792672b94f6}{Base\+Solver\+Guccione}} (const std\+::string \&problem\+\_\+name\+\_\+)
 \begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classBaseSolverGuccione_a7c833ab7de997194d17493b4c2e8a2b7}\label{classBaseSolverGuccione_a7c833ab7de997194d17493b4c2e8a2b7}} 
 virtual \mbox{\hyperlink{classBaseSolverGuccione_a7c833ab7de997194d17493b4c2e8a2b7}{$\sim$\+Base\+Solver\+Guccione}} ()
 \begin{DoxyCompactList}\small\item\em Virtual destructor for abstract class. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classBaseSolverGuccione_ae6020bb0c2dcd1cbea00e16982c35439}\label{classBaseSolverGuccione_ae6020bb0c2dcd1cbea00e16982c35439}} 
-virtual void {\bfseries setup} ()
-\item 
+virtual void \mbox{\hyperlink{classBaseSolverGuccione_ae6020bb0c2dcd1cbea00e16982c35439}{setup}} ()
+\begin{DoxyCompactList}\small\item\em Setup the problem by loading the mesh, creating the finite element and initialising the linear system. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_a0f84e4ca659b00432b1558fd6d85c9b5}{solve\+\_\+newton}} ()
 \begin{DoxyCompactList}\small\item\em Solve the non linear problem using the Newton method. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_ab17f97404a39f104892d56b033ae1859}{output}} () const
@@ -59,13 +54,24 @@ virtual void \mbox{\hyperlink{classBaseSolverGuccione_ab17f97404a39f104892d56b03
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}\label{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}} 
+virtual void \mbox{\hyperlink{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}{initialise\+\_\+boundaries\+\_\+tag}} ()=0
+\begin{DoxyCompactList}\small\item\em Initialise boundaries tag. This must be implemented by the derived class. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{classBaseSolverGuccione_a0fb9c00f9f8c2a43c45328f6b6a282e5}{initialize\+\_\+param\+\_\+handler}} (const std\+::string \&file\+\_\+)=0
+\begin{DoxyCompactList}\small\item\em Initialise parameters handler. This must be implemented by the derived class. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classBaseSolverGuccione_a73395623273cfa2e55ca1cfa2991b6d0}\label{classBaseSolverGuccione_a73395623273cfa2e55ca1cfa2991b6d0}} 
+virtual void \mbox{\hyperlink{classBaseSolverGuccione_a73395623273cfa2e55ca1cfa2991b6d0}{initialize\+\_\+pk\+\_\+weights}} ()=0
+\begin{DoxyCompactList}\small\item\em Initialise Piola Kirchhoff weights. There represent the material coefficient that have to be multiplied to the tensor pk\mbox{[}i\mbox{]}\mbox{[}j\mbox{]}. This must be implemented by the derived class. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_a5400a2a5ee845af80926c977a6cad51f}{compute\+\_\+piola\+\_\+kirchhoff}} (Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&out\+\_\+tensor, const Tensor$<$ 2, dim, A\+D\+Number\+Type $>$ \&solution\+\_\+gradient\+\_\+quadrature, const unsigned cell\+\_\+index)
 \begin{DoxyCompactList}\small\item\em Assemble the Piola Kirchhoff tensor. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_a7a0470cb94164c61b5c4e58cecb28fb1}{assemble\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado\+: \href{https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html}{\texttt{ https\+://www.\+dealii.\+org/current/doxygen/deal.\+I\+I/class\+Differentiation\+\_\+1\+\_\+1\+A\+D\+\_\+1\+\_\+1\+Residual\+Linearization.\+html}}. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_a4af99ebe84506b73a25d74523de8abac}{solve\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Solve the linear system. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classBaseSolverGuccione_a274f45304c161fb693c23e6fc46bb4f8}{parse\+\_\+parameters}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+)
+\mbox{\Hypertarget{classBaseSolverGuccione_a8b6a0067bb4c4e8f6f68f59953728715}\label{classBaseSolverGuccione_a8b6a0067bb4c4e8f6f68f59953728715}} 
+virtual void {\bfseries declare\+\_\+parameters} ()
+\item 
+virtual void \mbox{\hyperlink{classBaseSolverGuccione_a274f45304c161fb693c23e6fc46bb4f8}{parse\+\_\+parameters}} (const std\+::string \&parameters\+\_\+file\+\_\+name\+\_\+)
 \begin{DoxyCompactList}\small\item\em Parse the parameter input. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
@@ -84,7 +90,7 @@ std\+::map$<$ types\+::boundary\+\_\+id, const Function$<$ dim $>$ $\ast$ $>$ \m
 \item 
 std\+::map$<$ std\+::pair$<$ int, int $>$, double $>$ \mbox{\hyperlink{classBaseSolverGuccione_ab3cd896498fdea1a25f0a2a1ebed65db}{piola\+\_\+kirchhoff\+\_\+b\+\_\+weights}}
 \item 
-const std\+::string \& \mbox{\hyperlink{classBaseSolverGuccione_a23d525238191257630c9e2a91c135462}{mesh\+\_\+file\+\_\+name}}
+std\+::string \mbox{\hyperlink{classBaseSolverGuccione_ae9549a3534cd69d0c60f37a8f4a05abb}{mesh\+\_\+file\+\_\+name}}
 \item 
 unsigned int \mbox{\hyperlink{classBaseSolverGuccione_a7c38401259e108bfed03334988460779}{r}}
 \item 
@@ -130,16 +136,10 @@ Parameter\+Handler \mbox{\hyperlink{classBaseSolverGuccione_a0a45938b6a9ba8d229d
 \subsubsection*{template$<$int dim, typename Scalar = double$>$\newline
 class Base\+Solver\+Guccione$<$ dim, Scalar $>$}
 
-Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
-
-Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}).
+Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or transversely isotropic constitutive law by Guccione et al. (\href{https://pubmed.ncbi.nlm.nih.gov/8550635/}{\texttt{ https\+://pubmed.\+ncbi.\+nlm.\+nih.\+gov/8550635/}}). 
 
 
 \begin{DoxyTemplParams}{Template Parameters}
-{\em dim} & The problem dimension space \\
-\hline
-{\em Scalar} & The scalar type being used\\
-\hline
 {\em dim} & The problem dimension \\
 \hline
 {\em Scalar} & The scalar type for the problem, by default a double \\
@@ -148,12 +148,12 @@ Abstract class representing a base solver for non linear cardiac mechanics by us
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classBaseSolverGuccione_a9ebd848f987956fcfff023b7915c12c3}\label{classBaseSolverGuccione_a9ebd848f987956fcfff023b7915c12c3}} 
+\mbox{\Hypertarget{classBaseSolverGuccione_a73015dce2d100e32a9f84792672b94f6}\label{classBaseSolverGuccione_a73015dce2d100e32a9f84792672b94f6}} 
 \index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!BaseSolverGuccione@{BaseSolverGuccione}}
 \index{BaseSolverGuccione@{BaseSolverGuccione}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{BaseSolverGuccione()}{BaseSolverGuccione()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
-\mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameters\+\_\+file\+\_\+name\+\_\+,  }\item[{const std\+::string \&}]{mesh\+\_\+file\+\_\+name\+\_\+,  }\item[{const std\+::string \&}]{problem\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::\mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{problem\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -162,8 +162,6 @@ Constructor.
 
 \begin{DoxyParams}{Parameters}
 {\em parameters\+\_\+file\+\_\+name\+\_\+} & The parameters file name \\
-\hline
-{\em mesh\+\_\+file\+\_\+name\+\_\+} & The mesh file name \\
 \hline
 {\em problem\+\_\+name\+\_\+} & The problem name \\
 \hline
@@ -216,6 +214,22 @@ Assemble the Piola Kirchhoff tensor.
 {\em cell\+\_\+index} & The index of the current dealii cell \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classBaseSolverGuccione_a0fb9c00f9f8c2a43c45328f6b6a282e5}\label{classBaseSolverGuccione_a0fb9c00f9f8c2a43c45328f6b6a282e5}} 
+\index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!initialize\_param\_handler@{initialize\_param\_handler}}
+\index{initialize\_param\_handler@{initialize\_param\_handler}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{initialize\_param\_handler()}{initialize\_param\_handler()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
+virtual void \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::initialize\+\_\+param\+\_\+handler (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{file\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Initialise parameters handler. This must be implemented by the derived class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em file\+\_\+} & The input parameters file \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classBaseSolverGuccione_a3f5682ace5a6928f27ad4d05442808f4}\label{classBaseSolverGuccione_a3f5682ace5a6928f27ad4d05442808f4}} 
 \index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!is\_face\_at\_newmann\_boundary@{is\_face\_at\_newmann\_boundary}}
 \index{is\_face\_at\_newmann\_boundary@{is\_face\_at\_newmann\_boundary}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
@@ -258,7 +272,7 @@ Write the output.
 \index{parse\_parameters@{parse\_parameters}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{parse\_parameters()}{parse\_parameters()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
-void \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::parse\+\_\+parameters (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameters\+\_\+file\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+void \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::parse\+\_\+parameters (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{parameters\+\_\+file\+\_\+name\+\_\+ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
 
 
 
@@ -276,6 +290,24 @@ Parse the parameter input.
 {\em parameters\+\_\+file\+\_\+name\+\_\+} & The input configuration parameter file name \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classBaseSolverGuccione_ae6020bb0c2dcd1cbea00e16982c35439}\label{classBaseSolverGuccione_ae6020bb0c2dcd1cbea00e16982c35439}} 
+\index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!setup@{setup}}
+\index{setup@{setup}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
+\doxysubsubsection{\texorpdfstring{setup()}{setup()}}
+{\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
+void \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::setup\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Setup the problem by loading the mesh, creating the finite element and initialising the linear system. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em dim} & The problem dimension space \\
+\hline
+{\em Scalar} & The scalar type being used \\
+\hline
+\end{DoxyTemplParams}
 \mbox{\Hypertarget{classBaseSolverGuccione_a0f84e4ca659b00432b1558fd6d85c9b5}\label{classBaseSolverGuccione_a0f84e4ca659b00432b1558fd6d85c9b5}} 
 \index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!solve\_newton@{solve\_newton}}
 \index{solve\_newton@{solve\_newton}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
@@ -385,12 +417,12 @@ The rank locally relevant dofs \mbox{\Hypertarget{classBaseSolverGuccione_a65a2c
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
 parallel\+::fullydistributed\+::\+Triangulation$<$dim$>$ \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::mesh\hspace{0.3cm}{\ttfamily [protected]}}
 
-The distributed triangulation \mbox{\Hypertarget{classBaseSolverGuccione_a23d525238191257630c9e2a91c135462}\label{classBaseSolverGuccione_a23d525238191257630c9e2a91c135462}} 
+The distributed triangulation \mbox{\Hypertarget{classBaseSolverGuccione_ae9549a3534cd69d0c60f37a8f4a05abb}\label{classBaseSolverGuccione_ae9549a3534cd69d0c60f37a8f4a05abb}} 
 \index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!mesh\_file\_name@{mesh\_file\_name}}
 \index{mesh\_file\_name@{mesh\_file\_name}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{mesh\_file\_name}{mesh\_file\_name}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar  = double$>$ \\
-const std\+::string\& \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::mesh\+\_\+file\+\_\+name\hspace{0.3cm}{\ttfamily [protected]}}
+std\+::string \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::mesh\+\_\+file\+\_\+name\hspace{0.3cm}{\ttfamily [protected]}}
 
 The input mesh file name \mbox{\Hypertarget{classBaseSolverGuccione_a2134aca3da448dfe68890b60138bb828}\label{classBaseSolverGuccione_a2134aca3da448dfe68890b60138bb828}} 
 \index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!mpi\_rank@{mpi\_rank}}

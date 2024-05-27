@@ -216,11 +216,6 @@ public:
     }
   };
   /**
-   * @brief Initialise boundaries tag. This must be implemented by the derived
-   * class
-   */
-  virtual void initialise_boundaries_tag() = 0;
-  /**
    * @brief Determine if a given faces is at a Newmann boundary
    * @param face The face values
    * @return The requested query
@@ -231,30 +226,13 @@ public:
   /**
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
-   * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
-  BaseSolverGuccione(const std::string &parameters_file_name_,
-                     const std::string &mesh_file_name_,
-                     const std::string &problem_name_)
+  BaseSolverGuccione(const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
-        pcout(std::cout, mpi_rank == 0), mesh_file_name(mesh_file_name_),
-        mesh(MPI_COMM_WORLD), problem_name(problem_name_) {
-    // Initalized the parameter handler
-    parse_parameters(parameters_file_name_);
-
-    // Set the Piola Kirchhoff b_x values
-    piola_kirchhoff_b_weights[{0, 0}] = Material::b_f;
-    piola_kirchhoff_b_weights[{1, 1}] = Material::b_t;
-    piola_kirchhoff_b_weights[{2, 2}] = Material::b_t;
-    piola_kirchhoff_b_weights[{1, 2}] = Material::b_t;
-    piola_kirchhoff_b_weights[{2, 1}] = Material::b_t;
-    piola_kirchhoff_b_weights[{0, 2}] = Material::b_fs;
-    piola_kirchhoff_b_weights[{2, 0}] = Material::b_fs;
-    piola_kirchhoff_b_weights[{0, 1}] = Material::b_fs;
-    piola_kirchhoff_b_weights[{1, 0}] = Material::b_fs;
-  }
+        pcout(std::cout, mpi_rank == 0), mesh(MPI_COMM_WORLD),
+        problem_name(problem_name_) {}
   /**
    * @brief Virtual destructor for abstract class
    */
@@ -267,6 +245,24 @@ public:
   virtual void output() const;
 
 protected:
+  /**
+   * @brief Initialise boundaries tag. This must be implemented by the derived
+   * class
+   */
+  virtual void initialise_boundaries_tag() = 0;
+  /**
+   * @brief Initialise parameters handler. This must be implemented by the
+   * derived class
+   * @param file_ The input parameters file
+   */
+  virtual void initialize_param_handler(const std::string &file_) = 0;
+  /**
+   * @brief Initialise Piola Kirchhoff weights. There represent the material
+   * coefficient that have to be multiplied to the tensor pk[i][j]. This must be
+   * implemented by the derived class
+   */
+  virtual void initialize_pk_weights() = 0;
+
   virtual void compute_piola_kirchhoff(
       Tensor<2, dim, ADNumberType> &out_tensor,
       const Tensor<2, dim, ADNumberType> &solution_gradient_quadrature,
@@ -276,7 +272,9 @@ protected:
 
   virtual void solve_system();
 
-  void parse_parameters(const std::string &parameters_file_name_);
+  virtual void declare_parameters();
+
+  virtual void parse_parameters(const std::string &parameters_file_name_);
   /**
    * MPI size
    */
@@ -309,7 +307,7 @@ protected:
   /**
    * The input mesh file name
    */
-  const std::string &mesh_file_name;
+  std::string mesh_file_name;
   /**
    * The polynomial degree
    */

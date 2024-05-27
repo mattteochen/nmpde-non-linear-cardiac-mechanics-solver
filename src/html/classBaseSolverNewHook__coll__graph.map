@@ -1,5 +1,5 @@
 <map id="BaseSolverNewHook&lt; dim, Scalar &gt;" name="BaseSolverNewHook&lt; dim, Scalar &gt;">
-<area shape="rect" id="node1" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="616,90,785,131"/>
+<area shape="rect" id="node1" title="Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook cons..." alt="" coords="616,90,785,131"/>
 <area shape="rect" id="node2" href="$classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="237,5,372,32"/>
 <area shape="rect" id="node3" href="$classNewtonSolverUtility.html" title=" " alt="" coords="228,57,381,98"/>
 <area shape="rect" id="node4" href="$classLinearSolverUtility.html" title=" " alt="" coords="233,122,376,163"/>

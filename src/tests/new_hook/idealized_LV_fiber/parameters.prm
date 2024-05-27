@@ -14,7 +14,7 @@ end
 
 subsection PolynomialDegree
   # Degree of the polynomial for finite elements
-  set Degree                    = 2
+  set Degree                    = 1
 end
 
 subsection NewtonMethod
@@ -47,4 +47,18 @@ subsection Pressure
 
   # Fiber value
   set FiberValue                 = 60000.0
+end
+
+subsection Mesh
+  # Mesh file name
+  set File                      = ../../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh
+end
+
+subsection MeshGeometry
+  # Focal distance
+  set DistFocal                 = 45.0
+  # Endocardium nu coefficient
+  set NuEndo                    = 0.6
+  # Epicardium nu coefficient
+  set NuEpi                     = 0.8
 end

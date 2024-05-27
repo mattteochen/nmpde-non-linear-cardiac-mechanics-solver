@@ -1,5 +1,5 @@
 <map id="BaseSolverGuccione&lt; dim, Scalar &gt;" name="BaseSolverGuccione&lt; dim, Scalar &gt;">
-<area shape="rect" id="node1" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="627,101,781,142"/>
+<area shape="rect" id="node1" title="Abstract class representing a base solver for non linear cardiac mechanics by using the isotropic or ..." alt="" coords="627,101,781,142"/>
 <area shape="rect" id="node2" href="$classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="243,5,377,32"/>
 <area shape="rect" id="node3" href="$classBaseSolverGuccione_1_1ConstantPressureFunction.html" title="Class representing the applied pressure component." alt="" coords="187,56,433,112"/>
 <area shape="rect" id="node4" title=" " alt="" coords="5,71,137,97"/>

@@ -20,6 +20,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="logo.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">NMPDE Project: Non-linear cardiac mechanics
    &#160;<span id="projectnumber">0.1</span>
@@ -74,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  
+<p>Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook constitutive law.  
  <a href="classBaseSolverNewHook.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="BaseSolverNewHook_8hpp_source.html">BaseSolverNewHook.hpp</a>&gt;</code></p>
@@ -83,7 +84,7 @@ Collaboration diagram for BaseSolverNewHook&lt; dim, Scalar &gt;:</div>
 <div class="dyncontent">
 <div class="center"><img src="classBaseSolverNewHook__coll__graph.png" border="0" usemap="#BaseSolverNewHook_3_01dim_00_01Scalar_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="BaseSolverNewHook_3_01dim_00_01Scalar_01_4_coll__map" id="BaseSolverNewHook_3_01dim_00_01Scalar_01_4_coll__map">
-<area shape="rect" title="Setup the problem by loading the mesh, creating the finite element and initialising the linear system..." alt="" coords="616,90,785,131"/>
+<area shape="rect" title="Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook cons..." alt="" coords="616,90,785,131"/>
 <area shape="rect" href="classBoundariesUtility.html" title="Utility class for managing boundary conditions." alt="" coords="237,5,372,32"/>
 <area shape="rect" href="classNewtonSolverUtility.html" title=" " alt="" coords="228,57,381,98"/>
 <area shape="rect" href="classLinearSolverUtility.html" title=" " alt="" coords="233,122,376,163"/>
@@ -98,7 +99,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class representing the applied pressure component.  <a href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structBaseSolverNewHook_1_1Material.html">Material</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structBaseSolverNewHook_1_1Material.html" title="Material related parameters. Reference papaer: https://pubmed.ncbi.nlm.nih.gov/26807042/.">Material</a> related parameters. Reference papaer: <a href="https://pubmed.ncbi.nlm.nih.gov/26807042/">https://pubmed.ncbi.nlm.nih.gov/26807042/</a>.  <a href="structBaseSolverNewHook_1_1Material.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structBaseSolverNewHook_1_1Material.html" title="Material related parameters.">Material</a> related parameters.  <a href="structBaseSolverNewHook_1_1Material.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
@@ -111,22 +112,18 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a77a16b19af7732f15f3630dfe385ca8a"><td class="memItemLeft" align="right" valign="top"><a id="a77a16b19af7732f15f3630dfe385ca8a"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a77a16b19af7732f15f3630dfe385ca8a">initialise_boundaries_tag</a> ()=0</td></tr>
-<tr class="memdesc:a77a16b19af7732f15f3630dfe385ca8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag. This must be implemented by the derived class. <br /></td></tr>
-<tr class="separator:a77a16b19af7732f15f3630dfe385ca8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ef9459721d96d5b778669583511d7b1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a5ef9459721d96d5b778669583511d7b1">is_face_at_newmann_boundary</a> (const unsigned face)</td></tr>
 <tr class="memdesc:a5ef9459721d96d5b778669583511d7b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine if a given faces is at a Newmann boundary.  <a href="classBaseSolverNewHook.html#a5ef9459721d96d5b778669583511d7b1">More...</a><br /></td></tr>
 <tr class="separator:a5ef9459721d96d5b778669583511d7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5b4f304871299910f6aa62e769667558"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a5b4f304871299910f6aa62e769667558">BaseSolverNewHook</a> (const std::string &amp;parameters_file_name_, const std::string &amp;mesh_file_name_, const std::string &amp;problem_name_)</td></tr>
-<tr class="memdesc:a5b4f304871299910f6aa62e769667558"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classBaseSolverNewHook.html#a5b4f304871299910f6aa62e769667558">More...</a><br /></td></tr>
-<tr class="separator:a5b4f304871299910f6aa62e769667558"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a564cf60823e8a782b87cdc03d1dea4d0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a564cf60823e8a782b87cdc03d1dea4d0">BaseSolverNewHook</a> (const std::string &amp;problem_name_)</td></tr>
+<tr class="memdesc:a564cf60823e8a782b87cdc03d1dea4d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="classBaseSolverNewHook.html#a564cf60823e8a782b87cdc03d1dea4d0">More...</a><br /></td></tr>
+<tr class="separator:a564cf60823e8a782b87cdc03d1dea4d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d4ac5b35f9b8f5ee29bc4c13f98f2a4"><td class="memItemLeft" align="right" valign="top"><a id="a4d4ac5b35f9b8f5ee29bc4c13f98f2a4"></a>
 virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a4d4ac5b35f9b8f5ee29bc4c13f98f2a4">~BaseSolverNewHook</a> ()</td></tr>
 <tr class="memdesc:a4d4ac5b35f9b8f5ee29bc4c13f98f2a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor for abstract class. <br /></td></tr>
 <tr class="separator:a4d4ac5b35f9b8f5ee29bc4c13f98f2a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6289a722f20e971357c703fab6fc1846"><td class="memItemLeft" align="right" valign="top"><a id="a6289a722f20e971357c703fab6fc1846"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()</td></tr>
+<tr class="memitem:a6289a722f20e971357c703fab6fc1846"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a6289a722f20e971357c703fab6fc1846">setup</a> ()</td></tr>
+<tr class="memdesc:a6289a722f20e971357c703fab6fc1846"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup the problem by loading the mesh, creating the finite element and initialising the linear system.  <a href="classBaseSolverNewHook.html#a6289a722f20e971357c703fab6fc1846">More...</a><br /></td></tr>
 <tr class="separator:a6289a722f20e971357c703fab6fc1846"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a0495fb85337aaa84d5a802637507d4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a8a0495fb85337aaa84d5a802637507d4">solve_newton</a> ()</td></tr>
 <tr class="memdesc:a8a0495fb85337aaa84d5a802637507d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the non linear problem using the Newton method.  <a href="classBaseSolverNewHook.html#a8a0495fb85337aaa84d5a802637507d4">More...</a><br /></td></tr>
@@ -137,6 +134,13 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>setup</b> ()<
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:a77a16b19af7732f15f3630dfe385ca8a"><td class="memItemLeft" align="right" valign="top"><a id="a77a16b19af7732f15f3630dfe385ca8a"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a77a16b19af7732f15f3630dfe385ca8a">initialise_boundaries_tag</a> ()=0</td></tr>
+<tr class="memdesc:a77a16b19af7732f15f3630dfe385ca8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag. This must be implemented by the derived class. <br /></td></tr>
+<tr class="separator:a77a16b19af7732f15f3630dfe385ca8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3349708c15594664ab0d5428905c93ae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a3349708c15594664ab0d5428905c93ae">initialize_param_handler</a> (const std::string &amp;file_)=0</td></tr>
+<tr class="memdesc:a3349708c15594664ab0d5428905c93ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise parameters handler. This must be implemented by the derived class.  <a href="classBaseSolverNewHook.html#a3349708c15594664ab0d5428905c93ae">More...</a><br /></td></tr>
+<tr class="separator:a3349708c15594664ab0d5428905c93ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75e71b006dd21e6dc6c7673c15ae0645"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a75e71b006dd21e6dc6c7673c15ae0645">compute_piola_kirchhoff</a> (Tensor&lt; 2, dim, ADNumberType &gt; &amp;out_tensor, const Tensor&lt; 2, dim, ADNumberType &gt; &amp;solution_gradient_quadrature, const unsigned cell_index)</td></tr>
 <tr class="memdesc:a75e71b006dd21e6dc6c7673c15ae0645"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the Piola Kirchhoff tensor.  <a href="classBaseSolverNewHook.html#a75e71b006dd21e6dc6c7673c15ae0645">More...</a><br /></td></tr>
 <tr class="separator:a75e71b006dd21e6dc6c7673c15ae0645"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,7 +150,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:ae2e34cbd0431a55c29ba1bcacefb2a7d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#ae2e34cbd0431a55c29ba1bcacefb2a7d">solve_system</a> ()</td></tr>
 <tr class="memdesc:ae2e34cbd0431a55c29ba1bcacefb2a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolverNewHook.html#ae2e34cbd0431a55c29ba1bcacefb2a7d">More...</a><br /></td></tr>
 <tr class="separator:ae2e34cbd0431a55c29ba1bcacefb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c4c7ba84edfa0152ae0375110f46c2e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a7c4c7ba84edfa0152ae0375110f46c2e">parse_parameters</a> (const std::string &amp;parameters_file_name_)</td></tr>
+<tr class="memitem:ad029bff36a4dba68de2112b619176c33"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#ad029bff36a4dba68de2112b619176c33">declare_parameters</a> ()</td></tr>
+<tr class="memdesc:ad029bff36a4dba68de2112b619176c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare the parameter handler structure.  <a href="classBaseSolverNewHook.html#ad029bff36a4dba68de2112b619176c33">More...</a><br /></td></tr>
+<tr class="separator:ad029bff36a4dba68de2112b619176c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c4c7ba84edfa0152ae0375110f46c2e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a7c4c7ba84edfa0152ae0375110f46c2e">parse_parameters</a> (const std::string &amp;parameters_file_name_)</td></tr>
 <tr class="memdesc:a7c4c7ba84edfa0152ae0375110f46c2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the parameter input.  <a href="classBaseSolverNewHook.html#a7c4c7ba84edfa0152ae0375110f46c2e">More...</a><br /></td></tr>
 <tr class="separator:a7c4c7ba84edfa0152ae0375110f46c2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -164,8 +171,8 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:aadd5b41f6acb0fff913dde31ff263637"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1663a36196c95cc81957a4c2febd0b0"><td class="memItemLeft" align="right" valign="top">std::map&lt; types::boundary_id, const Function&lt; dim &gt; * &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#ae1663a36196c95cc81957a4c2febd0b0">dirichlet_boundary_functions</a></td></tr>
 <tr class="separator:ae1663a36196c95cc81957a4c2febd0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afec751a8f7059c7b4b5136839565f49d"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#afec751a8f7059c7b4b5136839565f49d">mesh_file_name</a></td></tr>
-<tr class="separator:afec751a8f7059c7b4b5136839565f49d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82bc87c07dcddb6af0e0bcf5e863b153"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a82bc87c07dcddb6af0e0bcf5e863b153">mesh_file_name</a></td></tr>
+<tr class="separator:a82bc87c07dcddb6af0e0bcf5e863b153"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac9625eca4cf06a8f26f17e7bdae1a219"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#ac9625eca4cf06a8f26f17e7bdae1a219">r</a></td></tr>
 <tr class="separator:ac9625eca4cf06a8f26f17e7bdae1a219"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af654bcd165d4462fc55586534393aafc"><td class="memItemLeft" align="right" valign="top">parallel::fullydistributed::Triangulation&lt; dim &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#af654bcd165d4462fc55586534393aafc">mesh</a></td></tr>
@@ -209,20 +216,17 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;int dim, typename Scalar = double&gt;<br />
 class BaseSolverNewHook&lt; dim, Scalar &gt;</h3>
 
-<p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system. </p>
-<p>Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook constitutive law.</p>
+<p>Abstract class representing a base solver for non linear cardiac mechanics by using the New Hook constitutive law. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
-    <tr><td class="paramname">Scalar</td><td>The scalar type being used</td></tr>
     <tr><td class="paramname">dim</td><td>The problem dimension </td></tr>
     <tr><td class="paramname">Scalar</td><td>The scalar type for the problem, by default a double </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5b4f304871299910f6aa62e769667558"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b4f304871299910f6aa62e769667558">&#9670;&nbsp;</a></span>BaseSolverNewHook()</h2>
+<a id="a564cf60823e8a782b87cdc03d1dea4d0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a564cf60823e8a782b87cdc03d1dea4d0">&#9670;&nbsp;</a></span>BaseSolverNewHook()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -236,24 +240,8 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
           <td class="memname"><a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::<a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a> </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>parameters_file_name_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"><em>problem_name_</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>mesh_file_name_</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>problem_name_</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -266,8 +254,6 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 <p>Constructor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parameters_file_name_</td><td>The parameters file name </td></tr>
-    <tr><td class="paramname">mesh_file_name_</td><td>The mesh file name </td></tr>
     <tr><td class="paramname">problem_name_</td><td>The problem name </td></tr>
   </table>
   </dd>
@@ -370,6 +356,75 @@ template&lt;int dim, typename Scalar &gt; </div>
 
 </div>
 </div>
+<a id="ad029bff36a4dba68de2112b619176c33"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad029bff36a4dba68de2112b619176c33">&#9670;&nbsp;</a></span>declare_parameters()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::declare_parameters</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Declare the parameter handler structure. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3349708c15594664ab0d5428905c93ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3349708c15594664ab0d5428905c93ae">&#9670;&nbsp;</a></span>initialize_param_handler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::initialize_param_handler </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>file_</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Initialise parameters handler. This must be implemented by the derived class. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file_</td><td>The input parameters file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a5ef9459721d96d5b778669583511d7b1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5ef9459721d96d5b778669583511d7b1">&#9670;&nbsp;</a></span>is_face_at_newmann_boundary()</h2>
 
@@ -461,7 +516,7 @@ template&lt;int dim, typename Scalar &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -477,6 +532,39 @@ template&lt;int dim, typename Scalar &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">parameters_file_name_</td><td>The input configuration parameter file name </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6289a722f20e971357c703fab6fc1846"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6289a722f20e971357c703fab6fc1846">&#9670;&nbsp;</a></span>setup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::setup</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Setup the problem by loading the mesh, creating the finite element and initialising the linear system. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">dim</td><td>The problem dimension space </td></tr>
+    <tr><td class="paramname">Scalar</td><td>The scalar type being used </td></tr>
   </table>
   </dd>
 </dl>
@@ -800,8 +888,8 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 
 </div>
 </div>
-<a id="afec751a8f7059c7b4b5136839565f49d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afec751a8f7059c7b4b5136839565f49d">&#9670;&nbsp;</a></span>mesh_file_name</h2>
+<a id="a82bc87c07dcddb6af0e0bcf5e863b153"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82bc87c07dcddb6af0e0bcf5e863b153">&#9670;&nbsp;</a></span>mesh_file_name</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -812,7 +900,7 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string&amp; <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::mesh_file_name</td>
+          <td class="memname">std::string <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::mesh_file_name</td>
         </tr>
       </table>
   </td>

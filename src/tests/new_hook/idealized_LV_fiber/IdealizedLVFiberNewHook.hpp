@@ -15,6 +15,7 @@
 #include <deal.II/lac/trilinos_solver.h>
 
 #include <cmath>
+#include <memory>
 #ifdef BUILD_TYPE_DEBUG
 #include <fstream>
 #include <string>
@@ -50,29 +51,65 @@ public:
   /**
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
-   * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
   IdealizedLVFiberNewHook(const std::string &parameters_file_name_,
-                          const std::string &mesh_file_name_,
                           const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_),
-        zero_function(dealii::Functions::ZeroFunction<dim>(dim)),
-        poisson_solver(mesh_file_name_, Base::r) {
-    Base::prm.enter_subsection("Pressure");
-    { fiber_pressure = Base::prm.get_double("FiberValue"); }
-    Base::prm.leave_subsection();
-    Base::pcout << "Problem pressure configuration" << std::endl;
-    Base::pcout << "  Boundary pressure value: " << Base::pressure.value()
-                << " Pa" << std::endl;
-    Base::pcout << "  Fiber pressure value: " << fiber_pressure << " Pa"
-                << std::endl;
-    Base::pcout << "==============================================="
-                << std::endl;
+      : Base(problem_name_),
+        zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
+    initialize_param_handler(parameters_file_name_);
+    initialise_boundaries_tag();
   }
   /**
-   * @brief Initialise boundaries tag. Boundaries are problem specific hence we
-   * override the base virtual implementation.
+   * @see Base::solve_newton
+   */
+  void solve_newton() override {
+    Base::pcout << "==============================================="
+                << std::endl;
+    poisson_solver->assemble();
+    poisson_solver->solve();
+    Base::solve_newton();
+  }
+  /**
+   * @see Base::setup
+   */
+  void setup() override {
+    poisson_solver =
+        std::make_unique<Poisson<dim, Scalar>>(Base::mesh_file_name, Base::r);
+    poisson_solver->setup();
+    Base::setup();
+    switch (Base::triangulation_type) {
+    case Base::TriangulationType::T: {
+      FE_SimplexP<dim> fe_linear(Base::r);
+      MappingFE mapping(fe_linear);
+      DoFTools::map_dofs_to_support_points(mapping, poisson_solver->dof_handler,
+                                           dofs_support_points);
+      break;
+    };
+    case Base::TriangulationType::Q: {
+      FE_Q<dim> fe_linear(Base::r);
+      MappingFE mapping(fe_linear);
+      DoFTools::map_dofs_to_support_points(mapping, poisson_solver->dof_handler,
+                                           dofs_support_points);
+      break;
+    };
+    }
+#ifdef BUILD_TYPE_DEBUG
+    std::cout << "  rank = " << Base::mpi_rank
+              << " dof support points count (based on poisson dofs) = "
+              << dofs_support_points.size() << std::endl;
+    std::ofstream out_f("dofs_support_points" + std::to_string(Base::mpi_rank) +
+                        ".log");
+    for (auto &[k, v] : dofs_support_points) {
+      out_f << v[0] << " " << v[1] << " " << v[2] << std::endl;
+    }
+    out_f.close();
+#endif
+  }
+
+protected:
+  /**
+   * @see Base::initialise_boundaries_tag
    */
   void initialise_boundaries_tag() override {
     //  Set Newmann boundary faces
@@ -86,7 +123,7 @@ public:
     }
   };
   /**
-   * @see Base::compute_piola_kirchhoff()
+   * @see Base::compute_piola_kirchhoff
    */
   void compute_piola_kirchhoff(
       Tensor<2, dim, ADNumberType> &out_tensor,
@@ -107,12 +144,12 @@ public:
       }
     };
 
-    const auto &poisson_solution = poisson_solver.get_solution();
+    const auto &poisson_solution = poisson_solver->get_solution();
     const auto &poisson_dof_indices =
-        poisson_solver.get_aggregate_dof_indices();
+        poisson_solver->get_aggregate_dof_indices();
     Tensor<1, dim, ADNumberType> f;
 
-    for (unsigned i = 0; i < poisson_solver.fe->dofs_per_cell; ++i) {
+    for (unsigned i = 0; i < poisson_solver->fe->dofs_per_cell; ++i) {
       const auto global_index = poisson_dof_indices[cell_index][i];
       const auto &support_point = dofs_support_points[global_index];
 
@@ -126,10 +163,6 @@ public:
       // retrive the t value
       const Scalar t = poisson_solution[global_index];
       // compute fiber parameters
-      // TODO: move them in the config file
-      const Scalar d_focal = 45.0;
-      const Scalar nu_endo = 0.6;
-      const Scalar nu_epi = 0.8;
       const Scalar endo_r_1 = d_focal * std::sinh(nu_endo);
       const Scalar endo_r_2 = d_focal * std::cosh(nu_endo);
       const Scalar epi_r_1 = d_focal * std::sinh(nu_epi);
@@ -167,9 +200,9 @@ public:
       std::vector<Scalar> dx_du = {r_s * std::cos(u_rad) * std::cos(v_rad),
                                    r_s * std::cos(u_rad) * std::sin(v_rad),
                                    -r_e * std::sin(u_rad)};
-      std::vector<Scalar> dx_dv = {-1.0 * r_s * std::sin(u_rad) *
-                                       std::sin(v_rad),
-                                   r_s * std::sin(u_rad) * std::cos(v_rad), 0};
+      std::vector<Scalar> dx_dv = {
+          static_cast<Scalar>(-1) * r_s * std::sin(u_rad) * std::sin(v_rad),
+          r_s * std::sin(u_rad) * std::cos(v_rad), static_cast<Scalar>(0)};
       normalize(dx_du, norm(dx_du));
       normalize(dx_dv, norm(dx_dv));
       // compute vector f
@@ -184,49 +217,58 @@ public:
                                   cell_index);
   }
   /**
-   * @see Base::solve_newton()
+   * @see Base::initialize_param_handler
    */
-  void solve_newton() override {
+  void initialize_param_handler(const std::string &file_) override {
+    declare_parameters();
+    parse_parameters(file_);
+  }
+  /**
+   * @see Base::declare_parameters
+   */
+  void declare_parameters() override {
+    Base::declare_parameters();
+    Base::prm.enter_subsection("MeshGeometry");
+    {
+      Base::prm.declare_entry("DistFocal", "0.0", Patterns::Double(0.0),
+                              "Focal distance");
+      Base::prm.declare_entry("NuEndo", "0.0", Patterns::Double(0.0),
+                              "Endotelium nu coefficient");
+      Base::prm.declare_entry("NuEpi", "0.0", Patterns::Double(0.0),
+                              "Epicardium nu coefficient");
+    }
+    Base::prm.leave_subsection();
+  }
+  /**
+   * @see Base::parse_parameters
+   */
+  void parse_parameters(const std::string &file_) override {
+    Base::parse_parameters(file_);
+    Base::prm.enter_subsection("MeshGeometry");
+    {
+      d_focal = Base::prm.get_double("DistFocal");
+      nu_endo = Base::prm.get_double("NuEndo");
+      nu_epi = Base::prm.get_double("NuEpi");
+    }
+    Base::prm.leave_subsection();
+    Base::prm.enter_subsection("Pressure");
+    { fiber_pressure = Base::prm.get_double("FiberValue"); }
+    Base::prm.leave_subsection();
+
+    Base::pcout << "Problem pressure configuration" << std::endl;
+    Base::pcout << "  Boundary pressure value: " << Base::pressure.value()
+                << " Pa" << std::endl;
+    Base::pcout << "  Fiber pressure value: " << fiber_pressure << " Pa"
+                << std::endl;
+    Base::pcout << "-----------------------------------------------"
+                << std::endl;
+    Base::pcout << "Problem geometry configuration" << std::endl;
+    Base::pcout << "  Focal distance: " << d_focal << std::endl;
+    Base::pcout << "  nu endo: " << nu_endo << std::endl;
+    Base::pcout << "  nu epi: " << nu_epi << std::endl;
     Base::pcout << "==============================================="
                 << std::endl;
-    poisson_solver.assemble();
-    poisson_solver.solve();
-    Base::solve_newton();
   }
-
-  void setup() override {
-    poisson_solver.setup();
-    Base::setup();
-    switch (Base::triangulation_type) {
-    case Base::TriangulationType::T: {
-      FE_SimplexP<dim> fe_linear(Base::r);
-      MappingFE mapping(fe_linear);
-      DoFTools::map_dofs_to_support_points(mapping, poisson_solver.dof_handler,
-                                           dofs_support_points);
-      break;
-    };
-    case Base::TriangulationType::Q: {
-      FE_Q<dim> fe_linear(Base::r);
-      MappingFE mapping(fe_linear);
-      DoFTools::map_dofs_to_support_points(mapping, poisson_solver.dof_handler,
-                                           dofs_support_points);
-      break;
-    };
-    }
-#ifdef BUILD_TYPE_DEBUG
-    std::cout << "  rank = " << Base::mpi_rank
-              << " dof support points count (based on poisson dofs) = "
-              << dofs_support_points.size() << std::endl;
-    std::ofstream out_f("dofs_support_points" + std::to_string(Base::mpi_rank) +
-                        ".log");
-    for (auto &[k, v] : dofs_support_points) {
-      out_f << v[0] << " " << v[1] << " " << v[2] << std::endl;
-    }
-    out_f.close();
-#endif
-  }
-
-protected:
   /**
    * Utility zero function for Dirichilet boundary
    */
@@ -238,11 +280,23 @@ protected:
   /**
    * Utility object to solve Poisson problems
    */
-  Poisson<dim, Scalar> poisson_solver;
+  std::unique_ptr<Poisson<dim, Scalar>> poisson_solver;
   /**
    * The fiber pressure T_a value (https://pubmed.ncbi.nlm.nih.gov/26807042/)
    */
   Scalar fiber_pressure;
+  /**
+   * The mesh focal distance
+   */
+  Scalar d_focal;
+  /**
+   * The mesh endocardium nu coefficient
+   */
+  Scalar nu_endo;
+  /**
+   * The mesh epicardium nu coefficient
+   */
+  Scalar nu_epi;
 };
 
 #endif // IDEALIZED_LV_FIBER_NEW_HOOK_HPP

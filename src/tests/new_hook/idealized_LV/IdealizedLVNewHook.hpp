@@ -24,22 +24,17 @@ public:
   /**
    * @brief Constructor
    * @param parameters_file_name_ The parameters file name
-   * @param mesh_file_name_ The mesh file name
    * @param problem_name_ The problem name
    */
   IdealizedLVNewHook(const std::string &parameters_file_name_,
-                     const std::string &mesh_file_name_,
                      const std::string &problem_name_)
-      : Base(parameters_file_name_, mesh_file_name_, problem_name_),
+      : Base(problem_name_),
         zero_function(dealii::Functions::ZeroFunction<dim>(dim)) {
-    Base::pcout << "Problem boundary pressure configuration" << std::endl;
-    Base::pcout << "  Value = " << Base::pressure.value() << " Pa" << std::endl;
-    Base::pcout << "==============================================="
-                << std::endl;
+    initialize_param_handler(parameters_file_name_);
+    initialise_boundaries_tag();
   }
   /**
-   * @brief Initialise boundaries tag. Boundaries are problem specific hence we
-   * override the base virtual implementation.
+   * @see Base::initialise_boundaries_tag
    */
   void initialise_boundaries_tag() override {
     //  Set Newmann boundary faces
@@ -52,6 +47,19 @@ public:
       Base::dirichlet_boundary_functions[t] = &zero_function;
     }
   };
+
+  /**
+   * @see Base::initialize_param_handler()
+   */
+  void initialize_param_handler(const std::string &file_) override {
+    Base::declare_parameters();
+    Base::parse_parameters(file_);
+
+    Base::pcout << "Problem boundary pressure configuration" << std::endl;
+    Base::pcout << "  Value: " << Base::pressure.value() << " Pa" << std::endl;
+    Base::pcout << "==============================================="
+                << std::endl;
+  }
 
 protected:
   /**
