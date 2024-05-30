@@ -3,8 +3,13 @@
  * @brief Implementation file for the base solver class.
  */
 
+#include <cardiac_mechanics/SolverException.hpp>
+#include <cardiac_mechanics/Nan.hpp>
+#include <cardiac_mechanics/NegativeFDeterminant.hpp>
 #include <cardiac_mechanics/BaseSolverGuccione.hpp>
 
+#include <deal.II/base/exceptions.h>
+#include <deal.II/base/numbers.h>
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
 
@@ -150,6 +155,8 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   // Compute deformation gradient tensor
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
+    //F's physical meaning requires that its determinant is greater than zero, we wanna throw in Debug also as its an error at physical level
+    AssertThrow(dealii::determinant(F) >= Scalar(0), NegativeFDeterminant());
   // Compute green Lagrange tensor
   const Tensor<2, dim, ADNumberType> E = Physics::Elasticity::Kinematics::E(F);
 #ifdef BUILD_TYPE_DEBUG
@@ -196,6 +203,9 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
                         " Q: " + std::to_string(Q.val()) + " sol_grad_quad: " +
                         solution_gradient_quadrature_str + "\n"));
 #endif
+      const auto exponential_term = Sacado::Fad::exp(Q);
+      // We wanna throw in Debug mode also as this nan is derived from a physical error
+      AssertThrow(dealii::numbers::is_finite(exponential_term.val()), Nan());
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
                           E[i][j] * Sacado::Fad::exp(Q);
@@ -308,7 +318,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
         const auto quadrature_integration_w = fe_values.JxW(q);
 
         for (unsigned int i = 0; i < dofs_per_cell; ++i) {
-          // Compose -F:
+          // Compose -R:
           // It is give by (L(q) + B_N(q)). This piece compose L(q).
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
@@ -340,6 +350,8 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
                   solution_gradient_loc_newmann[q]);
               // Compute determinant of F
               const auto det_F = determinant(F);
+              //F's physical meaning requires that its determinant is greater than zero, even in Debug mode
+              AssertThrow(det_F >= Scalar(0), NegativeFDeterminant());
               // Compute (F^T)^{-1}
               const auto F_T_inverse = invert(transpose(F));
               // Compute H_h (tensor)
@@ -395,7 +407,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
  * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
-void BaseSolverGuccione<dim, Scalar>::solve_system() {
+unsigned BaseSolverGuccione<dim, Scalar>::solve_system() {
   auto solver_control = linear_solver_utility.get_initialized_solver_control(
       jacobian_matrix.m(), residual_vector.l2_norm());
 
@@ -405,12 +417,10 @@ void BaseSolverGuccione<dim, Scalar>::solve_system() {
   linear_solver_utility.initialize_solver(solver, solver_control);
   linear_solver_utility.initialize_preconditioner(preconditioner,
                                                   jacobian_matrix);
+  //the linear system result will be written in the delta owned
   linear_solver_utility.solve(solver, jacobian_matrix, delta_owned,
                               residual_vector, preconditioner);
-  pcout << "   " << solver_control.last_step() << " "
-        << LinearSolverUtility<Scalar>::solver_type_matcher_rev
-               [linear_solver_utility.get_solver_type()]
-        << " iterations" << std::endl;
+  return solver_control.last_step();
 }
 
 /**
@@ -424,33 +434,35 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
 
   unsigned int n_iter = 0;
   double residual_norm = newton_solver_utility.get_tolerance() + 1;
-
   {
     const std::chrono::high_resolution_clock::time_point begin_time =
         std::chrono::high_resolution_clock::now();
+
     while (n_iter < newton_solver_utility.get_max_iterations() &&
            residual_norm > newton_solver_utility.get_tolerance()) {
+      
+      pcout << "Current pressure reduction factor value = " << std::fixed << std::setprecision(3) << pressure.get_reduction_factor() << std::endl;
+      unsigned solver_steps = 0;
       assemble_system();
+      solver_steps = solve_system();
+
+      //update our solution
+      residual_norm = delta_owned.l2_norm();
+      solution_owned += delta_owned;
+      solution = solution_owned;
 
       pcout << "Newton iteration " << n_iter << "/"
             << newton_solver_utility.get_max_iterations()
             << " - ||r|| = " << std::scientific << std::setprecision(6)
-            << residual_norm << std::flush;
-
-      // We actually solve the system only if the residual is larger than the
-      // tolerance.
-      if (residual_norm > newton_solver_utility.get_tolerance()) {
-        solve_system();
-
-        residual_norm = delta_owned.l2_norm();
-
-        solution_owned += delta_owned;
-        solution = solution_owned;
-      } else {
-        pcout << " < tolerance" << std::endl;
-      }
+            << residual_norm << "   " << solver_steps << " " << LinearSolverUtility<Scalar>::solver_type_matcher_rev
+               [linear_solver_utility.get_solver_type()] << " iterations" << std::endl << std::flush;
 
       ++n_iter;
+
+      // Enhance the applied pressure value 
+      if (static_cast<double>(pressure.get_reduction_factor()) < 1.0) {
+        pressure.increment_reduction_factor();
+      }
     }
     const std::chrono::high_resolution_clock::time_point end_time =
         std::chrono::high_resolution_clock::now();
@@ -596,6 +608,10 @@ void BaseSolverGuccione<dim, Scalar>::declare_parameters() {
                       "Boundary pressure value (Pa)");
     prm.declare_entry("FiberValue", "0.0", Patterns::Double(0.0),
                       "Fiber pressure value (Pa)");
+    prm.declare_entry("InitialReductionFactor", "0.1", Patterns::Double(0.000001),
+                      "The initial pressure reduction factor");
+    prm.declare_entry("ReductionFactorIncrement", "0.1", Patterns::Double(0.000001),
+                      "The reduction factor increment strategy");
   }
   prm.leave_subsection();
 
@@ -682,7 +698,9 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
 
   // Parse the pressure in the pressure function object
   prm.enter_subsection("Pressure");
-  { pressure = ConstantPressureFunction(prm.get_double("Value")); }
+  {
+    pressure = ConstantPressureFunction(prm.get_double("Value"), prm.get_double("InitialReductionFactor"), prm.get_double("ReductionFactorIncrement"));
+  }
   prm.leave_subsection();
 
   // Parse the mesh file
