@@ -27,7 +27,7 @@ subsection NewtonMethod
   set Residual                  = 1e-6
 
   # Newton method max iterations
-  set MaxIterations             = 100
+  set MaxIterations             = 100000
 end
 
 subsection Material
@@ -54,7 +54,13 @@ end
 
 subsection Pressure
   # Boundary pressure value
-  set Value                      = 2000.0
+  set Value                      = 5000.0
+
+  # Initial reduction factor
+  set InitialReductionFactor         = 0.1
+
+  # Reduction factor increment value
+  set ReductionFactorIncrement       = 0.0005
 end
 
 subsection Mesh

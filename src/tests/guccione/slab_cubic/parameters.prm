@@ -1,20 +1,20 @@
 subsection LinearSolver
   # Type of solver used to solve the linear system
-  set SolverType                = BiCGSTAB
+  set SolverType                = GMRES
 
   # Linear solver residual (scaled by residual norm)
   set Residual                  = 1e-6
 
   # Linear solver iterations multiplier (to be multiplied to matrix size)
-  set MaxIteration              = 1.0
+  set MaxIteration              = 1.5
 
   # Preconditioner type
-  set PreconditionerType        = SOR
+  set PreconditionerType        = ILU
 end
 
 subsection PolynomialDegree
   # Degree of the polynomial for finite elements
-  set Degree                    = 1
+  set Degree                    = 2
 end
 
 subsection NewtonMethod
@@ -50,6 +50,12 @@ end
 subsection Pressure
   # Boundary pressure value
   set Value                      = 400.0
+
+  # Initial reduction factor
+  set InitialReductionFactor         = 0.1
+
+  # Reduction factor increment value
+  set ReductionFactorIncrement       = 0.1
 end
 
 subsection Mesh

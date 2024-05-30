@@ -60,7 +60,7 @@ protected:
     Base::parse_parameters(file_);
 
     Base::pcout << "Problem boundary pressure configuration" << std::endl;
-    Base::pcout << "  Value = " << Base::pressure.value() << " Pa" << std::endl;
+    Base::pcout << "  Value = " << Base::pressure.value() / Base::pressure.get_reduction_factor() << " Pa" << std::endl;
     Base::pcout << "==============================================="
                 << std::endl;
   }

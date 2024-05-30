@@ -69,7 +69,66 @@ public:
                 << std::endl;
     poisson_solver->assemble();
     poisson_solver->solve();
-    Base::solve_newton();
+
+    Base::pcout << "===============================================" << std::endl;
+    unsigned int n_iter = 0;
+    double residual_norm = Base::newton_solver_utility.get_tolerance() + 1;
+    {
+      const std::chrono::high_resolution_clock::time_point begin_time =
+          std::chrono::high_resolution_clock::now();
+
+      while (n_iter < Base::newton_solver_utility.get_max_iterations() &&
+             residual_norm > Base::newton_solver_utility.get_tolerance()) {
+        
+        Base::pcout << "Current pressure reduction factor value = " << std::fixed << std::setprecision(3) << Base::pressure.get_reduction_factor() << std::endl;
+        Base::pcout << "Current fiber pressure reduction factor value = " << std::fixed << std::setprecision(3) << fiber_pressure.get_reduction_factor() << std::endl;
+        unsigned solver_steps = 0;
+        Base::assemble_system();
+        solver_steps = Base::solve_system();
+
+        //update our solution
+        residual_norm = Base::delta_owned.l2_norm();
+        Base::solution_owned += Base::delta_owned;
+        Base::solution = Base::solution_owned;
+
+        Base::pcout << "Newton iteration " << n_iter << "/"
+              << Base::newton_solver_utility.get_max_iterations()
+              << " - ||r|| = " << std::scientific << std::setprecision(6)
+              << residual_norm << "   " << solver_steps << " " << LinearSolverUtility<Scalar>::solver_type_matcher_rev
+                 [Base::linear_solver_utility.get_solver_type()] << " iterations" << std::endl << std::flush;
+
+        ++n_iter;
+
+        // Enhance the applied pressure value 
+        if (static_cast<double>(Base::pressure.get_reduction_factor()) < 1.0) {
+          Base::pressure.increment_reduction_factor();
+          fiber_pressure.increment_reduction_factor();
+        }
+      }
+      const std::chrono::high_resolution_clock::time_point end_time =
+          std::chrono::high_resolution_clock::now();
+      const long long diff =
+          std::chrono::duration_cast<std::chrono::microseconds>(end_time -
+                                                                begin_time)
+              .count();
+      Base::pcout << std::endl
+            << "Newton metod ended in " << diff << " us" << std::endl;
+
+      if (Base::mpi_rank == 0) {
+        const std::string report_name =
+            LinearSolverUtility<Scalar>::solver_type_matcher_rev
+                [Base::linear_solver_utility.get_solver_type()] +
+            "_" +
+            LinearSolverUtility<Scalar>::preconditioner_type_matcher_rev
+                [Base::linear_solver_utility.get_preconditioner_type()];
+        Reporter reporter(report_name + ".log",
+                          "TYPE,TIME(us),NEWTON_ITERATIONS,NEWTON_RESIDUAL_NORM",
+                          report_name);
+        reporter.write(diff, ',', n_iter, ',', residual_norm);
+      }
+    }
+
+    Base::pcout << "===============================================" << std::endl;
   }
   /**
    * @see Base::setup
@@ -159,13 +218,14 @@ protected:
     }
     Base::prm.leave_subsection();
     Base::prm.enter_subsection("Pressure");
-    { fiber_pressure = Base::prm.get_double("FiberValue"); }
+    // typename Base::ConstantPressureFunction p = Base::ConstantPressureFunction(Base::prm.get_double("FiberValue"), Base::prm.get_double("InitialReductionFactor"), Base::prm.get_double("ReductionFactorIncrement"));
+    fiber_pressure = typename Base::ConstantPressureFunction(Base::prm.get_double("FiberValue"), Base::prm.get_double("InitialReductionFactor"), Base::prm.get_double("ReductionFactorIncrement"));
     Base::prm.leave_subsection();
 
     Base::pcout << "Problem pressure configuration" << std::endl;
-    Base::pcout << "  Boundary pressure value: " << Base::pressure.value()
+    Base::pcout << "  Boundary pressure value: " << Base::pressure.value() / Base::pressure.get_reduction_factor()
                 << " Pa" << std::endl;
-    Base::pcout << "  Fiber pressure value: " << fiber_pressure << " Pa"
+    Base::pcout << "  Fiber pressure value: " << fiber_pressure.value() / fiber_pressure.get_reduction_factor() << " Pa"
                 << std::endl;
     Base::pcout << "-----------------------------------------------"
                 << std::endl;
@@ -281,7 +341,7 @@ protected:
             ADNumberType(dx_dv[i]) * Sacado::Fad::cos(ADNumberType(alpha_rad));
       }
     }
-    out_tensor += (ADNumberType(fiber_pressure) * dealii::outer_product(f, f));
+    out_tensor += (ADNumberType(fiber_pressure.value()) * dealii::outer_product(f, f));
     Base::compute_piola_kirchhoff(out_tensor, solution_gradient_quadrature,
                                   cell_index);
   }
@@ -300,7 +360,7 @@ protected:
   /**
    * The fiber pressure T_a value (https://pubmed.ncbi.nlm.nih.gov/26807042/)
    */
-  Scalar fiber_pressure;
+  typename Base::ConstantPressureFunction fiber_pressure;
   /**
    * The mesh focal distance
    */
@@ -315,4 +375,4 @@ protected:
   Scalar nu_epi;
 };
 
-#endif // IDEALIZED_LV_FIBER_GUCCIONE_HPP
+#endif // IDEALIZED_LV_FIBER_GUCCIONE_HP
