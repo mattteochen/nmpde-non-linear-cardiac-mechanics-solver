@@ -139,20 +139,24 @@ public:
     /**
      * @brief Parametrized constructor
      * @param pressure_ The pressure value;
+     * @param reduction_factor_ The pressure reduction factor to accomodate the modified Newton iteration
+     * @param reduction_factor_inc_ The incremental value for the above
      */
-    ConstantPressureFunction(const Scalar pressure_) : pressure(pressure_) {}
+    ConstantPressureFunction(const Scalar pressure_, const double reduction_factor_, const double reduction_factor_inc_) : pressure(pressure_), reduction_factor(reduction_factor_), reduction_increment_strat(reduction_factor_inc_) {}
     /**
      * @brief Copy operator
      * @param other The input ConstantPressureFunction object
      */
     void operator=(ConstantPressureFunction &&other) {
       pressure = other.pressure;
+      reduction_factor = other.reduction_factor;
+      reduction_increment_strat = other.reduction_increment_strat;
     }
     /**
      * @brief Retrieve the pressure value
      * @return The configured pressure value
      */
-    Scalar value() const { return pressure; }
+    Scalar value() const { return static_cast<Scalar>(static_cast<double>(pressure) * reduction_factor); }
     /**
      * @brief Evaluate the pressure at a given point
      * @param p The evaluation point
@@ -160,14 +164,36 @@ public:
      */
     virtual Scalar value(const Point<dim> & /*p*/,
                          const unsigned int /*component*/ = 0) const override {
-      return pressure;
+      return static_cast<Scalar>(static_cast<double>(pressure) * reduction_factor);
+    }
+    /**
+     * @brief Increment the reduction factor
+     */
+    void increment_reduction_factor() {
+      reduction_factor += reduction_increment_strat;
+      reduction_factor = std::min(reduction_factor, 1.0);
+    }
+    /**
+     * @brief Get the reduction factor
+     * @return The current reduction factor
+     */
+    double get_reduction_factor() const {
+      return reduction_factor;
     }
 
   protected:
     /**
      * @brief Pressure value in Pa
      */
-    Scalar pressure = static_cast<Scalar>(0.0);
+    Scalar pressure;
+    /**
+     * @brief A reduction factor to be applied to the set pressure value
+     */
+    double reduction_factor;
+    /**
+     * The pressure reduction factor increment value. Refer to the reference paper for the employed modfied Newton iteration
+     */
+    double reduction_increment_strat;
   };
   /**
    * @brief Class representing the exponent Q.
@@ -270,7 +296,7 @@ protected:
 
   virtual void assemble_system();
 
-  virtual void solve_system();
+  virtual unsigned solve_system();
 
   virtual void declare_parameters();
 
