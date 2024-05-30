@@ -9,7 +9,7 @@ subsection LinearSolver
   set MaxIteration              = 1.0
 
   # Preconditioner type
-  set PreconditionerType        = ILU
+  set PreconditionerType        = SSOR
 end
 
 subsection PolynomialDegree
@@ -22,7 +22,7 @@ subsection NewtonMethod
   set Residual                  = 1e-6
 
   # Newton method max iterations
-  set MaxIterations             = 100
+  set MaxIterations             = 100000
 end
 
 subsection Material
@@ -49,10 +49,16 @@ end
 
 subsection Pressure
   # Boundary pressure value
-  set Value                      = 150.0
+  set Value                      = 1500.0
 
   # Fiber value
-  set FiberValue                 = 600.0
+  set FiberValue                 = 6000.0
+
+  # Initial reduction factor
+  set InitialReductionFactor         = 0.1
+
+  # Reduction factor increment value
+  set ReductionFactorIncrement       = 0.0001
 end
 
 subsection Mesh
@@ -63,8 +69,10 @@ end
 subsection MeshGeometry
   # Focal distance
   set DistFocal                 = 45.0
+
   # Endocardium nu coefficient
   set NuEndo                    = 0.6
+
   # Epicardium nu coefficient
   set NuEpi                     = 0.8
 end
