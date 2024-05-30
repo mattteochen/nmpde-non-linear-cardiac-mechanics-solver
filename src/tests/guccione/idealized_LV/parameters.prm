@@ -60,7 +60,7 @@ subsection Pressure
   set InitialReductionFactor         = 0.1
 
   # Reduction factor increment value
-  set ReductionFactorIncrement       = 0.0005
+  set ReductionFactorIncrement       = 0.1
 end
 
 subsection Mesh
