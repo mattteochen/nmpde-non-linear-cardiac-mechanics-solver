@@ -438,10 +438,8 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
     const std::chrono::high_resolution_clock::time_point begin_time =
         std::chrono::high_resolution_clock::now();
 
-    while (n_iter < newton_solver_utility.get_max_iterations() &&
-           residual_norm > newton_solver_utility.get_tolerance()) {
-      
-      pcout << "Current pressure reduction factor value = " << std::fixed << std::setprecision(3) << pressure.get_reduction_factor() << std::endl;
+    while (n_iter < newton_solver_utility.get_max_iterations()) {
+      pcout << "Current pressure reduction factor value = " << std::fixed << std::setprecision(6) << pressure.get_reduction_factor() << std::endl;
       unsigned solver_steps = 0;
       assemble_system();
       solver_steps = solve_system();
@@ -458,9 +456,14 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
                [linear_solver_utility.get_solver_type()] << " iterations" << std::endl << std::flush;
 
       ++n_iter;
+        
+      // Exit condition: we have reached the treashold residual value and the applied pressure is the whole
+      if (residual_norm < newton_solver_utility.get_tolerance() && static_cast<double>(pressure.get_reduction_factor()) >= 1.0) {
+        n_iter = newton_solver_utility.get_max_iterations();
+      }
 
-      // Enhance the applied pressure value 
-      if (static_cast<double>(pressure.get_reduction_factor()) < 1.0) {
+      // We solve the problem with the reduced pressure and then after convergence we enhance its value
+      if (residual_norm < newton_solver_utility.get_tolerance() && static_cast<double>(pressure.get_reduction_factor()) < 1.0) {
         pressure.increment_reduction_factor();
       }
     }
@@ -505,7 +508,7 @@ void BaseSolverGuccione<dim, Scalar>::output() const {
   std::vector<DataComponentInterpretation::DataComponentInterpretation>
       data_component_interpretation(
           dim, DataComponentInterpretation::component_is_part_of_vector);
-  std::vector<std::string> solution_names(dim, "u");
+  std::vector<std::string> solution_names(dim, "displacement");
 
   data_out.add_data_vector(dof_handler, solution, solution_names,
                            data_component_interpretation);

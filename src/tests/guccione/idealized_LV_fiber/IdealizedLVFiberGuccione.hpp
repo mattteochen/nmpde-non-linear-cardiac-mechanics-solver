@@ -80,8 +80,8 @@ public:
       while (n_iter < Base::newton_solver_utility.get_max_iterations() &&
              residual_norm > Base::newton_solver_utility.get_tolerance()) {
         
-        Base::pcout << "Current pressure reduction factor value = " << std::fixed << std::setprecision(3) << Base::pressure.get_reduction_factor() << std::endl;
-        Base::pcout << "Current fiber pressure reduction factor value = " << std::fixed << std::setprecision(3) << fiber_pressure.get_reduction_factor() << std::endl;
+        Base::pcout << "Current pressure reduction factor value = " << std::fixed << std::setprecision(6) << Base::pressure.get_reduction_factor() << std::endl;
+        Base::pcout << "Current fiber pressure reduction factor value = " << std::fixed << std::setprecision(6) << fiber_pressure.get_reduction_factor() << std::endl;
         unsigned solver_steps = 0;
         Base::assemble_system();
         solver_steps = Base::solve_system();
@@ -99,8 +99,13 @@ public:
 
         ++n_iter;
 
+        // Exit condition: we have reached the treashold residual value and the applied pressure is the whole
+        if (residual_norm < Base::newton_solver_utility.get_tolerance() && static_cast<double>(Base::pressure.get_reduction_factor()) >= 1.0) {
+          n_iter = Base::newton_solver_utility.get_max_iterations();
+        }
+
         // Enhance the applied pressure value 
-        if (static_cast<double>(Base::pressure.get_reduction_factor()) < 1.0) {
+        if (residual_norm < Base::newton_solver_utility.get_tolerance() && static_cast<double>(Base::pressure.get_reduction_factor()) < 1.0) {
           Base::pressure.increment_reduction_factor();
           fiber_pressure.increment_reduction_factor();
         }
