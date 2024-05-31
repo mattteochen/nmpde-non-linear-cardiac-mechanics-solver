@@ -53,6 +53,8 @@
 #include <string>
 #endif
 
+#define PK_TENSOR_ALTERNATIVE_DEFINITION 0
+
 using namespace dealii;
 
 /**
