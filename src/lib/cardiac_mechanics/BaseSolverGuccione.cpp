@@ -12,6 +12,7 @@
 #include <deal.II/base/numbers.h>
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
+//#include <deal.II/lac/trilinos_solver.h>
 
 #include <fstream>
 
@@ -155,10 +156,15 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   // Compute deformation gradient tensor
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
-    //F's physical meaning requires that its determinant is greater than zero, we wanna throw in Debug also as its an error at physical level
-    AssertThrow(dealii::determinant(F) >= Scalar(0), NegativeFDeterminant());
+  const auto det_F = dealii::determinant(F);
+  //F's physical meaning requires that its determinant is greater than zero, we wanna throw in Debug also as its an error at physical level
+  AssertThrow(det_F.val() > Scalar(0), NegativeFDeterminant());
   // Compute green Lagrange tensor
   const Tensor<2, dim, ADNumberType> E = Physics::Elasticity::Kinematics::E(F);
+#if PK_TENSOR_ALTERNATIVE_DEFINITION == 1
+  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
+  const Scalar B = 1;
+#endif
 #ifdef BUILD_TYPE_DEBUG
   for (unsigned row = 0; row < dim; row++) {
     const auto &F_i = F[row];
@@ -206,9 +212,15 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
       const auto exponential_term = Sacado::Fad::exp(Q);
       // We wanna throw in Debug mode also as this nan is derived from a physical error
       AssertThrow(dealii::numbers::is_finite(exponential_term.val()), Nan());
+#if PK_TENSOR_ALTERNATIVE_DEFINITION == 1
+      out_tensor[i][j] += ADNumberType(Material::C) *
+                          ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
+                          E[i][j] * Sacado::Fad::exp(Q) * F[i][j] + ADNumberType((B / 2) * (1 - 1/det_F) * det_F * (F_inverse[j][i]).val());
+#else
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
                           E[i][j] * Sacado::Fad::exp(Q);
+#endif
     }
   }
 #ifdef BUILD_TYPE_DEBUG
@@ -295,12 +307,12 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
       // Problem specific task, compute values and gradients
       std::vector<Tensor<2, dim, ADNumberType>> solution_gradient_loc(
           n_q, Tensor<2, dim, ADNumberType>());
-      std::vector<Tensor<1, dim, ADNumberType>> solution_loc(
-          n_q, Tensor<1, dim, ADNumberType>());
+      // std::vector<Tensor<1, dim, ADNumberType>> solution_loc(
+      //     n_q, Tensor<1, dim, ADNumberType>());
       fe_values[displacement].get_function_gradients_from_local_dof_values(
           dof_values_ad, solution_gradient_loc);
-      fe_values[displacement].get_function_values_from_local_dof_values(
-          dof_values_ad, solution_loc);
+      // fe_values[displacement].get_function_values_from_local_dof_values(
+      //     dof_values_ad, solution_loc);
 
       // This variable stores the cell residual vector contributions.
       // Good practise is to initialise it to zero.
@@ -319,7 +331,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
 
         for (unsigned int i = 0; i < dofs_per_cell; ++i) {
           // Compose -R:
-          // It is give by (L(q) + B_N(q)). This piece compose L(q).
+          // It is given by -(L(q) + B_N(q)). This piece compose L(q).
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
@@ -345,15 +357,14 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
             // Loop over face quadrature points
             for (unsigned int q = 0; q < n_face_q; ++q) {
               // Compute deformation gradient tensor
-              // TODO: maybe cache this (is 3x3 for now)
               const auto F = Physics::Elasticity::Kinematics::F(
                   solution_gradient_loc_newmann[q]);
               // Compute determinant of F
-              const auto det_F = determinant(F);
+              const auto det_F = dealii::determinant(F);
               //F's physical meaning requires that its determinant is greater than zero, even in Debug mode
-              AssertThrow(det_F >= Scalar(0), NegativeFDeterminant());
+              AssertThrow(det_F.val() > Scalar(0), NegativeFDeterminant());
               // Compute (F^T)^{-1}
-              const auto F_T_inverse = invert(transpose(F));
+              const auto F_T_inverse = dealii::invert(dealii::transpose(F));
               // Compute H_h (tensor)
               const auto H_h = det_F * F_T_inverse;
 
@@ -374,7 +385,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
       ad_helper.register_residual_vector(residual_ad);
       // Compute the residual
       ad_helper.compute_residual(cell_rhs);
-      // We need -R(displacement)(test_function) at Newton rhs
+      // Compose -R
       cell_rhs *= -1.0;
       // Compute the local Jacobian
       ad_helper.compute_linearization(cell_matrix);
@@ -421,6 +432,11 @@ unsigned BaseSolverGuccione<dim, Scalar>::solve_system() {
   linear_solver_utility.solve(solver, jacobian_matrix, delta_owned,
                               residual_vector, preconditioner);
   return solver_control.last_step();
+
+  // dealii::TrilinosWrappers::SolverDirect solver(solver_control);
+  // solver.initialize(jacobian_matrix);
+  // solver.solve(jacobian_matrix, delta_owned, residual_vector);
+  // return 0;
 }
 
 /**
@@ -552,7 +568,7 @@ void BaseSolverGuccione<dim, Scalar>::declare_parameters() {
                       "Linear solver max iterations multiplier");
 
     prm.declare_entry("PreconditionerType", "ILU",
-                      Patterns::Selection("IDENTITY|SSOR|ILU|SOR"),
+                      Patterns::Selection("IDENTITY|SSOR|ILU|SOR|AMG"),
                       "Type of preconditioner");
   }
   prm.leave_subsection();

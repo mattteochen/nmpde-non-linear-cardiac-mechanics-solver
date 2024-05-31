@@ -39,7 +39,8 @@ public:
     IDENTITY, /**< Identity preconditioner */
     ILU,      /**< ILU preconditioner */
     SOR,      /**< SOR preconditioner */
-    SSOR      /**< SSOR preconditioner */
+    SSOR,      /**< SSOR preconditioner */
+    AMG      /**< AMG preconditioner */
   };
   /**
    * @brief Default constructor.
@@ -173,6 +174,17 @@ public:
       derived_ptr->initialize(matrix);
       break;
     }
+    case Preconditioner::AMG: {
+      preconditioner =
+          std::make_unique<dealii::TrilinosWrappers::PreconditionAMG>();
+      // We have to perform a dynamic cast as the PreconditionBase class has
+      // not the initialize method
+      auto derived_ptr =
+          dynamic_cast<dealii::TrilinosWrappers::PreconditionAMG *>(
+              preconditioner.get());
+      derived_ptr->initialize(matrix);
+      break;
+    }
     default: {
       preconditioner =
           std::make_unique<dealii::TrilinosWrappers::PreconditionIdentity>();
@@ -293,6 +305,7 @@ std::map<std::string, typename LinearSolverUtility<Scalar>::Preconditioner>
         {"IDENTITY", LinearSolverUtility<Scalar>::Preconditioner::IDENTITY},
         {"ILU", LinearSolverUtility<Scalar>::Preconditioner::ILU},
         {"SOR", LinearSolverUtility<Scalar>::Preconditioner::SOR},
+        {"AMG", LinearSolverUtility<Scalar>::Preconditioner::AMG},
         {"SSOR", LinearSolverUtility<Scalar>::Preconditioner::SSOR}};
 
 template <typename Scalar>
@@ -300,6 +313,7 @@ std::map<typename LinearSolverUtility<Scalar>::Preconditioner, std::string>
     LinearSolverUtility<Scalar>::preconditioner_type_matcher_rev = {
         {LinearSolverUtility<Scalar>::Preconditioner::IDENTITY, "IDENTITY"},
         {LinearSolverUtility<Scalar>::Preconditioner::ILU, "ILU"},
+        {LinearSolverUtility<Scalar>::Preconditioner::AMG, "AMG"},
         {LinearSolverUtility<Scalar>::Preconditioner::SOR, "SOR"},
         {LinearSolverUtility<Scalar>::Preconditioner::SSOR, "SSOR"}};
 
