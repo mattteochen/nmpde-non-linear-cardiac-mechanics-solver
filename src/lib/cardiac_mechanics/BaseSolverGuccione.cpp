@@ -12,6 +12,7 @@
 #include <deal.II/base/numbers.h>
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
+#include <deal.II/lac/trilinos_solver.h>
 
 #include <deal.II/fe/fe_update_flags.h>
 #include <fstream>
@@ -213,7 +214,7 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
       AssertThrow(dealii::numbers::is_finite(exponential_term.val()), Nan());
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
-                          E[i][j] * Sacado::Fad::exp(Q) * F[i][j]; //+ ADNumberType((B / 2) * (1 - 1/det_F) * det_F * (F_inverse[j][i]).val());
+                          E[i][j] * Sacado::Fad::exp(Q) * F[i][j] + ADNumberType((B / 2) * (1 - 1/det_F) * det_F * (F_inverse[j][i]).val());
     }
   }
 #ifdef BUILD_TYPE_DEBUG
@@ -416,16 +417,21 @@ unsigned BaseSolverGuccione<dim, Scalar>::solve_system() {
   auto solver_control = linear_solver_utility.get_initialized_solver_control(
       jacobian_matrix.m(), residual_vector.l2_norm());
 
-  Preconditioner preconditioner;
-  LinearSolver solver;
+  // Preconditioner preconditioner;
+  // LinearSolver solver;
 
-  linear_solver_utility.initialize_solver(solver, solver_control);
-  linear_solver_utility.initialize_preconditioner(preconditioner,
-                                                  jacobian_matrix);
-  //the linear system result will be written in the delta owned
-  linear_solver_utility.solve(solver, jacobian_matrix, delta_owned,
-                              residual_vector, preconditioner);
-  return solver_control.last_step();
+  // linear_solver_utility.initialize_solver(solver, solver_control);
+  // linear_solver_utility.initialize_preconditioner(preconditioner,
+  //                                                 jacobian_matrix);
+  // //the linear system result will be written in the delta owned
+  // linear_solver_utility.solve(solver, jacobian_matrix, delta_owned,
+  //                             residual_vector, preconditioner);
+  // return solver_control.last_step();
+
+  SolverDirect solver(solver_control);
+  solver.initalize(jacobian_matrix);
+  solver.solver(jacobian_matrix, delta_owned, residual_vector);
+  return 0;
 }
 
 /**
