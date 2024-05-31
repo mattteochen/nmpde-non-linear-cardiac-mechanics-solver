@@ -213,7 +213,7 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
       AssertThrow(dealii::numbers::is_finite(exponential_term.val()), Nan());
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
-                          E[i][j] * Sacado::Fad::exp(Q) * F[i][j] + ADNumberType((B / 2) * (1 - 1/det_F) * det_F * (F_inverse[j][i]).val());
+                          E[i][j] * Sacado::Fad::exp(Q) * F[i][j]; //+ ADNumberType((B / 2) * (1 - 1/det_F) * det_F * (F_inverse[j][i]).val());
     }
   }
 #ifdef BUILD_TYPE_DEBUG
@@ -557,7 +557,7 @@ void BaseSolverGuccione<dim, Scalar>::declare_parameters() {
                       "Linear solver max iterations multiplier");
 
     prm.declare_entry("PreconditionerType", "ILU",
-                      Patterns::Selection("IDENTITY|SSOR|ILU|SOR"),
+                      Patterns::Selection("IDENTITY|SSOR|ILU|SOR|AMG"),
                       "Type of preconditioner");
   }
   prm.leave_subsection();
