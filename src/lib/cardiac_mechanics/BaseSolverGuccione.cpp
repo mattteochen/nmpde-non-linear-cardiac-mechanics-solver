@@ -14,7 +14,6 @@
 #include <deal.II/base/tensor.h>
 #include <deal.II/lac/trilinos_solver.h>
 
-#include <deal.II/fe/fe_update_flags.h>
 #include <fstream>
 
 /**
@@ -160,10 +159,10 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   const auto det_F = dealii::determinant(F);
   //F's physical meaning requires that its determinant is greater than zero, we wanna throw in Debug also as its an error at physical level
   AssertThrow(det_F.val() > Scalar(0), NegativeFDeterminant());
-  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
   // Compute green Lagrange tensor
   const Tensor<2, dim, ADNumberType> E = Physics::Elasticity::Kinematics::E(F);
 #if PK_TENSOR_ALTERNATIVE_DEFINITION == 1
+  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
   const Scalar B = 1;
 #endif
 #ifdef BUILD_TYPE_DEBUG
