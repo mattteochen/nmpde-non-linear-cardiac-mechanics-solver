@@ -429,8 +429,8 @@ unsigned BaseSolverGuccione<dim, Scalar>::solve_system() {
   // return solver_control.last_step();
 
   dealii::TrilinosWrappers::SolverDirect solver(solver_control);
-  solver.initalize(jacobian_matrix);
-  solver.solver(jacobian_matrix, delta_owned, residual_vector);
+  solver.initialize(jacobian_matrix);
+  solver.solve(jacobian_matrix, delta_owned, residual_vector);
   return 0;
 }
 
