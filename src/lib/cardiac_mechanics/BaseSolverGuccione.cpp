@@ -13,6 +13,7 @@
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
 
+#include <deal.II/fe/fe_update_flags.h>
 #include <fstream>
 
 /**
@@ -155,10 +156,14 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   // Compute deformation gradient tensor
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
-    //F's physical meaning requires that its determinant is greater than zero, we wanna throw in Debug also as its an error at physical level
-    AssertThrow(dealii::determinant(F) >= Scalar(0), NegativeFDeterminant());
+  const auto det_F = dealii::determinant(F).val();
+  //F's physical meaning requires that its determinant is greater than zero, we wanna throw in Debug also as its an error at physical level
+  AssertThrow(det_F >= Scalar(0), NegativeFDeterminant());
+  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
   // Compute green Lagrange tensor
   const Tensor<2, dim, ADNumberType> E = Physics::Elasticity::Kinematics::E(F);
+
+  const Scalar B = 1;
 #ifdef BUILD_TYPE_DEBUG
   for (unsigned row = 0; row < dim; row++) {
     const auto &F_i = F[row];
@@ -208,7 +213,7 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
       AssertThrow(dealii::numbers::is_finite(exponential_term.val()), Nan());
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
-                          E[i][j] * Sacado::Fad::exp(Q);
+                          E[i][j] * Sacado::Fad::exp(Q) * F[i][j] + ((B / 2) * ADNumberType((1 - 1/det_F) * det_F * (F_inverse[j][i]).val());
     }
   }
 #ifdef BUILD_TYPE_DEBUG
@@ -319,7 +324,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
 
         for (unsigned int i = 0; i < dofs_per_cell; ++i) {
           // Compose -R:
-          // It is give by (L(q) + B_N(q)). This piece compose L(q).
+          // It is given by -(L(q) + B_N(q)). This piece compose L(q).
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
@@ -374,7 +379,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
       ad_helper.register_residual_vector(residual_ad);
       // Compute the residual
       ad_helper.compute_residual(cell_rhs);
-      // We need -R(displacement)(test_function) at Newton rhs
+      // Compose -R
       cell_rhs *= -1.0;
       // Compute the local Jacobian
       ad_helper.compute_linearization(cell_matrix);
