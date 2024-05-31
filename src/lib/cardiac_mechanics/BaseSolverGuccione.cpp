@@ -12,7 +12,7 @@
 #include <deal.II/base/numbers.h>
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
-#include <deal.II/lac/trilinos_solver.h>
+//#include <deal.II/lac/trilinos_solver.h>
 
 #include <fstream>
 
