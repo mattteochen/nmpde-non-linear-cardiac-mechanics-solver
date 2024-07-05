@@ -454,8 +454,10 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
     const std::chrono::high_resolution_clock::time_point begin_time =
         std::chrono::high_resolution_clock::now();
 
+    pcout << "  Current pressure = " << std::fixed << std::setprecision(6) << pressure.get_reduction_factor() * pressure.value() << " Pa" <<  std::endl;
+
     while (n_iter < newton_solver_utility.get_max_iterations()) {
-      pcout << "Current pressure reduction factor value = " << std::fixed << std::setprecision(6) << pressure.get_reduction_factor() << std::endl;
+      
       unsigned solver_steps = 0;
       assemble_system();
       solver_steps = solve_system();
@@ -480,7 +482,10 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
 
       // We solve the problem with the reduced pressure and then after convergence we enhance its value
       if (residual_norm < newton_solver_utility.get_tolerance() && static_cast<double>(pressure.get_reduction_factor()) < 1.0) {
+        double old_red_factor = pressure.get_reduction_factor();
         pressure.increment_reduction_factor();
+        if (std::fabs(pressure.get_reduction_factor() - old_red_factor) >= 0.000000001 )
+          pcout << "  Current pressure = " << std::fixed << std::setprecision(6) << pressure.get_reduction_factor() * pressure.value() << " Pa" <<  std::endl;
       }
     }
     const std::chrono::high_resolution_clock::time_point end_time =
