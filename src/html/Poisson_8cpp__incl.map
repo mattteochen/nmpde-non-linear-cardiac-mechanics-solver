@@ -1,5 +1,5 @@
 <map id="lib/poisson/Poisson.cpp" name="lib/poisson/Poisson.cpp">
-<area shape="rect" id="node1" title="Implementation file for the Poisson class." alt="" coords="1211,5,1385,32"/>
+<area shape="rect" id="node1" title="Implementation file for the Poisson problem solver class." alt="" coords="1211,5,1385,32"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,162,79,189"/>
 <area shape="rect" id="node3" href="$Poisson_8hpp.html" title="Header file defining the Poisson problem solver." alt="" coords="2393,80,2547,107"/>
 <area shape="rect" id="node4" title=" " alt="" coords="103,155,277,196"/>

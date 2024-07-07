@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['declare_5fparameters_20',['declare_parameters',['../classBaseSolverNewHook.html#ad029bff36a4dba68de2112b619176c33',1,'BaseSolverNewHook']]],
-  ['delta_5fowned_21',['delta_owned',['../classBaseSolverGuccione.html#a7d49320ac4d329a1642f6d53d65a4643',1,'BaseSolverGuccione::delta_owned()'],['../classBaseSolverNewHook.html#a79c949d61016c9afc8b8e9cfd4ab5d87',1,'BaseSolverNewHook::delta_owned()']]],
-  ['dirichlet_5fboundaries_22',['dirichlet_boundaries',['../classBoundariesUtility.html#aac31790baf16435a82db6b7b748e0cb8',1,'BoundariesUtility']]],
-  ['dirichlet_5fboundary_5ffunctions_23',['dirichlet_boundary_functions',['../classBaseSolverGuccione.html#ab8b50b3080a6f3a9fc4e32c40cca11f2',1,'BaseSolverGuccione::dirichlet_boundary_functions()'],['../classBaseSolverNewHook.html#ae1663a36196c95cc81957a4c2febd0b0',1,'BaseSolverNewHook::dirichlet_boundary_functions()'],['../classPoisson.html#a39c76978174d1e06d506d74eaee12ab1',1,'Poisson::dirichlet_boundary_functions()']]],
-  ['dof_5fhandler_24',['dof_handler',['../classBaseSolverGuccione.html#ad4c0bc31735f90740fbad20c666d8194',1,'BaseSolverGuccione::dof_handler()'],['../classBaseSolverNewHook.html#afda882ee86413aad0c0ed91e6b78e2c3',1,'BaseSolverNewHook::dof_handler()'],['../classPoisson.html#a95ee14fd830d18f8f4708a6be020a595',1,'Poisson::dof_handler()']]]
+  ['declare_5fparameters_21',['declare_parameters',['../classBaseSolverNewHook.html#ad029bff36a4dba68de2112b619176c33',1,'BaseSolverNewHook']]],
+  ['delta_5fowned_22',['delta_owned',['../classBaseSolverGuccione.html#a7d49320ac4d329a1642f6d53d65a4643',1,'BaseSolverGuccione::delta_owned()'],['../classBaseSolverNewHook.html#a79c949d61016c9afc8b8e9cfd4ab5d87',1,'BaseSolverNewHook::delta_owned()']]],
+  ['dirichlet_5fboundaries_23',['dirichlet_boundaries',['../classBoundariesUtility.html#aac31790baf16435a82db6b7b748e0cb8',1,'BoundariesUtility']]],
+  ['dirichlet_5fboundary_5ffunctions_24',['dirichlet_boundary_functions',['../classBaseSolverGuccione.html#ab8b50b3080a6f3a9fc4e32c40cca11f2',1,'BaseSolverGuccione::dirichlet_boundary_functions()'],['../classBaseSolverNewHook.html#ae1663a36196c95cc81957a4c2febd0b0',1,'BaseSolverNewHook::dirichlet_boundary_functions()'],['../classPoisson.html#a39c76978174d1e06d506d74eaee12ab1',1,'Poisson::dirichlet_boundary_functions()']]],
+  ['dof_5fhandler_25',['dof_handler',['../classBaseSolverGuccione.html#ad4c0bc31735f90740fbad20c666d8194',1,'BaseSolverGuccione::dof_handler()'],['../classBaseSolverNewHook.html#afda882ee86413aad0c0ed91e6b78e2c3',1,'BaseSolverNewHook::dof_handler()'],['../classPoisson.html#a95ee14fd830d18f8f4708a6be020a595',1,'Poisson::dof_handler()']]]
 ];

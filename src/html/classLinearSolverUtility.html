@@ -85,10 +85,14 @@ Public Types</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:ada37cd28e18fafc5cb189317df5118ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates different types of solvers.  <a href="classLinearSolverUtility.html#ada37cd28e18fafc5cb189317df5118ae">More...</a><br /></td></tr>
 <tr class="separator:ada37cd28e18fafc5cb189317df5118ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b549bb5b77ed2e0b1785c4589067009"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009">Preconditioner</a> { <a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009ad8156d3c6735d75d8a1b8dedd0e79c8b">Preconditioner::IDENTITY</a>, 
+<tr class="memitem:a3b549bb5b77ed2e0b1785c4589067009"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009">Preconditioner</a> { <br />
+&#160;&#160;<a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009ad8156d3c6735d75d8a1b8dedd0e79c8b">Preconditioner::IDENTITY</a>, 
 <a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009af77d68d6b47fa42d89a943d976a0759d">Preconditioner::ILU</a>, 
 <a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe">Preconditioner::SOR</a>, 
-<a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169">Preconditioner::SSOR</a>
+<a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169">Preconditioner::SSOR</a>, 
+<br />
+&#160;&#160;<a class="el" href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a378ff3b4a7e82873638b320c4b5578a0">Preconditioner::AMG</a>
+<br />
  }</td></tr>
 <tr class="memdesc:a3b549bb5b77ed2e0b1785c4589067009"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enumerates different types of preconditioners.  <a href="classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009">More...</a><br /></td></tr>
 <tr class="separator:a3b549bb5b77ed2e0b1785c4589067009"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -188,6 +192,8 @@ template&lt;typename Scalar  = double&gt; </div>
 <tr><td class="fieldname"><a id="a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe"></a>SOR&#160;</td><td class="fielddoc"><p>SOR preconditioner </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169"></a>SSOR&#160;</td><td class="fielddoc"><p>SSOR preconditioner </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a3b549bb5b77ed2e0b1785c4589067009a378ff3b4a7e82873638b320c4b5578a0"></a>AMG&#160;</td><td class="fielddoc"><p>AMG preconditioner </p>
 </td></tr>
 </table>
 
@@ -717,6 +723,7 @@ template&lt;typename Scalar &gt; </div>
 <div class="line">        {<span class="stringliteral">&quot;IDENTITY&quot;</span>, <a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::IDENTITY</a>},</div>
 <div class="line">        {<span class="stringliteral">&quot;ILU&quot;</span>, <a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::ILU</a>},</div>
 <div class="line">        {<span class="stringliteral">&quot;SOR&quot;</span>, <a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::SOR</a>},</div>
+<div class="line">        {<span class="stringliteral">&quot;AMG&quot;</span>, <a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::AMG</a>},</div>
 <div class="line">        {<span class="stringliteral">&quot;SSOR&quot;</span>, <a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::SSOR</a>}}</div>
 </div><!-- fragment --><p>Map for preconditioner type matching </p>
 
@@ -746,6 +753,7 @@ template&lt;typename Scalar &gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">= {</div>
 <div class="line">        {<a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::IDENTITY</a>, <span class="stringliteral">&quot;IDENTITY&quot;</span>},</div>
 <div class="line">        {<a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::ILU</a>, <span class="stringliteral">&quot;ILU&quot;</span>},</div>
+<div class="line">        {<a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::AMG</a>, <span class="stringliteral">&quot;AMG&quot;</span>},</div>
 <div class="line">        {<a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::SOR</a>, <span class="stringliteral">&quot;SOR&quot;</span>},</div>
 <div class="line">        {<a class="code" href="classLinearSolverUtility.html">LinearSolverUtility&lt;Scalar&gt;::Preconditioner::SSOR</a>, <span class="stringliteral">&quot;SSOR&quot;</span>}}</div>
 </div><!-- fragment --><p>Reverse map for preconditioner type matching </p>

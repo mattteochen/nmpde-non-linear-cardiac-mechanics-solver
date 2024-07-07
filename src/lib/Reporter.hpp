@@ -1,7 +1,7 @@
 /**
  * @file Reporter.hpp
  * @brief Header file containing the reporter class for managing
- * test reporting into log file.
+ * test reporting results into log file.
  */
 
 #ifndef REPORTER_HPP

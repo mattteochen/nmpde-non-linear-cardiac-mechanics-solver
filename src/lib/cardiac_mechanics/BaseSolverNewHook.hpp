@@ -173,7 +173,10 @@ public:
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
         pcout(std::cout, mpi_rank == 0), mesh(MPI_COMM_WORLD),
-        problem_name(problem_name_) {}
+        problem_name(problem_name_) {
+    // Trillinos library supports only doubles for now.
+    static_assert(std::is_same_v<Scalar, double>, "Type not supported");
+  }
   /**
    * @brief Virtual destructor for abstract class
    */
@@ -318,14 +321,14 @@ protected:
 };
 
 /**
- * @brief Define static member of BaseSolverNewHook<dim, Scalar>::Material::mu.
+ * @brief Define static member of BaseSolverNewHook::Material::mu.
  * Needed for linking.
  */
 template <int dim, typename Scalar>
 Scalar BaseSolverNewHook<dim, Scalar>::Material::mu;
 /**
- * @brief Define static member of BaseSolverNewHook<dim,
- * Scalar>::Material::lambda Needed for linking.
+ * @brief Define static member of BaseSolverNewHook::Material::lambda Needed for
+ * linking.
  */
 template <int dim, typename Scalar>
 Scalar BaseSolverNewHook<dim, Scalar>::Material::lambda;

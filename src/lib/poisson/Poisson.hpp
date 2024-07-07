@@ -76,6 +76,10 @@ public:
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
         endocardium_function(0), epicardium_function(1), mesh(MPI_COMM_WORLD),
         pcout(std::cout, mpi_rank == 0) {
+
+    // Trillinos library supports only doubles for now.
+    static_assert(std::is_same_v<Scalar, double>, "Type not supported");
+
     dirichlet_boundary_functions[20] = &endocardium_function;
     dirichlet_boundary_functions[10] = &epicardium_function;
   }

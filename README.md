@@ -47,6 +47,7 @@ Currently the following ***iterative solvers*** are supported in order to solve 
 - [x] ILU
 - [x] SOR
 - [x] SSOR
+- [x] AMG
 
 ## Configuration file
 The single entry point for all run time and application specific parameters can be specified inside a configuration file called `your_config_name.prm`.
@@ -111,7 +112,7 @@ end
 
 subsection Mesh
   # Mesh file name
-  set File                      = ./mesh.msh
+  set File                      = /path/to/mesh
 end
 ```
 **Please be sure to add every subsection shown above as for missing sections, the program sets a default value that may lead to undefined results**.

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gmres_235',['GMRES',['../classLinearSolverUtility.html#ada37cd28e18fafc5cb189317df5118aeac1bfd84e7215afa3204b8e1cdb21a2bd',1,'LinearSolverUtility']]]
+  ['bicgstab_261',['BiCGSTAB',['../classLinearSolverUtility.html#ada37cd28e18fafc5cb189317df5118aea107cc31f1291324f13149cef15e000ce',1,'LinearSolverUtility']]]
 ];

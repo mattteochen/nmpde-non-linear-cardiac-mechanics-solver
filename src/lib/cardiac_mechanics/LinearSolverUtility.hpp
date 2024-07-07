@@ -39,8 +39,8 @@ public:
     IDENTITY, /**< Identity preconditioner */
     ILU,      /**< ILU preconditioner */
     SOR,      /**< SOR preconditioner */
-    SSOR,      /**< SSOR preconditioner */
-    AMG      /**< AMG preconditioner */
+    SSOR,     /**< SSOR preconditioner */
+    AMG       /**< AMG preconditioner */
   };
   /**
    * @brief Default constructor.

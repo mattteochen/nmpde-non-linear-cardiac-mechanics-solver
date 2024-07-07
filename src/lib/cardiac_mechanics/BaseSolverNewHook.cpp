@@ -4,6 +4,7 @@
  */
 
 #include <cardiac_mechanics/BaseSolverNewHook.hpp>
+#include <cardiac_mechanics/NegativeFDeterminant.hpp>
 
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
@@ -21,9 +22,6 @@ void BaseSolverNewHook<dim, Scalar>::setup() {
   // Create the mesh.
   {
     pcout << "Initializing the mesh" << std::endl;
-
-    // First we read the mesh from file into a serial (i.e. not parallel)
-    // triangulation.
     Triangulation<dim> mesh_serial;
 
     {
@@ -33,17 +31,12 @@ void BaseSolverNewHook<dim, Scalar>::setup() {
       std::ifstream grid_in_file(mesh_file_name);
       grid_in.read_msh(grid_in_file);
     }
-
-    // Then, we copy the triangulation into the parallel one.
     {
       GridTools::partition_triangulation(mpi_size, mesh_serial);
       const auto construction_data = TriangulationDescription::Utilities::
           create_description_from_triangulation(mesh_serial, MPI_COMM_WORLD);
       mesh.create_triangulation(construction_data);
     }
-
-    // Notice that we write here the number of *global* active cells (across all
-    // processes).
     pcout << "  Number of elements = " << mesh.n_global_active_cells()
           << std::endl;
   }
@@ -55,7 +48,7 @@ void BaseSolverNewHook<dim, Scalar>::setup() {
     pcout << "Initializing the finite element space" << std::endl;
 
     // To construct a vector-valued finite element space, we use the FESystem
-    // class. It is still derived from FiniteElement.
+    // class.
     switch (triangulation_type) {
     case TriangulationType::T: {
       pcout << "  Using triangulation: T" << std::endl;
@@ -151,16 +144,14 @@ void BaseSolverNewHook<dim, Scalar>::compute_piola_kirchhoff(
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
   const ADNumberType F_det = dealii::determinant(F);
-  // #ifdef BUILD_TYPE_DEBUG
-  Assert(F_det > ADNumberType(0.0), ExcMessage("Negative F determinant"));
-  // #endif
+  AssertThrow(F_det.val() > Scalar(0), NegativeFDeterminant());
   const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
 
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
       out_tensor[i][j] =
           (ADNumberType(Material::mu) * (F[i][j] - F_inverse[j][i])) +
-          (ADNumberType(Material::lambda) * (F_det - 1) * F_det *
+          (ADNumberType(Material::lambda) * (F_det - 1.0) * F_det *
            F_inverse[j][i]);
     }
   }
@@ -248,12 +239,8 @@ void BaseSolverNewHook<dim, Scalar>::assemble_system() {
       // Problem specific task, compute values and gradients
       std::vector<Tensor<2, dim, ADNumberType>> solution_gradient_loc(
           n_q, Tensor<2, dim, ADNumberType>());
-      std::vector<Tensor<1, dim, ADNumberType>> solution_loc(
-          n_q, Tensor<1, dim, ADNumberType>());
       fe_values[displacement].get_function_gradients_from_local_dof_values(
           dof_values_ad, solution_gradient_loc);
-      fe_values[displacement].get_function_values_from_local_dof_values(
-          dof_values_ad, solution_loc);
 
       // This variable stores the cell residual vector contributions.
       // Good practise is to initialise it to zero.
@@ -276,7 +263,7 @@ void BaseSolverNewHook<dim, Scalar>::assemble_system() {
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
-              quadrature_integration_w; // L(q)
+              quadrature_integration_w;
         }
       }
       // Loop over quadrature points for Neumann boundaries conditions
@@ -291,11 +278,11 @@ void BaseSolverNewHook<dim, Scalar>::assemble_system() {
             // Loop over face quadrature points
             for (unsigned int q = 0; q < n_face_q; ++q) {
               // Compute deformation gradient tensor
-              // TODO: maybe cache this (is 3x3 for now)
               const auto F =
                   Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
               // Compute determinant of F
               const auto det_F = determinant(F);
+              AssertThrow(det_F.val() > Scalar(0), NegativeFDeterminant());
               // Compute (F^T)^{-1}
               const auto F_T_inverse = invert(transpose(F));
               // Compute H_h (tensor)

@@ -1,7 +1,7 @@
-/**
- * @file BaseSolverGuccione.hpp
- * @brief Header file defining the abstract base solver class for materials
- * having the isotropic or transversely isotropic constructive law.
+/** @file BaseSolverGuccione.hpp @brief Header file defining the abstract base
+ * solver class for materials following the Guccione et al (Guccione JM, Costa
+ * KD, McCulloch AD. 1995 Finite element stress analysis of left ventricular
+ * mechanics in the beating dog heart) constructive law.
  */
 
 #ifndef BASESOLVERGUCCIONE_HPP
@@ -33,6 +33,7 @@
 #include <deal.II/numerics/data_out.h>
 #include <deal.II/numerics/matrix_tools.h>
 #include <deal.II/numerics/vector_tools.h>
+#include <type_traits>
 #if DEAL_II_VERSION_MAJOR >= 9 && defined(DEAL_II_WITH_TRILINOS)
 #include <deal.II/differentiation/ad.h>
 #define ENABLE_SACADO_FORMULATION
@@ -52,8 +53,6 @@
 #warning "Building in DEBUG mode"
 #include <string>
 #endif
-
-#define PK_TENSOR_ALTERNATIVE_DEFINITION 0
 
 using namespace dealii;
 
@@ -141,10 +140,15 @@ public:
     /**
      * @brief Parametrized constructor
      * @param pressure_ The pressure value;
-     * @param reduction_factor_ The pressure reduction factor to accomodate the modified Newton iteration
+     * @param reduction_factor_ The pressure reduction factor to accomodate the
+     * modified Newton iteration
      * @param reduction_factor_inc_ The incremental value for the above
      */
-    ConstantPressureFunction(const Scalar pressure_, const double reduction_factor_, const double reduction_factor_inc_) : pressure(pressure_), reduction_factor(reduction_factor_), reduction_increment_strat(reduction_factor_inc_) {}
+    ConstantPressureFunction(const Scalar pressure_,
+                             const double reduction_factor_,
+                             const double reduction_factor_inc_)
+        : pressure(pressure_), reduction_factor(reduction_factor_),
+          reduction_increment_strat(reduction_factor_inc_) {}
     /**
      * @brief Copy operator
      * @param other The input ConstantPressureFunction object
@@ -158,7 +162,10 @@ public:
      * @brief Retrieve the pressure value
      * @return The configured pressure value
      */
-    Scalar value() const { return static_cast<Scalar>(static_cast<double>(pressure) * reduction_factor); }
+    Scalar value() const {
+      return static_cast<Scalar>(static_cast<double>(pressure) *
+                                 reduction_factor);
+    }
     /**
      * @brief Evaluate the pressure at a given point
      * @param p The evaluation point
@@ -166,7 +173,8 @@ public:
      */
     virtual Scalar value(const Point<dim> & /*p*/,
                          const unsigned int /*component*/ = 0) const override {
-      return static_cast<Scalar>(static_cast<double>(pressure) * reduction_factor);
+      return static_cast<Scalar>(static_cast<double>(pressure) *
+                                 reduction_factor);
     }
     /**
      * @brief Increment the reduction factor
@@ -179,9 +187,7 @@ public:
      * @brief Get the reduction factor
      * @return The current reduction factor
      */
-    double get_reduction_factor() const {
-      return reduction_factor;
-    }
+    double get_reduction_factor() const { return reduction_factor; }
 
   protected:
     /**
@@ -193,7 +199,8 @@ public:
      */
     double reduction_factor;
     /**
-     * The pressure reduction factor increment value. Refer to the reference paper for the employed modfied Newton iteration
+     * The pressure reduction factor increment value. Refer to the reference
+     * paper for the employed modfied Newton iteration
      */
     double reduction_increment_strat;
   };
@@ -253,14 +260,16 @@ public:
   }
   /**
    * @brief Constructor
-   * @param parameters_file_name_ The parameters file name
    * @param problem_name_ The problem name
    */
   BaseSolverGuccione(const std::string &problem_name_)
       : mpi_size(Utilities::MPI::n_mpi_processes(MPI_COMM_WORLD)),
         mpi_rank(Utilities::MPI::this_mpi_process(MPI_COMM_WORLD)),
         pcout(std::cout, mpi_rank == 0), mesh(MPI_COMM_WORLD),
-        problem_name(problem_name_) {}
+        problem_name(problem_name_) {
+    // Trillinos library supports only doubles for now.
+    static_assert(std::is_same_v<Scalar, double>, "Type not supported");
+  }
   /**
    * @brief Virtual destructor for abstract class
    */
@@ -274,13 +283,13 @@ public:
 
 protected:
   /**
-   * @brief Initialise boundaries tag. This must be implemented by the derived
-   * class
+   * @brief Initialise boundaries tag (pure virtual). This must be implemented
+   * by the derived class
    */
   virtual void initialise_boundaries_tag() = 0;
   /**
-   * @brief Initialise parameters handler. This must be implemented by the
-   * derived class
+   * @brief Initialise parameters handler (pure virtual). This must be
+   * implemented by the derived class
    * @param file_ The input parameters file
    */
   virtual void initialize_param_handler(const std::string &file_) = 0;
@@ -415,8 +424,8 @@ protected:
 };
 
 /**
- * @brief Define static member of BaseSolverGuccione<dim,
- * Scalar>::Material::b_f. Needed for linking.
+ * @brief Define static member of BaseSolverGuccione::Material::b_f. Needed for
+ * linking.
  */
 template <int dim, typename Scalar>
 Scalar BaseSolverGuccione<dim, Scalar>::Material::b_f;
@@ -427,13 +436,13 @@ Scalar BaseSolverGuccione<dim, Scalar>::Material::b_f;
 template <int dim, typename Scalar>
 Scalar BaseSolverGuccione<dim, Scalar>::Material::b_t;
 /**
- * @brief Define static member of BaseSolverGuccione<dim,
- * Scalar>::Material::b_fs Needed for linking.
+ * @brief Define static member of BaseSolverGuccione::Material::b_fs Needed for
+ * linking.
  */
 template <int dim, typename Scalar>
 Scalar BaseSolverGuccione<dim, Scalar>::Material::b_fs;
 /**
- * @brief Define static member of BaseSolverGuccione<dim, Scalar>::Material::C
+ * @brief Define static member of BaseSolverGuccione::Material::C
  * Needed for linking.
  */
 template <int dim, typename Scalar>
