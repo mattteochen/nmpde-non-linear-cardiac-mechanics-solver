@@ -23,8 +23,8 @@
 
 /**
  * @class IdealizedLVFiberNewHook
- * @brief Class representing the an Idealized LV solver with fiber contraction
- * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
+ * @brief Class representing the an Idealized LV solver with active fiber
+ * contraction
  */
 template <int dim, typename Scalar>
 class IdealizedLVFiberNewHook : public BaseSolverNewHook<dim, Scalar> {

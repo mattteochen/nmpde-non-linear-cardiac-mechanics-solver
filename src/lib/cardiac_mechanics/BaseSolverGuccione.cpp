@@ -3,16 +3,15 @@
  * @brief Implementation file for the base solver class.
  */
 
-#include <cardiac_mechanics/SolverException.hpp>
+#include <cardiac_mechanics/BaseSolverGuccione.hpp>
 #include <cardiac_mechanics/Nan.hpp>
 #include <cardiac_mechanics/NegativeFDeterminant.hpp>
-#include <cardiac_mechanics/BaseSolverGuccione.hpp>
+#include <cardiac_mechanics/SolverException.hpp>
 
 #include <deal.II/base/exceptions.h>
 #include <deal.II/base/numbers.h>
 #include <deal.II/base/symmetric_tensor.h>
 #include <deal.II/base/tensor.h>
-//#include <deal.II/lac/trilinos_solver.h>
 
 #include <fstream>
 
@@ -27,11 +26,7 @@ void BaseSolverGuccione<dim, Scalar>::setup() {
   // Create the mesh.
   {
     pcout << "Initializing the mesh" << std::endl;
-
-    // First we read the mesh from file into a serial (i.e. not parallel)
-    // triangulation.
     Triangulation<dim> mesh_serial;
-
     {
       GridIn<dim> grid_in;
       grid_in.attach_triangulation(mesh_serial);
@@ -39,29 +34,24 @@ void BaseSolverGuccione<dim, Scalar>::setup() {
       std::ifstream grid_in_file(mesh_file_name);
       grid_in.read_msh(grid_in_file);
     }
-
-    // Then, we copy the triangulation into the parallel one.
     {
       GridTools::partition_triangulation(mpi_size, mesh_serial);
       const auto construction_data = TriangulationDescription::Utilities::
           create_description_from_triangulation(mesh_serial, MPI_COMM_WORLD);
       mesh.create_triangulation(construction_data);
     }
-
-    // Notice that we write here the number of *global* active cells (across all
-    // processes).
     pcout << "  Number of elements = " << mesh.n_global_active_cells()
           << std::endl;
   }
 
   pcout << "-----------------------------------------------" << std::endl;
 
-  // Initialize the finite element space. This is the same as in serial codes.
+  // Initialize the finite element space.
   {
     pcout << "Initializing the finite element space" << std::endl;
 
     // To construct a vector-valued finite element space, we use the FESystem
-    // class. It is still derived from FiniteElement.
+    // class.
     switch (triangulation_type) {
     case TriangulationType::T: {
       pcout << "  Using triangulation: T" << std::endl;
@@ -124,12 +114,14 @@ void BaseSolverGuccione<dim, Scalar>::setup() {
     // corresponding to locally owned DoFs).
     sparsity.compress();
 
-    // Then, we use the sparsity pattern to initialize the system matrix. Since
-    // the sparsity pattern is partitioned by row, so will the matrix.
+    // Then, we use the sparsity pattern to initialize the system matrix (Newton
+    // method Jacobian matrix). Since the sparsity pattern is partitioned by
+    // row, so will the matrix.
     pcout << "  Initializing the system matrix" << std::endl;
     jacobian_matrix.reinit(sparsity);
 
-    // Finally, we initialize the right-hand side and solution vectors.
+    // Finally, we initialize the right-hand side (Newton method residual) and
+    // solution vectors.
     pcout << "  Initializing the system right-hand side" << std::endl;
     residual_vector.reinit(locally_owned_dofs, MPI_COMM_WORLD);
     pcout << "  Initializing the solution vector" << std::endl;
@@ -157,38 +149,14 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
   const Tensor<2, dim, ADNumberType> F =
       Physics::Elasticity::Kinematics::F(solution_gradient_quadrature);
   const auto det_F = dealii::determinant(F);
-  //F's physical meaning requires that its determinant is greater than zero, we wanna throw in Debug also as its an error at physical level
+  // F's physical meaning requires that its determinant is greater than zero, we
+  // wanna throw in Debug also as its an error at physical level
   AssertThrow(det_F.val() > Scalar(0), NegativeFDeterminant());
   // Compute green Lagrange tensor
   const Tensor<2, dim, ADNumberType> E = Physics::Elasticity::Kinematics::E(F);
-#if PK_TENSOR_ALTERNATIVE_DEFINITION == 1
-  const Tensor<2, dim, ADNumberType> F_inverse = dealii::invert(F);
-  const Scalar B = 1;
-#endif
-#ifdef BUILD_TYPE_DEBUG
-  for (unsigned row = 0; row < dim; row++) {
-    const auto &F_i = F[row];
-    const auto &E_i = E[row];
-    for (unsigned col = 0; col < dim; col++) {
-      const double scalar_F = F_i[col].val();
-      const double scalar_E = E_i[col].val();
-      Assert(dealii::numbers::is_finite(scalar_F),
-             ExcMessage("rank = " + std::to_string(mpi_rank) +
-                        " F NaN: " + std::to_string(scalar_F) + "\n"));
-      Assert(dealii::numbers::is_finite(scalar_E),
-             ExcMessage("rank = " + std::to_string(mpi_rank) +
-                        " E NaN: " + std::to_string(scalar_E) + "\n"));
-    }
-  }
-#endif
   // Compute exponent Q
   ExponentQ<ADNumberType> exponent_q;
   const ADNumberType Q = exponent_q.compute(E);
-#ifdef BUILD_TYPE_DEBUG
-  Assert(dealii::numbers::is_finite(Q.val()),
-         ExcMessage("rank = " + std::to_string(mpi_rank) +
-                    " Q NaN: " + std::to_string(Q.val()) + "\n"));
-#endif
   for (uint32_t i = 0; i < dim; ++i) {
     for (uint32_t j = 0; j < dim; ++j) {
 #ifdef BUILD_TYPE_DEBUG
@@ -210,30 +178,14 @@ void BaseSolverGuccione<dim, Scalar>::compute_piola_kirchhoff(
                         solution_gradient_quadrature_str + "\n"));
 #endif
       const auto exponential_term = Sacado::Fad::exp(Q);
-      // We wanna throw in Debug mode also as this nan is derived from a physical error
+      // We wanna throw in Debug mode also as this nan is derived from a
+      // physical error
       AssertThrow(dealii::numbers::is_finite(exponential_term.val()), Nan());
-#if PK_TENSOR_ALTERNATIVE_DEFINITION == 1
-      out_tensor[i][j] += ADNumberType(Material::C) *
-                          ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
-                          E[i][j] * Sacado::Fad::exp(Q) * F[i][j] + ADNumberType((B / 2) * (1 - 1/det_F) * det_F * (F_inverse[j][i]).val());
-#else
       out_tensor[i][j] += ADNumberType(Material::C) *
                           ADNumberType(piola_kirchhoff_b_weights[{i, j}]) *
                           E[i][j] * Sacado::Fad::exp(Q);
-#endif
     }
   }
-#ifdef BUILD_TYPE_DEBUG
-  for (unsigned row = 0; row < dim; row++) {
-    const auto &PK_i = out_tensor[row];
-    for (unsigned col = 0; col < dim; col++) {
-      const double scalar = PK_i[col].val();
-      Assert(dealii::numbers::is_finite(scalar),
-             ExcMessage("rank = " + std::to_string(mpi_rank) +
-                        " PK NaN: " + std::to_string(scalar) + "\n"));
-    }
-  }
-#endif
 }
 
 /**
@@ -307,12 +259,8 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
       // Problem specific task, compute values and gradients
       std::vector<Tensor<2, dim, ADNumberType>> solution_gradient_loc(
           n_q, Tensor<2, dim, ADNumberType>());
-      // std::vector<Tensor<1, dim, ADNumberType>> solution_loc(
-      //     n_q, Tensor<1, dim, ADNumberType>());
       fe_values[displacement].get_function_gradients_from_local_dof_values(
           dof_values_ad, solution_gradient_loc);
-      // fe_values[displacement].get_function_values_from_local_dof_values(
-      //     dof_values_ad, solution_loc);
 
       // This variable stores the cell residual vector contributions.
       // Good practise is to initialise it to zero.
@@ -335,7 +283,7 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
           residual_ad[i] +=
               scalar_product(piola_kirchhoff,
                              fe_values[displacement].gradient(i, q)) *
-              quadrature_integration_w; // L(q)
+              quadrature_integration_w;
         }
       }
       // Loop over quadrature points for Neumann boundaries conditions
@@ -361,7 +309,8 @@ void BaseSolverGuccione<dim, Scalar>::assemble_system() {
                   solution_gradient_loc_newmann[q]);
               // Compute determinant of F
               const auto det_F = dealii::determinant(F);
-              //F's physical meaning requires that its determinant is greater than zero, even in Debug mode
+              // F's physical meaning requires that its determinant is greater
+              // than zero, even in Debug mode
               AssertThrow(det_F.val() > Scalar(0), NegativeFDeterminant());
               // Compute (F^T)^{-1}
               const auto F_T_inverse = dealii::invert(dealii::transpose(F));
@@ -428,15 +377,10 @@ unsigned BaseSolverGuccione<dim, Scalar>::solve_system() {
   linear_solver_utility.initialize_solver(solver, solver_control);
   linear_solver_utility.initialize_preconditioner(preconditioner,
                                                   jacobian_matrix);
-  //the linear system result will be written in the delta owned
+  // the linear system result will be written in <delta_owned>
   linear_solver_utility.solve(solver, jacobian_matrix, delta_owned,
                               residual_vector, preconditioner);
   return solver_control.last_step();
-
-  // dealii::TrilinosWrappers::SolverDirect solver(solver_control);
-  // solver.initialize(jacobian_matrix);
-  // solver.solve(jacobian_matrix, delta_owned, residual_vector);
-  // return 0;
 }
 
 /**
@@ -446,6 +390,13 @@ unsigned BaseSolverGuccione<dim, Scalar>::solve_system() {
  */
 template <int dim, typename Scalar>
 void BaseSolverGuccione<dim, Scalar>::solve_newton() {
+
+  auto log_pressure = [&]() {
+    pcout << "  Current pressure = " << std::fixed << std::setprecision(6)
+          << pressure.get_reduction_factor() * pressure.value() << " Pa"
+          << std::endl;
+  };
+
   pcout << "===============================================" << std::endl;
 
   unsigned int n_iter = 0;
@@ -454,15 +405,15 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
     const std::chrono::high_resolution_clock::time_point begin_time =
         std::chrono::high_resolution_clock::now();
 
-    pcout << "  Current pressure = " << std::fixed << std::setprecision(6) << pressure.get_reduction_factor() * pressure.value() << " Pa" <<  std::endl;
+    log_pressure();
 
     while (n_iter < newton_solver_utility.get_max_iterations()) {
-      
+
       unsigned solver_steps = 0;
       assemble_system();
       solver_steps = solve_system();
 
-      //update our solution
+      // update our solution
       residual_norm = delta_owned.l2_norm();
       solution_owned += delta_owned;
       solution = solution_owned;
@@ -470,22 +421,30 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
       pcout << "Newton iteration " << n_iter << "/"
             << newton_solver_utility.get_max_iterations()
             << " - ||r|| = " << std::scientific << std::setprecision(6)
-            << residual_norm << "   " << solver_steps << " " << LinearSolverUtility<Scalar>::solver_type_matcher_rev
-               [linear_solver_utility.get_solver_type()] << " iterations" << std::endl << std::flush;
+            << residual_norm << "   " << solver_steps << " "
+            << LinearSolverUtility<Scalar>::solver_type_matcher_rev
+                   [linear_solver_utility.get_solver_type()]
+            << " iterations" << std::endl
+            << std::flush;
 
       ++n_iter;
-        
-      // Exit condition: we have reached the treashold residual value and the applied pressure is the whole
-      if (residual_norm < newton_solver_utility.get_tolerance() && static_cast<double>(pressure.get_reduction_factor()) >= 1.0) {
+
+      // Exit condition: we have reached the treashold residual value and the
+      // applied pressure is the whole
+      if (residual_norm < newton_solver_utility.get_tolerance() &&
+          static_cast<double>(pressure.get_reduction_factor()) >= 1.0) {
         n_iter = newton_solver_utility.get_max_iterations();
       }
 
-      // We solve the problem with the reduced pressure and then after convergence we enhance its value
-      if (residual_norm < newton_solver_utility.get_tolerance() && static_cast<double>(pressure.get_reduction_factor()) < 1.0) {
-        double old_red_factor = pressure.get_reduction_factor();
+      // We solve the problem with the reduced pressure and then after
+      // convergence we enhance its value
+      if (residual_norm < newton_solver_utility.get_tolerance() &&
+          static_cast<double>(pressure.get_reduction_factor()) < 1.0) {
+        const auto old_red_factor = pressure.get_reduction_factor();
         pressure.increment_reduction_factor();
-        if (std::fabs(pressure.get_reduction_factor() - old_red_factor) >= 0.000000001 )
-          pcout << "  Current pressure = " << std::fixed << std::setprecision(6) << pressure.get_reduction_factor() * pressure.value() << " Pa" <<  std::endl;
+        if (pressure.get_reduction_factor() != old_red_factor) {
+          log_pressure();
+        }
       }
     }
     const std::chrono::high_resolution_clock::time_point end_time =
@@ -632,9 +591,11 @@ void BaseSolverGuccione<dim, Scalar>::declare_parameters() {
                       "Boundary pressure value (Pa)");
     prm.declare_entry("FiberValue", "0.0", Patterns::Double(0.0),
                       "Fiber pressure value (Pa)");
-    prm.declare_entry("InitialReductionFactor", "0.1", Patterns::Double(0.000001),
+    prm.declare_entry("InitialReductionFactor", "0.1",
+                      Patterns::Double(0.000001),
                       "The initial pressure reduction factor");
-    prm.declare_entry("ReductionFactorIncrement", "0.1", Patterns::Double(0.000001),
+    prm.declare_entry("ReductionFactorIncrement", "0.1",
+                      Patterns::Double(0.000001),
                       "The reduction factor increment strategy");
   }
   prm.leave_subsection();
@@ -723,7 +684,9 @@ void BaseSolverGuccione<dim, Scalar>::parse_parameters(
   // Parse the pressure in the pressure function object
   prm.enter_subsection("Pressure");
   {
-    pressure = ConstantPressureFunction(prm.get_double("Value"), prm.get_double("InitialReductionFactor"), prm.get_double("ReductionFactorIncrement"));
+    pressure = ConstantPressureFunction(
+        prm.get_double("Value"), prm.get_double("InitialReductionFactor"),
+        prm.get_double("ReductionFactorIncrement"));
   }
   prm.leave_subsection();
 

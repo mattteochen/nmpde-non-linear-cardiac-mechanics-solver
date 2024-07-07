@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sor_238',['SOR',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a5dc4f449b09b7cfdb1847167e660e0fe',1,'LinearSolverUtility']]],
-  ['ssor_239',['SSOR',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009a509e979abbe4cd33109ec768f1b18169',1,'LinearSolverUtility']]]
+  ['identity_263',['IDENTITY',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009ad8156d3c6735d75d8a1b8dedd0e79c8b',1,'LinearSolverUtility']]],
+  ['ilu_264',['ILU',['../classLinearSolverUtility.html#a3b549bb5b77ed2e0b1785c4589067009af77d68d6b47fa42d89a943d976a0759d',1,'LinearSolverUtility']]]
 ];

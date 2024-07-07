@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reporter_2ehpp_136',['Reporter.hpp',['../Reporter_8hpp.html',1,'']]]
+  ['solverexception_2ehpp_156',['SolverException.hpp',['../SolverException_8hpp.html',1,'']]]
 ];
