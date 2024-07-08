@@ -67,12 +67,15 @@ subsection Mesh
 end
 
 subsection MeshGeometry
-  # Focal distance
-  set DistFocal                 = 45.0
+  # Endocardim major axe length (mm)
+  set EndoRl                  = 17.0
 
-  # Endocardium nu coefficient
-  set NuEndo                    = 0.6
+  # Endocardim minor axe length
+  set EndoRs                  = 7.0
 
-  # Epicardium nu coefficient
-  set NuEpi                     = 0.8
+  # Epicardium major axe length (mm)
+  set EpiRl                   = 20.0
+
+  # Epicardium minor axe length (mm)
+  set EpiRs                   = 10.0
 end
