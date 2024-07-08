@@ -72,18 +72,26 @@ public:
 
     Base::pcout << "==============================================="
                 << std::endl;
+
+    auto log_pressure = [&]() {
+      Base::pcout << "Current pressure = " << std::fixed << std::setprecision(6)
+                  << Base::pressure.get_reduction_factor() *
+                         Base::pressure.value()
+                  << " Pa" << std::endl;
+      Base::pcout << "Current fiber pressure = " << std::fixed
+                  << std::setprecision(6)
+                  << fiber_pressure.get_reduction_factor() *
+                         fiber_pressure.value()
+                  << " Pa" << std::endl;
+    };
+
     unsigned int n_iter = 0;
     double residual_norm = Base::newton_solver_utility.get_tolerance() + 1;
     {
       const std::chrono::high_resolution_clock::time_point begin_time =
           std::chrono::high_resolution_clock::now();
-      
-          Base::pcout << "Current pressure = "
-                    << std::fixed << std::setprecision(6)
-                    << Base::pressure.get_reduction_factor() * Base::pressure.value() << " Pa" << std::endl;
-          Base::pcout << "Current fiber pressure = "
-                    << std::fixed << std::setprecision(6)
-                    << fiber_pressure.get_reduction_factor() * fiber_pressure.value() << " Pa" << std::endl;
+
+      log_pressure();
 
       while (n_iter < Base::newton_solver_utility.get_max_iterations()) {
 
@@ -111,22 +119,17 @@ public:
         // applied pressure is the whole
         if (residual_norm < Base::newton_solver_utility.get_tolerance() &&
             static_cast<double>(Base::pressure.get_reduction_factor()) >= 1.0) {
-          Base::pcout << "Test --------------- " << n_iter << std::endl;
           n_iter = Base::newton_solver_utility.get_max_iterations();
         }
 
-        // Enhance the applied pressure value
+        // Solved Newton iteration with lower pressure that requested. Enhance
+        // the applied pressure value and solve again
         if (residual_norm < Base::newton_solver_utility.get_tolerance() &&
             static_cast<double>(Base::pressure.get_reduction_factor()) < 1.0) {
           Base::pressure.increment_reduction_factor();
           fiber_pressure.increment_reduction_factor();
 
-          Base::pcout << "Current pressure = "
-                    << std::fixed << std::setprecision(6)
-                    << Base::pressure.get_reduction_factor() * Base::pressure.value() << std::endl;
-          Base::pcout << "Current fiber pressure reduction factor value = "
-                    << std::fixed << std::setprecision(6)
-                    << fiber_pressure.get_reduction_factor() * fiber_pressure.value() << std::endl;
+          log_pressure();
         }
       }
       const std::chrono::high_resolution_clock::time_point end_time =
@@ -247,10 +250,6 @@ protected:
     }
     Base::prm.leave_subsection();
     Base::prm.enter_subsection("Pressure");
-    // typename Base::ConstantPressureFunction p =
-    // Base::ConstantPressureFunction(Base::prm.get_double("FiberValue"),
-    // Base::prm.get_double("InitialReductionFactor"),
-    // Base::prm.get_double("ReductionFactorIncrement"));
     fiber_pressure = typename Base::ConstantPressureFunction(
         Base::prm.get_double("FiberValue"),
         Base::prm.get_double("InitialReductionFactor"),

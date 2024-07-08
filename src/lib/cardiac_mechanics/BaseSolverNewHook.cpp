@@ -338,7 +338,7 @@ void BaseSolverNewHook<dim, Scalar>::assemble_system() {
  * @tparam Scalar The scalar type being used
  */
 template <int dim, typename Scalar>
-void BaseSolverNewHook<dim, Scalar>::solve_system() {
+unsigned BaseSolverNewHook<dim, Scalar>::solve_system() {
   auto solver_control = linear_solver_utility.get_initialized_solver_control(
       jacobian_matrix.m(), residual_vector.l2_norm());
 
@@ -350,10 +350,7 @@ void BaseSolverNewHook<dim, Scalar>::solve_system() {
                                                   jacobian_matrix);
   linear_solver_utility.solve(solver, jacobian_matrix, delta_owned,
                               residual_vector, preconditioner);
-  pcout << "   " << solver_control.last_step() << " "
-        << LinearSolverUtility<Scalar>::solver_type_matcher_rev
-               [linear_solver_utility.get_solver_type()]
-        << " iterations" << std::endl;
+  return solver_control.last_step();
 }
 
 /**
@@ -367,7 +364,6 @@ void BaseSolverNewHook<dim, Scalar>::solve_newton() {
 
   unsigned int n_iter = 0;
   double residual_norm = newton_solver_utility.get_tolerance() + 1;
-
   {
     const std::chrono::high_resolution_clock::time_point begin_time =
         std::chrono::high_resolution_clock::now();
@@ -375,17 +371,18 @@ void BaseSolverNewHook<dim, Scalar>::solve_newton() {
            residual_norm > newton_solver_utility.get_tolerance()) {
       assemble_system();
 
-      pcout << "Newton iteration " << n_iter << "/"
-            << newton_solver_utility.get_max_iterations()
-            << " - ||r|| = " << std::scientific << std::setprecision(6)
-            << residual_norm << std::flush;
-
-      // We actually solve the system only if the residual is larger than the
-      // tolerance.
       if (residual_norm > newton_solver_utility.get_tolerance()) {
-        solve_system();
-
+        const unsigned solver_steps = solve_system();
         residual_norm = delta_owned.l2_norm();
+
+        pcout << "Newton iteration " << n_iter << "/"
+              << newton_solver_utility.get_max_iterations()
+              << " - ||r|| = " << std::scientific << std::setprecision(6)
+              << residual_norm << "   " << solver_steps << " "
+              << LinearSolverUtility<Scalar>::solver_type_matcher_rev
+                     [linear_solver_utility.get_solver_type()]
+              << " iterations" << std::endl
+              << std::flush;
 
         solution_owned += delta_owned;
         solution = solution_owned;
@@ -538,6 +535,12 @@ void BaseSolverNewHook<dim, Scalar>::declare_parameters() {
                       "Boundary pressure value (Pa)");
     prm.declare_entry("FiberValue", "0.0", Patterns::Double(0.0),
                       "Fiber pressure value (Pa)");
+    prm.declare_entry("InitialReductionFactor", "1.0",
+                      Patterns::Double(0.000001),
+                      "The initial pressure reduction factor");
+    prm.declare_entry("ReductionFactorIncrement", "0.1",
+                      Patterns::Double(0.000001),
+                      "The reduction factor increment strategy");
   }
   prm.leave_subsection();
 
@@ -623,7 +626,11 @@ void BaseSolverNewHook<dim, Scalar>::parse_parameters(
 
   // Parse the pressure in the pressure function object
   prm.enter_subsection("Pressure");
-  { pressure = ConstantPressureFunction(prm.get_double("Value")); }
+  {
+    pressure = ConstantPressureFunction(
+        prm.get_double("Value"), prm.get_double("InitialReductionFactor"),
+        prm.get_double("ReductionFactorIncrement"));
+  }
   prm.leave_subsection();
 
   // Parse the mesh file

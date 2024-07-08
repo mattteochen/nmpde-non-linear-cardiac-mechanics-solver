@@ -61,7 +61,7 @@ virtual void \mbox{\hyperlink{classBaseSolverNewHook_a75e71b006dd21e6dc6c7673c15
 \begin{DoxyCompactList}\small\item\em Assemble the Piola Kirchhoff tensor. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverNewHook_a3494609f9ce919a055b04ec36ad68c56}{assemble\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado\+: \href{https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html}{\texttt{ https\+://www.\+dealii.\+org/current/doxygen/deal.\+I\+I/class\+Differentiation\+\_\+1\+\_\+1\+A\+D\+\_\+1\+\_\+1\+Residual\+Linearization.\+html}}. \end{DoxyCompactList}\item 
-virtual void \mbox{\hyperlink{classBaseSolverNewHook_ae2e34cbd0431a55c29ba1bcacefb2a7d}{solve\+\_\+system}} ()
+virtual unsigned \mbox{\hyperlink{classBaseSolverNewHook_adc2261f845a0027d1859600341cbb15a}{solve\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Solve the linear system. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverNewHook_ad029bff36a4dba68de2112b619176c33}{declare\+\_\+parameters}} ()
 \begin{DoxyCompactList}\small\item\em Declare the parameter handler structure. \end{DoxyCompactList}\item 
@@ -334,12 +334,12 @@ Solve the non linear problem using the Newton method.
 {\em Scalar} & The scalar type being used \\
 \hline
 \end{DoxyTemplParams}
-\mbox{\Hypertarget{classBaseSolverNewHook_ae2e34cbd0431a55c29ba1bcacefb2a7d}\label{classBaseSolverNewHook_ae2e34cbd0431a55c29ba1bcacefb2a7d}} 
+\mbox{\Hypertarget{classBaseSolverNewHook_adc2261f845a0027d1859600341cbb15a}\label{classBaseSolverNewHook_adc2261f845a0027d1859600341cbb15a}} 
 \index{BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}!solve\_system@{solve\_system}}
 \index{solve\_system@{solve\_system}!BaseSolverNewHook$<$ dim, Scalar $>$@{BaseSolverNewHook$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{solve\_system()}{solve\_system()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
-void \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::solve\+\_\+system\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+unsigned \mbox{\hyperlink{classBaseSolverNewHook}{Base\+Solver\+New\+Hook}}$<$ dim, Scalar $>$\+::solve\+\_\+system\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
 
 
 

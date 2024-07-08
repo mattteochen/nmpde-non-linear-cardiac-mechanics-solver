@@ -105,9 +105,9 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a444a86977ccee74b181f663061f61544">ConstantPressureFunction</a> ()</td></tr>
 <tr class="memdesc:a444a86977ccee74b181f663061f61544"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor. <br /></td></tr>
 <tr class="separator:a444a86977ccee74b181f663061f61544"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5db2e3409768bc58c1369a78d55a117"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#aa5db2e3409768bc58c1369a78d55a117">ConstantPressureFunction</a> (const Scalar pressure_)</td></tr>
-<tr class="memdesc:aa5db2e3409768bc58c1369a78d55a117"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parametrized constructor.  <a href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#aa5db2e3409768bc58c1369a78d55a117">More...</a><br /></td></tr>
-<tr class="separator:aa5db2e3409768bc58c1369a78d55a117"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a214c904f8376f2048255ff949ecd5e87"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a214c904f8376f2048255ff949ecd5e87">ConstantPressureFunction</a> (const Scalar pressure_, const Scalar reduction_factor_, const Scalar reduction_factor_inc_)</td></tr>
+<tr class="memdesc:a214c904f8376f2048255ff949ecd5e87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parametrized constructor.  <a href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a214c904f8376f2048255ff949ecd5e87">More...</a><br /></td></tr>
+<tr class="separator:a214c904f8376f2048255ff949ecd5e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a370e8c37fcf9fba1641d353375b9d3dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a370e8c37fcf9fba1641d353375b9d3dd">operator=</a> (<a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html">ConstantPressureFunction</a> &amp;&amp;other)</td></tr>
 <tr class="memdesc:a370e8c37fcf9fba1641d353375b9d3dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy operator.  <a href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a370e8c37fcf9fba1641d353375b9d3dd">More...</a><br /></td></tr>
 <tr class="separator:a370e8c37fcf9fba1641d353375b9d3dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -117,13 +117,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a897afe5841fef9a015f3ca38395bd52c"><td class="memItemLeft" align="right" valign="top">virtual Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a897afe5841fef9a015f3ca38395bd52c">value</a> (const Point&lt; dim &gt; &amp;, const unsigned int=0) const override</td></tr>
 <tr class="memdesc:a897afe5841fef9a015f3ca38395bd52c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the pressure at a given point.  <a href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a897afe5841fef9a015f3ca38395bd52c">More...</a><br /></td></tr>
 <tr class="separator:a897afe5841fef9a015f3ca38395bd52c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a681f95bb3ca96706bdd49b20481792a9"><td class="memItemLeft" align="right" valign="top"><a id="a681f95bb3ca96706bdd49b20481792a9"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a681f95bb3ca96706bdd49b20481792a9">increment_reduction_factor</a> ()</td></tr>
+<tr class="memdesc:a681f95bb3ca96706bdd49b20481792a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increment the reduction factor. <br /></td></tr>
+<tr class="separator:a681f95bb3ca96706bdd49b20481792a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09312eb7c603bb7fa4e23507a241b49d"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a09312eb7c603bb7fa4e23507a241b49d">get_reduction_factor</a> () const</td></tr>
+<tr class="memdesc:a09312eb7c603bb7fa4e23507a241b49d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the reduction factor.  <a href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a09312eb7c603bb7fa4e23507a241b49d">More...</a><br /></td></tr>
+<tr class="separator:a09312eb7c603bb7fa4e23507a241b49d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a6fcf7af1c6f01df6cdff1b48e9821619"><td class="memItemLeft" align="right" valign="top"><a id="a6fcf7af1c6f01df6cdff1b48e9821619"></a>
-Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a6fcf7af1c6f01df6cdff1b48e9821619">pressure</a> = static_cast&lt;Scalar&gt;(0.0)</td></tr>
+Scalar&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#a6fcf7af1c6f01df6cdff1b48e9821619">pressure</a></td></tr>
 <tr class="memdesc:a6fcf7af1c6f01df6cdff1b48e9821619"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pressure value in Pa. <br /></td></tr>
 <tr class="separator:a6fcf7af1c6f01df6cdff1b48e9821619"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8d126cc7594bde72769344fa199ce83"><td class="memItemLeft" align="right" valign="top"><a id="ae8d126cc7594bde72769344fa199ce83"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#ae8d126cc7594bde72769344fa199ce83">reduction_factor</a></td></tr>
+<tr class="memdesc:ae8d126cc7594bde72769344fa199ce83"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reduction factor to be applied to the set pressure value. <br /></td></tr>
+<tr class="separator:ae8d126cc7594bde72769344fa199ce83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb00443f6f5cd9e0154c65ee11d19619"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook_1_1ConstantPressureFunction.html#abb00443f6f5cd9e0154c65ee11d19619">reduction_increment_strat</a></td></tr>
+<tr class="separator:abb00443f6f5cd9e0154c65ee11d19619"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;int dim, typename Scalar = double&gt;<br />
@@ -131,8 +144,8 @@ class BaseSolverNewHook&lt; dim, Scalar &gt;::ConstantPressureFunction</h3>
 
 <p>Class representing the applied pressure component. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aa5db2e3409768bc58c1369a78d55a117"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5db2e3409768bc58c1369a78d55a117">&#9670;&nbsp;</a></span>ConstantPressureFunction()</h2>
+<a id="a214c904f8376f2048255ff949ecd5e87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a214c904f8376f2048255ff949ecd5e87">&#9670;&nbsp;</a></span>ConstantPressureFunction()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -146,8 +159,24 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
           <td class="memname"><a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::ConstantPressureFunction::ConstantPressureFunction </td>
           <td>(</td>
           <td class="paramtype">const Scalar&#160;</td>
-          <td class="paramname"><em>pressure_</em></td><td>)</td>
+          <td class="paramname"><em>pressure_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const Scalar&#160;</td>
+          <td class="paramname"><em>reduction_factor_</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Scalar&#160;</td>
+          <td class="paramname"><em>reduction_factor_inc_</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -161,6 +190,8 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pressure_</td><td>The pressure value; </td></tr>
+    <tr><td class="paramname">reduction_factor_</td><td>The pressure reduction factor to accomodate the modified Newton iteration </td></tr>
+    <tr><td class="paramname">reduction_factor_inc_</td><td>The incremental value for the above </td></tr>
   </table>
   </dd>
 </dl>
@@ -168,6 +199,36 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a09312eb7c603bb7fa4e23507a241b49d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09312eb7c603bb7fa4e23507a241b49d">&#9670;&nbsp;</a></span>get_reduction_factor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::ConstantPressureFunction::get_reduction_factor </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the reduction factor. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current reduction factor </dd></dl>
+
+</div>
+</div>
 <a id="a370e8c37fcf9fba1641d353375b9d3dd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a370e8c37fcf9fba1641d353375b9d3dd">&#9670;&nbsp;</a></span>operator=()</h2>
 
@@ -278,6 +339,32 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="abb00443f6f5cd9e0154c65ee11d19619"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb00443f6f5cd9e0154c65ee11d19619">&#9670;&nbsp;</a></span>reduction_increment_strat</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int dim, typename Scalar  = double&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::ConstantPressureFunction::reduction_increment_strat</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The pressure reduction factor increment value. Refer to the reference paper for the employed modfied Newton iteration </p>
 
 </div>
 </div>

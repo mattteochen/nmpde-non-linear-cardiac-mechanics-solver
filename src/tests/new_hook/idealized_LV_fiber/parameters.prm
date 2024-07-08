@@ -47,6 +47,12 @@ subsection Pressure
 
   # Fiber value
   set FiberValue                 = 60000.0
+
+  # Initial reduction factor
+  set InitialReductionFactor         = 0.1
+
+  # Reduction factor increment value
+  set ReductionFactorIncrement       = 0.0001
 end
 
 subsection Mesh
