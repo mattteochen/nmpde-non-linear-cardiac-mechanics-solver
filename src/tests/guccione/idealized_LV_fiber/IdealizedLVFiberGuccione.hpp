@@ -77,16 +77,16 @@ public:
     {
       const std::chrono::high_resolution_clock::time_point begin_time =
           std::chrono::high_resolution_clock::now();
-
-      while (n_iter < Base::newton_solver_utility.get_max_iterations() &&
-             residual_norm > Base::newton_solver_utility.get_tolerance()) {
-
-        Base::pcout << "Current pressure reduction factor value = "
+      
+          Base::pcout << "Current pressure = "
                     << std::fixed << std::setprecision(6)
-                    << Base::pressure.get_reduction_factor() << std::endl;
-        Base::pcout << "Current fiber pressure reduction factor value = "
+                    << Base::pressure.get_reduction_factor() * Base::pressure.value() << " Pa" << std::endl;
+          Base::pcout << "Current fiber pressure = "
                     << std::fixed << std::setprecision(6)
-                    << fiber_pressure.get_reduction_factor() << std::endl;
+                    << fiber_pressure.get_reduction_factor() * fiber_pressure.value() << " Pa" << std::endl;
+
+      while (n_iter < Base::newton_solver_utility.get_max_iterations()) {
+
         unsigned solver_steps = 0;
         Base::assemble_system();
         solver_steps = Base::solve_system();
@@ -111,6 +111,7 @@ public:
         // applied pressure is the whole
         if (residual_norm < Base::newton_solver_utility.get_tolerance() &&
             static_cast<double>(Base::pressure.get_reduction_factor()) >= 1.0) {
+          Base::pcout << "Test --------------- " << n_iter << std::endl;
           n_iter = Base::newton_solver_utility.get_max_iterations();
         }
 
@@ -119,6 +120,13 @@ public:
             static_cast<double>(Base::pressure.get_reduction_factor()) < 1.0) {
           Base::pressure.increment_reduction_factor();
           fiber_pressure.increment_reduction_factor();
+
+          Base::pcout << "Current pressure = "
+                    << std::fixed << std::setprecision(6)
+                    << Base::pressure.get_reduction_factor() * Base::pressure.value() << std::endl;
+          Base::pcout << "Current fiber pressure reduction factor value = "
+                    << std::fixed << std::setprecision(6)
+                    << fiber_pressure.get_reduction_factor() * fiber_pressure.value() << std::endl;
         }
       }
       const std::chrono::high_resolution_clock::time_point end_time =
