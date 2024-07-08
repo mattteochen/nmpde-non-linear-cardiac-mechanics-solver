@@ -393,8 +393,7 @@ void BaseSolverGuccione<dim, Scalar>::solve_newton() {
 
   auto log_pressure = [&]() {
     pcout << "  Current pressure = " << std::fixed << std::setprecision(6)
-          << pressure.get_reduction_factor() * pressure.value() << " Pa"
-          << std::endl;
+          << pressure.value() << " Pa" << std::endl;
   };
 
   pcout << "===============================================" << std::endl;

@@ -75,14 +75,10 @@ public:
 
     auto log_pressure = [&]() {
       Base::pcout << "Current pressure = " << std::fixed << std::setprecision(6)
-                  << Base::pressure.get_reduction_factor() *
-                         Base::pressure.value()
-                  << " Pa" << std::endl;
+                  << Base::pressure.value() << " Pa" << std::endl;
       Base::pcout << "Current fiber pressure = " << std::fixed
-                  << std::setprecision(6)
-                  << fiber_pressure.get_reduction_factor() *
-                         fiber_pressure.value()
-                  << " Pa" << std::endl;
+                  << std::setprecision(6) << fiber_pressure.value() << " Pa"
+                  << std::endl;
     };
 
     unsigned int n_iter = 0;

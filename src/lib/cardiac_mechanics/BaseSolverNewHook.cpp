@@ -360,6 +360,12 @@ unsigned BaseSolverNewHook<dim, Scalar>::solve_system() {
  */
 template <int dim, typename Scalar>
 void BaseSolverNewHook<dim, Scalar>::solve_newton() {
+
+  auto log_pressure = [&]() {
+    pcout << "  Current pressure = " << std::fixed << std::setprecision(6)
+          << pressure.value() << " Pa" << std::endl;
+  };
+
   pcout << "===============================================" << std::endl;
 
   unsigned int n_iter = 0;
@@ -367,30 +373,48 @@ void BaseSolverNewHook<dim, Scalar>::solve_newton() {
   {
     const std::chrono::high_resolution_clock::time_point begin_time =
         std::chrono::high_resolution_clock::now();
-    while (n_iter < newton_solver_utility.get_max_iterations() &&
-           residual_norm > newton_solver_utility.get_tolerance()) {
+
+    log_pressure();
+
+    while (n_iter < newton_solver_utility.get_max_iterations()) {
+
+      unsigned solver_steps = 0;
       assemble_system();
+      solver_steps = solve_system();
 
-      if (residual_norm > newton_solver_utility.get_tolerance()) {
-        const unsigned solver_steps = solve_system();
-        residual_norm = delta_owned.l2_norm();
+      // update our solution
+      residual_norm = delta_owned.l2_norm();
+      solution_owned += delta_owned;
+      solution = solution_owned;
 
-        pcout << "Newton iteration " << n_iter << "/"
-              << newton_solver_utility.get_max_iterations()
-              << " - ||r|| = " << std::scientific << std::setprecision(6)
-              << residual_norm << "   " << solver_steps << " "
-              << LinearSolverUtility<Scalar>::solver_type_matcher_rev
-                     [linear_solver_utility.get_solver_type()]
-              << " iterations" << std::endl
-              << std::flush;
-
-        solution_owned += delta_owned;
-        solution = solution_owned;
-      } else {
-        pcout << " < tolerance" << std::endl;
-      }
+      pcout << "Newton iteration " << n_iter << "/"
+            << newton_solver_utility.get_max_iterations()
+            << " - ||r|| = " << std::scientific << std::setprecision(6)
+            << residual_norm << "   " << solver_steps << " "
+            << LinearSolverUtility<Scalar>::solver_type_matcher_rev
+                   [linear_solver_utility.get_solver_type()]
+            << " iterations" << std::endl
+            << std::flush;
 
       ++n_iter;
+
+      // Exit condition: we have reached the treashold residual value and the
+      // applied pressure is the whole
+      if (residual_norm < newton_solver_utility.get_tolerance() &&
+          static_cast<double>(pressure.get_reduction_factor()) >= 1.0) {
+        n_iter = newton_solver_utility.get_max_iterations();
+      }
+
+      // We solve the problem with the reduced pressure and then after
+      // convergence we enhance its value
+      if (residual_norm < newton_solver_utility.get_tolerance() &&
+          static_cast<double>(pressure.get_reduction_factor()) < 1.0) {
+        const auto old_red_factor = pressure.get_reduction_factor();
+        pressure.increment_reduction_factor();
+        if (pressure.get_reduction_factor() != old_red_factor) {
+          log_pressure();
+        }
+      }
     }
     const std::chrono::high_resolution_clock::time_point end_time =
         std::chrono::high_resolution_clock::now();
