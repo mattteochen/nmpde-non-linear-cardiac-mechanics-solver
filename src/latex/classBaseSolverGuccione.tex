@@ -56,9 +56,9 @@ virtual void \mbox{\hyperlink{classBaseSolverGuccione_ab17f97404a39f104892d56b03
 \item 
 \mbox{\Hypertarget{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}\label{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}} 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_acf84a9ce1cc89e12fea797cb59b232c7}{initialise\+\_\+boundaries\+\_\+tag}} ()=0
-\begin{DoxyCompactList}\small\item\em Initialise boundaries tag. This must be implemented by the derived class. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Initialise boundaries tag (pure virtual). This must be implemented by the derived class. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_a0fb9c00f9f8c2a43c45328f6b6a282e5}{initialize\+\_\+param\+\_\+handler}} (const std\+::string \&file\+\_\+)=0
-\begin{DoxyCompactList}\small\item\em Initialise parameters handler. This must be implemented by the derived class. \end{DoxyCompactList}\item 
+\begin{DoxyCompactList}\small\item\em Initialise parameters handler (pure virtual). This must be implemented by the derived class. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classBaseSolverGuccione_a73395623273cfa2e55ca1cfa2991b6d0}\label{classBaseSolverGuccione_a73395623273cfa2e55ca1cfa2991b6d0}} 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_a73395623273cfa2e55ca1cfa2991b6d0}{initialize\+\_\+pk\+\_\+weights}} ()=0
 \begin{DoxyCompactList}\small\item\em Initialise Piola Kirchhoff weights. There represent the material coefficient that have to be multiplied to the tensor pk\mbox{[}i\mbox{]}\mbox{[}j\mbox{]}. This must be implemented by the derived class. \end{DoxyCompactList}\item 
@@ -66,7 +66,7 @@ virtual void \mbox{\hyperlink{classBaseSolverGuccione_a5400a2a5ee845af80926c977a
 \begin{DoxyCompactList}\small\item\em Assemble the Piola Kirchhoff tensor. \end{DoxyCompactList}\item 
 virtual void \mbox{\hyperlink{classBaseSolverGuccione_a7a0470cb94164c61b5c4e58cecb28fb1}{assemble\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado\+: \href{https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html}{\texttt{ https\+://www.\+dealii.\+org/current/doxygen/deal.\+I\+I/class\+Differentiation\+\_\+1\+\_\+1\+A\+D\+\_\+1\+\_\+1\+Residual\+Linearization.\+html}}. \end{DoxyCompactList}\item 
-virtual void \mbox{\hyperlink{classBaseSolverGuccione_a4af99ebe84506b73a25d74523de8abac}{solve\+\_\+system}} ()
+virtual unsigned \mbox{\hyperlink{classBaseSolverGuccione_a89482e095fc2b4c5f33f69eea6a3c3d4}{solve\+\_\+system}} ()
 \begin{DoxyCompactList}\small\item\em Solve the linear system. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classBaseSolverGuccione_a8b6a0067bb4c4e8f6f68f59953728715}\label{classBaseSolverGuccione_a8b6a0067bb4c4e8f6f68f59953728715}} 
 virtual void {\bfseries declare\+\_\+parameters} ()
@@ -161,8 +161,6 @@ Constructor.
 
 
 \begin{DoxyParams}{Parameters}
-{\em parameters\+\_\+file\+\_\+name\+\_\+} & The parameters file name \\
-\hline
 {\em problem\+\_\+name\+\_\+} & The problem name \\
 \hline
 \end{DoxyParams}
@@ -223,7 +221,7 @@ virtual void \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$
 
 
 
-Initialise parameters handler. This must be implemented by the derived class. 
+Initialise parameters handler (pure virtual). This must be implemented by the derived class. 
 
 
 \begin{DoxyParams}{Parameters}
@@ -326,12 +324,12 @@ Solve the non linear problem using the Newton method.
 {\em Scalar} & The scalar type being used \\
 \hline
 \end{DoxyTemplParams}
-\mbox{\Hypertarget{classBaseSolverGuccione_a4af99ebe84506b73a25d74523de8abac}\label{classBaseSolverGuccione_a4af99ebe84506b73a25d74523de8abac}} 
+\mbox{\Hypertarget{classBaseSolverGuccione_a89482e095fc2b4c5f33f69eea6a3c3d4}\label{classBaseSolverGuccione_a89482e095fc2b4c5f33f69eea6a3c3d4}} 
 \index{BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}!solve\_system@{solve\_system}}
 \index{solve\_system@{solve\_system}!BaseSolverGuccione$<$ dim, Scalar $>$@{BaseSolverGuccione$<$ dim, Scalar $>$}}
 \doxysubsubsection{\texorpdfstring{solve\_system()}{solve\_system()}}
 {\footnotesize\ttfamily template$<$int dim, typename Scalar $>$ \\
-void \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::solve\+\_\+system\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+unsigned \mbox{\hyperlink{classBaseSolverGuccione}{Base\+Solver\+Guccione}}$<$ dim, Scalar $>$\+::solve\+\_\+system\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
 
 
 

@@ -11,7 +11,6 @@
 /**
  * @class IdealizedLVNewHook
  * @brief Class representing the an Idealized LV solver
- * (https://pubmed.ncbi.nlm.nih.gov/26807042/)
  */
 template <int dim, typename Scalar>
 class IdealizedLVNewHook : public BaseSolverNewHook<dim, Scalar> {

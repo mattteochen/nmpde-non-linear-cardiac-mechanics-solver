@@ -139,10 +139,10 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:acf84a9ce1cc89e12fea797cb59b232c7"><td class="memItemLeft" align="right" valign="top"><a id="acf84a9ce1cc89e12fea797cb59b232c7"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#acf84a9ce1cc89e12fea797cb59b232c7">initialise_boundaries_tag</a> ()=0</td></tr>
-<tr class="memdesc:acf84a9ce1cc89e12fea797cb59b232c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag. This must be implemented by the derived class. <br /></td></tr>
+<tr class="memdesc:acf84a9ce1cc89e12fea797cb59b232c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise boundaries tag (pure virtual). This must be implemented by the derived class. <br /></td></tr>
 <tr class="separator:acf84a9ce1cc89e12fea797cb59b232c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fb9c00f9f8c2a43c45328f6b6a282e5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a0fb9c00f9f8c2a43c45328f6b6a282e5">initialize_param_handler</a> (const std::string &amp;file_)=0</td></tr>
-<tr class="memdesc:a0fb9c00f9f8c2a43c45328f6b6a282e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise parameters handler. This must be implemented by the derived class.  <a href="classBaseSolverGuccione.html#a0fb9c00f9f8c2a43c45328f6b6a282e5">More...</a><br /></td></tr>
+<tr class="memdesc:a0fb9c00f9f8c2a43c45328f6b6a282e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialise parameters handler (pure virtual). This must be implemented by the derived class.  <a href="classBaseSolverGuccione.html#a0fb9c00f9f8c2a43c45328f6b6a282e5">More...</a><br /></td></tr>
 <tr class="separator:a0fb9c00f9f8c2a43c45328f6b6a282e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73395623273cfa2e55ca1cfa2991b6d0"><td class="memItemLeft" align="right" valign="top"><a id="a73395623273cfa2e55ca1cfa2991b6d0"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a73395623273cfa2e55ca1cfa2991b6d0">initialize_pk_weights</a> ()=0</td></tr>
@@ -154,9 +154,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a7a0470cb94164c61b5c4e58cecb28fb1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a7a0470cb94164c61b5c4e58cecb28fb1">assemble_system</a> ()</td></tr>
 <tr class="memdesc:a7a0470cb94164c61b5c4e58cecb28fb1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado: <a href="https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html">https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html</a>.  <a href="classBaseSolverGuccione.html#a7a0470cb94164c61b5c4e58cecb28fb1">More...</a><br /></td></tr>
 <tr class="separator:a7a0470cb94164c61b5c4e58cecb28fb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4af99ebe84506b73a25d74523de8abac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a4af99ebe84506b73a25d74523de8abac">solve_system</a> ()</td></tr>
-<tr class="memdesc:a4af99ebe84506b73a25d74523de8abac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolverGuccione.html#a4af99ebe84506b73a25d74523de8abac">More...</a><br /></td></tr>
-<tr class="separator:a4af99ebe84506b73a25d74523de8abac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89482e095fc2b4c5f33f69eea6a3c3d4"><td class="memItemLeft" align="right" valign="top">virtual unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverGuccione.html#a89482e095fc2b4c5f33f69eea6a3c3d4">solve_system</a> ()</td></tr>
+<tr class="memdesc:a89482e095fc2b4c5f33f69eea6a3c3d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolverGuccione.html#a89482e095fc2b4c5f33f69eea6a3c3d4">More...</a><br /></td></tr>
+<tr class="separator:a89482e095fc2b4c5f33f69eea6a3c3d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b6a0067bb4c4e8f6f68f59953728715"><td class="memItemLeft" align="right" valign="top"><a id="a8b6a0067bb4c4e8f6f68f59953728715"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>declare_parameters</b> ()</td></tr>
 <tr class="separator:a8b6a0067bb4c4e8f6f68f59953728715"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -263,7 +263,6 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 <p>Constructor. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">parameters_file_name_</td><td>The parameters file name </td></tr>
     <tr><td class="paramname">problem_name_</td><td>The problem name </td></tr>
   </table>
   </dd>
@@ -392,7 +391,7 @@ template&lt;int dim, typename Scalar  = double&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Initialise parameters handler. This must be implemented by the derived class. </p>
+<p>Initialise parameters handler (pure virtual). This must be implemented by the derived class. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">file_</td><td>The input parameters file </td></tr>
@@ -581,8 +580,8 @@ template&lt;int dim, typename Scalar &gt; </div>
 
 </div>
 </div>
-<a id="a4af99ebe84506b73a25d74523de8abac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4af99ebe84506b73a25d74523de8abac">&#9670;&nbsp;</a></span>solve_system()</h2>
+<a id="a89482e095fc2b4c5f33f69eea6a3c3d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a89482e095fc2b4c5f33f69eea6a3c3d4">&#9670;&nbsp;</a></span>solve_system()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -593,7 +592,7 @@ template&lt;int dim, typename Scalar &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a>&lt; dim, Scalar &gt;::solve_system</td>
+          <td class="memname">unsigned <a class="el" href="classBaseSolverGuccione.html">BaseSolverGuccione</a>&lt; dim, Scalar &gt;::solve_system</td>
         </tr>
       </table>
   </td>

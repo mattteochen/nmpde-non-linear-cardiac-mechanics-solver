@@ -1,6 +1,6 @@
 /**
  * @file Poisson.cpp
- * @brief Implementation file for the Poisson class.
+ * @brief Implementation file for the Poisson problem solver class.
  */
 
 #include <fstream>
@@ -24,8 +24,6 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::setup() {
       std::ifstream grid_in_file(mesh_file_name);
       grid_in.read_msh(grid_in_file);
     }
-
-    // Then, we copy the triangulation into the parallel one.
     {
       GridTools::partition_triangulation(mpi_size, mesh_serial);
       const auto construction_data = TriangulationDescription::Utilities::
@@ -33,8 +31,6 @@ template <int dim, typename Scalar> void Poisson<dim, Scalar>::setup() {
       mesh.create_triangulation(construction_data);
     }
   }
-
-  // Initialize the finite element space. This is the same as in serial codes.
   {
     fe = std::make_unique<FE_SimplexP<dim>>(r);
     quadrature = std::make_unique<QGaussSimplex<dim>>(r + 1);

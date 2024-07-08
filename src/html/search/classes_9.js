@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reporter_130',['Reporter',['../classReporter.html',1,'']]]
+  ['solverexception_143',['SolverException',['../classSolverException.html',1,'']]]
 ];
