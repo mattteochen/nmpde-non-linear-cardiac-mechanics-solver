@@ -44,6 +44,12 @@ end
 subsection Pressure
   # Boundary pressure value (Pascal)
   set Value                      = 10000.0
+
+  # Initial reduction factor
+  set InitialReductionFactor         = 0.1
+
+  # Reduction factor increment value
+  set ReductionFactorIncrement       = 0.1
   
 end
 

@@ -47,6 +47,12 @@ subsection Pressure
 
   # Fiber value
   set FiberValue                 = 60000.0
+
+  # Initial reduction factor
+  set InitialReductionFactor         = 0.1
+
+  # Reduction factor increment value
+  set ReductionFactorIncrement       = 0.0001
 end
 
 subsection Mesh
@@ -55,10 +61,15 @@ subsection Mesh
 end
 
 subsection MeshGeometry
-  # Focal distance
-  set DistFocal                 = 45.0
-  # Endocardium nu coefficient
-  set NuEndo                    = 0.6
-  # Epicardium nu coefficient
-  set NuEpi                     = 0.8
+  # Endocardim major axe length (mm)
+  set EndoRl                  = 17.0
+
+  # Endocardim minor axe length
+  set EndoRs                  = 7.0
+
+  # Epicardium major axe length (mm)
+  set EpiRl                   = 20.0
+
+  # Epicardium minor axe length (mm)
+  set EpiRs                   = 10.0
 end

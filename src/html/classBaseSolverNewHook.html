@@ -147,9 +147,9 @@ virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" hr
 <tr class="memitem:a3494609f9ce919a055b04ec36ad68c56"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#a3494609f9ce919a055b04ec36ad68c56">assemble_system</a> ()</td></tr>
 <tr class="memdesc:a3494609f9ce919a055b04ec36ad68c56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assemble the system for a Newton iteration. The residual vector and Jacobian matrix are evaluated leveraging automatic differentiation by Sacado: <a href="https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html">https://www.dealii.org/current/doxygen/deal.II/classDifferentiation_1_1AD_1_1ResidualLinearization.html</a>.  <a href="classBaseSolverNewHook.html#a3494609f9ce919a055b04ec36ad68c56">More...</a><br /></td></tr>
 <tr class="separator:a3494609f9ce919a055b04ec36ad68c56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2e34cbd0431a55c29ba1bcacefb2a7d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#ae2e34cbd0431a55c29ba1bcacefb2a7d">solve_system</a> ()</td></tr>
-<tr class="memdesc:ae2e34cbd0431a55c29ba1bcacefb2a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolverNewHook.html#ae2e34cbd0431a55c29ba1bcacefb2a7d">More...</a><br /></td></tr>
-<tr class="separator:ae2e34cbd0431a55c29ba1bcacefb2a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc2261f845a0027d1859600341cbb15a"><td class="memItemLeft" align="right" valign="top">virtual unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#adc2261f845a0027d1859600341cbb15a">solve_system</a> ()</td></tr>
+<tr class="memdesc:adc2261f845a0027d1859600341cbb15a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solve the linear system.  <a href="classBaseSolverNewHook.html#adc2261f845a0027d1859600341cbb15a">More...</a><br /></td></tr>
+<tr class="separator:adc2261f845a0027d1859600341cbb15a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad029bff36a4dba68de2112b619176c33"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBaseSolverNewHook.html#ad029bff36a4dba68de2112b619176c33">declare_parameters</a> ()</td></tr>
 <tr class="memdesc:ad029bff36a4dba68de2112b619176c33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare the parameter handler structure.  <a href="classBaseSolverNewHook.html#ad029bff36a4dba68de2112b619176c33">More...</a><br /></td></tr>
 <tr class="separator:ad029bff36a4dba68de2112b619176c33"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -604,8 +604,8 @@ template&lt;int dim, typename Scalar &gt; </div>
 
 </div>
 </div>
-<a id="ae2e34cbd0431a55c29ba1bcacefb2a7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2e34cbd0431a55c29ba1bcacefb2a7d">&#9670;&nbsp;</a></span>solve_system()</h2>
+<a id="adc2261f845a0027d1859600341cbb15a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc2261f845a0027d1859600341cbb15a">&#9670;&nbsp;</a></span>solve_system()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -616,7 +616,7 @@ template&lt;int dim, typename Scalar &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::solve_system</td>
+          <td class="memname">unsigned <a class="el" href="classBaseSolverNewHook.html">BaseSolverNewHook</a>&lt; dim, Scalar &gt;::solve_system</td>
         </tr>
       </table>
   </td>

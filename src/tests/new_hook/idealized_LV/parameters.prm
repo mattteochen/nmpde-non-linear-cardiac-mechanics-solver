@@ -49,6 +49,12 @@ end
 subsection Pressure
   # Boundary pressure value
   set Value                     = 15000.0
+
+  # Initial reduction factor
+  set InitialReductionFactor         = 0.1
+
+  # Reduction factor increment value
+  set ReductionFactorIncrement       = 0.1
 end
 
 subsection Mesh

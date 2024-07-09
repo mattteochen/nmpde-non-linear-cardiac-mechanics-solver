@@ -68,7 +68,91 @@ public:
                 << std::endl;
     poisson_solver->assemble();
     poisson_solver->solve();
-    Base::solve_newton();
+
+    Base::pcout << "==============================================="
+                << std::endl;
+
+    auto log_pressure = [&]() {
+      Base::pcout << "Current pressure = " << std::fixed << std::setprecision(6)
+                  << Base::pressure.value() << " Pa" << std::endl;
+      Base::pcout << "Current fiber pressure = " << std::fixed
+                  << std::setprecision(6) << fiber_pressure.value() << " Pa"
+                  << std::endl;
+    };
+
+    unsigned int n_iter = 0;
+    double residual_norm = Base::newton_solver_utility.get_tolerance() + 1;
+    {
+      const std::chrono::high_resolution_clock::time_point begin_time =
+          std::chrono::high_resolution_clock::now();
+
+      log_pressure();
+
+      while (n_iter < Base::newton_solver_utility.get_max_iterations()) {
+
+        unsigned solver_steps = 0;
+        Base::assemble_system();
+        solver_steps = Base::solve_system();
+
+        // update our solution
+        residual_norm = Base::delta_owned.l2_norm();
+        Base::solution_owned += Base::delta_owned;
+        Base::solution = Base::solution_owned;
+
+        Base::pcout << "Newton iteration " << n_iter << "/"
+                    << Base::newton_solver_utility.get_max_iterations()
+                    << " - ||r|| = " << std::scientific << std::setprecision(6)
+                    << residual_norm << "   " << solver_steps << " "
+                    << LinearSolverUtility<Scalar>::solver_type_matcher_rev
+                           [Base::linear_solver_utility.get_solver_type()]
+                    << " iterations" << std::endl
+                    << std::flush;
+
+        ++n_iter;
+
+        // Exit condition: we have reached the treashold residual value and the
+        // applied pressure is the whole
+        if (residual_norm < Base::newton_solver_utility.get_tolerance() &&
+            static_cast<double>(Base::pressure.get_reduction_factor()) >= 1.0) {
+          n_iter = Base::newton_solver_utility.get_max_iterations();
+        }
+
+        // Solved Newton iteration with lower pressure that requested. Enhance
+        // the applied pressure value and solve again
+        if (residual_norm < Base::newton_solver_utility.get_tolerance() &&
+            static_cast<double>(Base::pressure.get_reduction_factor()) < 1.0) {
+          Base::pressure.increment_reduction_factor();
+          fiber_pressure.increment_reduction_factor();
+
+          log_pressure();
+        }
+      }
+      const std::chrono::high_resolution_clock::time_point end_time =
+          std::chrono::high_resolution_clock::now();
+      const long long diff =
+          std::chrono::duration_cast<std::chrono::microseconds>(end_time -
+                                                                begin_time)
+              .count();
+      Base::pcout << std::endl
+                  << "Newton metod ended in " << diff << " us" << std::endl;
+
+      if (Base::mpi_rank == 0) {
+        const std::string report_name =
+            LinearSolverUtility<Scalar>::solver_type_matcher_rev
+                [Base::linear_solver_utility.get_solver_type()] +
+            "_" +
+            LinearSolverUtility<Scalar>::preconditioner_type_matcher_rev
+                [Base::linear_solver_utility.get_preconditioner_type()];
+        Reporter reporter(
+            report_name + ".log",
+            "TYPE,TIME(us),NEWTON_ITERATIONS,NEWTON_RESIDUAL_NORM",
+            report_name);
+        reporter.write(diff, ',', n_iter, ',', residual_norm);
+      }
+    }
+
+    Base::pcout << "==============================================="
+                << std::endl;
   }
   /**
    * @see Base::setup
@@ -163,10 +247,10 @@ protected:
       // retrive the t value
       const Scalar t = poisson_solution[global_index];
       // compute fiber parameters
-      const Scalar endo_r_1 = d_focal * std::sinh(nu_endo);
-      const Scalar endo_r_2 = d_focal * std::cosh(nu_endo);
-      const Scalar epi_r_1 = d_focal * std::sinh(nu_epi);
-      const Scalar epi_r_2 = d_focal * std::cosh(nu_epi);
+      const Scalar endo_r_2 = Ellipsoid::endo_r_l;
+      const Scalar endo_r_1 = Ellipsoid::endo_r_s;
+      const Scalar epi_r_2 = Ellipsoid::epi_r_l;
+      const Scalar epi_r_1 = Ellipsoid::epi_r_s;
       const Scalar endo_epi_r_1_delta = std::abs(endo_r_1 - epi_r_1);
       const Scalar endo_epi_r_2_delta = std::abs(endo_r_2 - epi_r_2);
       const Scalar r_s = endo_r_1 + endo_epi_r_1_delta * t;
@@ -212,7 +296,8 @@ protected:
             ADNumberType(dx_dv[i]) * Sacado::Fad::cos(ADNumberType(alpha_rad));
       }
     }
-    out_tensor += (ADNumberType(fiber_pressure) * dealii::outer_product(f, f));
+    out_tensor +=
+        (ADNumberType(fiber_pressure.value()) * dealii::outer_product(f, f));
     Base::compute_piola_kirchhoff(out_tensor, solution_gradient_quadrature,
                                   cell_index);
   }
@@ -230,12 +315,14 @@ protected:
     Base::declare_parameters();
     Base::prm.enter_subsection("MeshGeometry");
     {
-      Base::prm.declare_entry("DistFocal", "0.0", Patterns::Double(0.0),
-                              "Focal distance");
-      Base::prm.declare_entry("NuEndo", "0.0", Patterns::Double(0.0),
-                              "Endotelium nu coefficient");
-      Base::prm.declare_entry("NuEpi", "0.0", Patterns::Double(0.0),
-                              "Epicardium nu coefficient");
+      Base::prm.declare_entry("EpiRl", "0.0", Patterns::Double(0.0),
+                              "Epicardium major axe length (mm)");
+      Base::prm.declare_entry("EpiRs", "0.0", Patterns::Double(0.0),
+                              "Epicardium minor axe length (mm)");
+      Base::prm.declare_entry("EndoRl", "0.0", Patterns::Double(0.0),
+                              "Endocardium major axe length (mm)");
+      Base::prm.declare_entry("EndoRs", "0.0", Patterns::Double(0.0),
+                              "Endocardium minor axe length (mm)");
     }
     Base::prm.leave_subsection();
   }
@@ -246,29 +333,64 @@ protected:
     Base::parse_parameters(file_);
     Base::prm.enter_subsection("MeshGeometry");
     {
-      d_focal = Base::prm.get_double("DistFocal");
-      nu_endo = Base::prm.get_double("NuEndo");
-      nu_epi = Base::prm.get_double("NuEpi");
+      Ellipsoid::endo_r_l = Base::prm.get_double("EndoRl");
+      Ellipsoid::endo_r_s = Base::prm.get_double("EndoRs");
+      Ellipsoid::epi_r_l = Base::prm.get_double("EpiRl");
+      Ellipsoid::epi_r_s = Base::prm.get_double("EpiRs");
     }
     Base::prm.leave_subsection();
     Base::prm.enter_subsection("Pressure");
-    { fiber_pressure = Base::prm.get_double("FiberValue"); }
+    fiber_pressure = typename Base::ConstantPressureFunction(
+        Base::prm.get_double("FiberValue"),
+        Base::prm.get_double("InitialReductionFactor"),
+        Base::prm.get_double("ReductionFactorIncrement"));
     Base::prm.leave_subsection();
 
     Base::pcout << "Problem pressure configuration" << std::endl;
-    Base::pcout << "  Boundary pressure value: " << Base::pressure.value()
+    Base::pcout << "  Boundary pressure value: "
+                << Base::pressure.value() /
+                       Base::pressure.get_reduction_factor()
                 << " Pa" << std::endl;
-    Base::pcout << "  Fiber pressure value: " << fiber_pressure << " Pa"
-                << std::endl;
+    Base::pcout << "  Fiber pressure value: "
+                << fiber_pressure.value() /
+                       fiber_pressure.get_reduction_factor()
+                << " Pa" << std::endl;
     Base::pcout << "-----------------------------------------------"
                 << std::endl;
     Base::pcout << "Problem geometry configuration" << std::endl;
-    Base::pcout << "  Focal distance: " << d_focal << std::endl;
-    Base::pcout << "  nu endo: " << nu_endo << std::endl;
-    Base::pcout << "  nu epi: " << nu_epi << std::endl;
+    Base::pcout << "  Endocardium major axe: " << Ellipsoid::endo_r_l << "mm"
+                << std::endl;
+    Base::pcout << "  Endocardium minor axe: " << Ellipsoid::endo_r_s << "mm"
+                << std::endl;
+    Base::pcout << "  Epicardium major axe: " << Ellipsoid::epi_r_l << "mm"
+                << std::endl;
+    Base::pcout << "  Epicardium minor axe: " << Ellipsoid::epi_r_s << "mm"
+                << std::endl;
     Base::pcout << "==============================================="
                 << std::endl;
   }
+  /**
+   * @brief Ellipsoidal geometry axes size
+   */
+  struct Ellipsoid {
+  public:
+    /**
+     * Endocardium major axe
+     */
+    static Scalar endo_r_l;
+    /**
+     * Endocardium minor axe
+     */
+    static Scalar endo_r_s;
+    /**
+     * Epicardium major axe
+     */
+    static Scalar epi_r_l;
+    /**
+     * Epicardium minor axe
+     */
+    static Scalar epi_r_s;
+  };
   /**
    * Utility zero function for Dirichilet boundary
    */
@@ -284,19 +406,19 @@ protected:
   /**
    * The fiber pressure T_a value (https://pubmed.ncbi.nlm.nih.gov/26807042/)
    */
-  Scalar fiber_pressure;
-  /**
-   * The mesh focal distance
-   */
-  Scalar d_focal;
-  /**
-   * The mesh endocardium nu coefficient
-   */
-  Scalar nu_endo;
-  /**
-   * The mesh epicardium nu coefficient
-   */
-  Scalar nu_epi;
+  typename Base::ConstantPressureFunction fiber_pressure;
 };
+
+template <int dim, typename Scalar>
+Scalar IdealizedLVFiberNewHook<dim, Scalar>::Ellipsoid::epi_r_l;
+
+template <int dim, typename Scalar>
+Scalar IdealizedLVFiberNewHook<dim, Scalar>::Ellipsoid::epi_r_s;
+
+template <int dim, typename Scalar>
+Scalar IdealizedLVFiberNewHook<dim, Scalar>::Ellipsoid::endo_r_l;
+
+template <int dim, typename Scalar>
+Scalar IdealizedLVFiberNewHook<dim, Scalar>::Ellipsoid::endo_r_s;
 
 #endif // IDEALIZED_LV_FIBER_NEW_HOOK_HPP
