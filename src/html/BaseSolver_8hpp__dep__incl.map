@@ -1,7 +1,0 @@
-<map id="lib/cardiac_mechanics/BaseSolver.hpp" name="lib/cardiac_mechanics/BaseSolver.hpp">
-<area shape="rect" id="node1" title="Header file defining the abstract base solver class for materials having the isotropic or transversel..." alt="" coords="327,5,493,47"/>
-<area shape="rect" id="node2" href="$BaseSolver_8cpp.html" title="Implementation file for the base solver class." alt="" coords="5,95,172,136"/>
-<area shape="rect" id="node3" href="$SlabCubic_8hpp.html" title="Header file defining the slab cubic solver class." alt="" coords="196,102,419,129"/>
-<area shape="rect" id="node4" href="$IdealizedLV_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="443,95,582,136"/>
-<area shape="rect" id="node5" href="$IdealizedLVFiber_8hpp.html" title="Header file defining the idealized lv solver class." alt="" coords="606,95,801,136"/>
-</map>

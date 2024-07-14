@@ -1,7 +1,0 @@
-<map id="lib/cardiac_mechanics/SolverException.hpp" name="lib/cardiac_mechanics/SolverException.hpp">
-<area shape="rect" id="node1" title="Header file defining the base class for runtime exceptions." alt="" coords="24,5,191,47"/>
-<area shape="rect" id="node2" href="$BaseSolverGuccione_8cpp.html" title="Implementation file for the base solver class." alt="" coords="13,184,200,225"/>
-<area shape="rect" id="node3" href="$Nan_8hpp.html" title="Header file defining the not a number runtime exception." alt="" coords="24,95,191,136"/>
-<area shape="rect" id="node4" href="$NegativeFDeterminant_8hpp.html" title="Header file defining the negative deformation gradient tensor F determinant exception." alt="" coords="216,95,418,136"/>
-<area shape="rect" id="node5" href="$BaseSolverNewHook_8cpp.html" title="Implementation file for the base solver class." alt="" coords="224,184,413,225"/>
-</map>

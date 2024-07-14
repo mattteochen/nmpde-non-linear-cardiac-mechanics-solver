@@ -6,7 +6,7 @@ def list_files_with_extension(directory, extension):
     files = glob.glob(search_pattern)
     return files
 
-material_law = "new_hook"
+material_law = "neo_hooke"
 problem_name = "slab_cubic" 
 #modify this based on your machine
 process_num = 14

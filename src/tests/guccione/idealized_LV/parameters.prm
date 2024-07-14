@@ -48,8 +48,8 @@ subsection Boundaries
   # Dirichlet boundaries tags
   set Dirichlet                  = 50
 
-  # Newmann boundaries tags
-  set Newmann                    = 20
+  # Neumann boundaries tags
+  set Neumann                    = 20
 end
 
 subsection Pressure

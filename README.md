@@ -14,25 +14,25 @@ This section covers the finite element solver for materials that follow the [Guc
 An abstract base solver class `BaseSolverGuccione` has been introduced as a base line starting point for each mesh test that we have run.
 This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
 
-The base class takes in account a pressure component that pushes on ***x*** boundaries, referred as Newmann boundaries.
+The base class takes in account a pressure component that pushes on ***x*** boundaries, referred as Neumann boundaries.
 If your problem does not follow this pattern, please ***override*** all the needed implementations (this might the `assemble` method).
 
 Dirichlet boundaries condition values are assigned in the derived class.
 
 `BaseSolverGuccione`'s extension is a trivial task in order to create custom tests (e.g. `SlabCubicGuccione`).
 
-## Constructive law: New Hook
-This section covers the finite element solver for materials that follow the New Hook law.
+## Constructive law: neo Hooke
+This section covers the finite element solver for materials that follow the neo Hooke law.
 
-An abstract base solver class `BaseSolverNewHook` has been introduced as a base line starting point for each mesh test that we have run.
+An abstract base solver class `BaseSolverNeoHooke` has been introduced as a base line starting point for each mesh test that we have run.
 This is a complete solver except for the boundaries initialization which must occur in any derived class as every problem is different.
 
-The base class takes in account a pressure component that pushes on ***x*** boundaries, referred as Newmann boundaries.
+The base class takes in account a pressure component that pushes on ***x*** boundaries, referred as Neumann boundaries.
 If your problem does not follow this pattern, please ***override*** all the needed implementations (this might the `assemble` method).
 
 Dirichlet boundaries condition values are assigned in the derived class.
 
-`BaseSolverNewHook`'s extension is a trivial task in order to create custom tests (e.g. `SlabCubicNewHook`).
+`BaseSolverNeoHooke`'s extension is a trivial task in order to create custom tests (e.g. `SlabCubicNeoHooke`).
 
 ## Non Linear Solver
 As the cardiac problem is non linear, we have employed the [Newton method](https://en.wikipedia.org/wiki/Newton%27s_method).
@@ -101,8 +101,8 @@ subsection Boundaries
   # Dirichlet boundaries tags
   set Dirichlet                  = 40
 
-  # Newmann boundaries tags
-  set Newmann                    = 60
+  # Neumann boundaries tags
+  set Neumann                    = 60
 end
 
 subsection Pressure
@@ -142,6 +142,12 @@ $ make
 The executable will be created into `build`, and can be executed through
 ```bash
 $ mpirun -n x executable_name
+```
+
+## Documentation
+Local documentation can be produced by running:
+```
+cd src && doxygen Doxyfile
 ```
 
 ## Formatting

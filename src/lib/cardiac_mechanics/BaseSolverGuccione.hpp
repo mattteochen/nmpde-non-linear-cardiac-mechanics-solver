@@ -251,12 +251,12 @@ public:
     }
   };
   /**
-   * @brief Determine if a given faces is at a Newmann boundary
+   * @brief Determine if a given faces is at a Neumann boundary
    * @param face The face values
    * @return The requested query
    */
-  bool is_face_at_newmann_boundary(const unsigned face) {
-    return newmann_boundary_faces.find(face) != newmann_boundary_faces.end();
+  bool is_face_at_neumann_boundary(const unsigned face) {
+    return neumann_boundary_faces.find(face) != neumann_boundary_faces.end();
   }
   /**
    * @brief Constructor
@@ -329,9 +329,9 @@ protected:
    */
   ConstantPressureFunction pressure;
   /**
-   * A set of Newmann boundary faces
+   * A set of Neumann boundary faces
    */
-  std::set<unsigned int> newmann_boundary_faces;
+  std::set<unsigned int> neumann_boundary_faces;
   /**
    * A map of Dirichlet boundary faces
    */
@@ -362,7 +362,7 @@ protected:
    */
   std::unique_ptr<Quadrature<dim>> quadrature;
   /**
-   * The newmann boundary quadrature object representation
+   * The neumann boundary quadrature object representation
    */
   std::unique_ptr<Quadrature<dim - 1>> quadrature_face;
   /**

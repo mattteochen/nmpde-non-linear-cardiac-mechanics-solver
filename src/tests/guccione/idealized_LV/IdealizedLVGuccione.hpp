@@ -42,9 +42,9 @@ protected:
    * @see Base::initialise_boundaries_tag
    */
   void initialise_boundaries_tag() override {
-    //  Set Newmann boundary faces
-    for (auto &t : Base::boundaries_utility.get_newmann_boundaries_tags()) {
-      Base::newmann_boundary_faces.insert(t);
+    //  Set Neumann boundary faces
+    for (auto &t : Base::boundaries_utility.get_neumann_boundaries_tags()) {
+      Base::neumann_boundary_faces.insert(t);
     }
 
     // Set Dirichlet boundary faces
