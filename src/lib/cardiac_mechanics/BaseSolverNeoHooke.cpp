@@ -275,13 +275,22 @@ void BaseSolverNeoHooke<dim, Scalar>::assemble_system() {
                   cell->face(face_number)->boundary_id())) {
             fe_values_boundary.reinit(cell, face_number);
 
+            std::vector<Tensor<2, dim, ADNumberType>>
+                solution_gradient_loc_neumann(n_face_q,
+                                              Tensor<2, dim, ADNumberType>());
+            fe_values_boundary[displacement]
+                .get_function_gradients_from_local_dof_values(
+                    dof_values_ad, solution_gradient_loc_neumann);
+
             // Loop over face quadrature points
             for (unsigned int q = 0; q < n_face_q; ++q) {
               // Compute deformation gradient tensor
               const auto F =
-                  Physics::Elasticity::Kinematics::F(solution_gradient_loc[q]);
+                  Physics::Elasticity::Kinematics::F(solution_gradient_loc_neumann[q]);
               // Compute determinant of F
               const auto det_F = determinant(F);
+              // F's physical meaning requires that its determinant is greater
+              // than zero, even in Debug mode
               AssertThrow(det_F.val() > Scalar(0), NegativeFDeterminant());
               // Compute (F^T)^{-1}
               const auto F_T_inverse = invert(transpose(F));
