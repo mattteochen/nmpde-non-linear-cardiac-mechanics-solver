@@ -6,6 +6,8 @@
 #ifndef BOUNDARIES_UTILITY_HPP
 #define BOUNDARIES_UTILITY_HPP
 
+#include <deal.II/base/types.h>
+
 #include <iterator>
 #include <ostream>
 #include <sstream>
@@ -64,9 +66,9 @@ public:
   }
 
 protected:
-  std::vector<unsigned int>
+  std::vector<dealii::types::boundary_id>
       dirichlet_boundaries; /**< Vector to store Dirichlet boundary tags. */
-  std::vector<unsigned int>
+  std::vector<dealii::types::boundary_id>
       neumann_boundaries; /**< Vector to store Neumann boundary tags. */
 };
 

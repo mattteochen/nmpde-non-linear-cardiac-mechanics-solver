@@ -131,7 +131,7 @@ public:
   /**
    * @brief Class representing the applied pressure component
    */
-  class ConstantPressureFunction : Function<dim> {
+  class ConstantPressureFunction : Function<dim, Scalar> {
   public:
     /**
      * @brief Default constructor
@@ -255,7 +255,7 @@ public:
    * @param face The face values
    * @return The requested query
    */
-  bool is_face_at_neumann_boundary(const unsigned face) {
+  bool is_face_at_neumann_boundary(const unsigned face) const {
     return neumann_boundary_faces.find(face) != neumann_boundary_faces.end();
   }
   /**
@@ -335,7 +335,7 @@ protected:
   /**
    * A map of Dirichlet boundary faces
    */
-  std::map<types::boundary_id, const Function<dim> *>
+  std::map<types::boundary_id, const Function<dim, Scalar> *>
       dirichlet_boundary_functions;
   /**
    * The b_ij coefficients for the Piola Kiochhoff tensor
