@@ -150,15 +150,6 @@ public:
         : pressure(pressure_), reduction_factor(reduction_factor_),
           reduction_increment_strat(reduction_factor_inc_) {}
     /**
-     * @brief Copy operator
-     * @param other The input ConstantPressureFunction object
-     */
-    void operator=(ConstantPressureFunction &&other) {
-      pressure = other.pressure;
-      reduction_factor = other.reduction_factor;
-      reduction_increment_strat = other.reduction_increment_strat;
-    }
-    /**
      * @brief Retrieve the pressure value
      * @return The configured pressure value
      */
