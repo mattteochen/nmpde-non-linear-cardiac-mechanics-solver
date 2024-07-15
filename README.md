@@ -8,7 +8,7 @@ material properties. Subsequently, we refine the model by incorporating a more i
 formulation that accounts for the material properties. This testing methodology is inspired
 by the approach outlined [here](https://pubmed.ncbi.nlm.nih.gov/26807042/).
 
-## Constructive law: Guccione
+## Constitutive law: Guccione
 This section covers the finite element solver for materials that follow the [Guccione’s Law](https://pubmed.ncbi.nlm.nih.gov/8550635/).
 
 An abstract base solver class `BaseSolverGuccione` has been introduced as a base line starting point for each mesh test that we have run.
@@ -21,7 +21,7 @@ Dirichlet boundaries condition values are assigned in the derived class.
 
 `BaseSolverGuccione`'s extension is a trivial task in order to create custom tests (e.g. `SlabCubicGuccione`).
 
-## Constructive law: neo Hooke
+## Constitutive law: neo Hooke
 This section covers the finite element solver for materials that follow the neo Hooke law.
 
 An abstract base solver class `BaseSolverNeoHooke` has been introduced as a base line starting point for each mesh test that we have run.
