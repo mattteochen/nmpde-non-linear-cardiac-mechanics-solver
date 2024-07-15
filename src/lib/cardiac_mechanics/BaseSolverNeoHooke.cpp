@@ -187,7 +187,7 @@ void BaseSolverNeoHooke<dim, Scalar>::assemble_system() {
 
   FEFaceValues<dim> fe_values_boundary(
       *fe, *quadrature_face,
-      update_values | update_quadrature_points | update_JxW_values |
+      update_values | update_quadrature_points | update_JxW_values | update_gradients |
           update_normal_vectors);
 
   FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
