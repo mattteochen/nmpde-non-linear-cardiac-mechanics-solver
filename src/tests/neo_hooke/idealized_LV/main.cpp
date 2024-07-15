@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
   const std::string problem_name = "idealized_LV";
 
   if (argc > 1) {
-    parameter_file_name = argv[2];
+    parameter_file_name = argv[1];
   }
 
   IdealizedLVNeoHooke<3, double> problem(parameter_file_name, problem_name);

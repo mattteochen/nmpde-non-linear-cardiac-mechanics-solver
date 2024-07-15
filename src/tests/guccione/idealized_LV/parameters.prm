@@ -65,5 +65,5 @@ end
 
 subsection Mesh
   # Mesh file name
-  set File                      = ../../../../../lifex_fiber_generation_examples/mesh/idealized_LV.msh
+  set File                      = ../mesh.msh
 end

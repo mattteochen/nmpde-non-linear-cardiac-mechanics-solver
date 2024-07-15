@@ -14,7 +14,6 @@ directory_path = f'../tests/{material_law}/{problem_name}/test_parameters/'
 extension = 'prm'
 parameters_files = list_files_with_extension(directory_path, extension)
 build_dir = f"../tests/{material_law}/{problem_name}/build/"
-mesh_file_name = f'../../../../../lifex_fiber_generation_examples/mesh/{problem_name}.msh'
 executable = "main"
 
 print("Compiling...")
@@ -39,7 +38,7 @@ else:
 
     for p in parameters_files:
         print(f'############################################## Launching test for {p} ##############################################')
-        cmd = f'cd {build_dir} && mpirun -n {process_num} {executable} {mesh_file_name} {p}'
+        cmd = f'cd {build_dir} && mpirun -n {process_num} {executable} {p}'
         print("command: ", cmd)
         if os.system(cmd) != 0:
             print(f'Process failed for {p}')

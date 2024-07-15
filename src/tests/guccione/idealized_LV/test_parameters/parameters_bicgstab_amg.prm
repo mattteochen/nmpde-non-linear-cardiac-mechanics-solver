@@ -14,7 +14,7 @@ subsection LinearSolver
   set MaxIteration              = 1.0
 
   # Preconditioner type
-  set PreconditionerType        = ILU
+  set PreconditionerType        = AMG
 end
 
 subsection PolynomialDegree

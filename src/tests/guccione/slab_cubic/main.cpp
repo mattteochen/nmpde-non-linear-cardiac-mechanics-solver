@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
   const std::string problem_name = "slab_cubic";
   std::string parameter_file_name = "../parameters.prm";
   if (argc > 1) {
-    parameter_file_name = argv[2];
+    parameter_file_name = argv[1];
   }
 
   SlabCubicGuccione<3, double> problem(parameter_file_name, problem_name);
